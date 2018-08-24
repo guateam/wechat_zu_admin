@@ -33,7 +33,6 @@ $(document).ready(function() {
                         //} 
                     } else if (result.status == 0) {
                         swal("权限不足", "您不是管理员!", "error");
-                        error_password();
                     } else if (result.status == -1) {
                         swal("错误", "密码不正确", "error");
                         error_username();

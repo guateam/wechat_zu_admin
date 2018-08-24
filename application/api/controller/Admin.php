@@ -17,9 +17,15 @@
         */
         private function getcookie(){
             $cookie = $this->makekeys();
-            if (UserModel::get(["Cookie" => $cookie])) {
-                $cookie = $this->getcookie();
+            if(!isset($_COOKIE['login']))setcookie("login",$cookie);
+            else{
+                while($cookie ==$_COOKIE['login'] ){
+                    $cookie = $this->makekeys();
+                }
             }
+            //if (UserModel::get(["Cookie" => $cookie])) {
+            //    $cookie = $this->getcookie();
+            //}
             return $cookie;
         }
         /**

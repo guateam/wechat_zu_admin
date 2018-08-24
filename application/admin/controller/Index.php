@@ -10,7 +10,7 @@ class Index extends Controller{
      * 全局工作情况页面
      */
     public function index(){
-        //if(isset($_COOKIE['userid'])){
+        //if(isset($_COOKIE['login'])){
         //    $user=new \app\api\controller\admin();
         //    if($user->checkuser($_COOKIE['userid'])){
                 return $this->fetch('index');

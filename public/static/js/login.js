@@ -22,7 +22,7 @@ $(document).ready(function() {
                     username: username.val(),
                     password: password.val()
                 }).done(function(result) {
-                    if (result.status == 1) {
+                    if (result.status === 1) {
                         //$.cookie("userid", result.cookie, {
                         //    path: '/'
                         //})
@@ -31,12 +31,12 @@ $(document).ready(function() {
                                 window.location.href = "../public/index.php/admin"
                             })
                         //} 
-                    } else if (result.status == 0) {
+                    } else if (result.status === 0) {
                         swal("权限不足", "您不是管理员!", "error");
-                    } else if (result.status == -1) {
+                    } else if (result.status === -1) {
                         swal("错误", "密码不正确", "error");
                         error_username();
-                    }else if (result.status == -1) {
+                    }else if (result.status === -2) {
                         swal("错误", "用户名不存在", "error");
                         error_username();
                     }

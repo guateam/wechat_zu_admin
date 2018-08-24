@@ -58,11 +58,13 @@
             $name = $_POST['username'];
             $data=UserModel::get(["name"=>$name]);//从数据库调取此用户信息
             if($data){
+
+                if($data->is_admin!=1)return json(['status'=>0]);
+
                 if($data->password == $_POST['password']){
-                    if($data->is_admin==1)
                         return json(['status'=>1]);
-                    else return json(['status'=>0]);
                 }else return json(['status'=>-1]);
+                
             }else return json(['status'=>-2]);
         }
 

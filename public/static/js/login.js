@@ -24,7 +24,7 @@ $(document).ready(function() {
                 }).done(function(result) {
                     if (result.status === 1) {
                         swal("成功", "登录成功!", "success").then((ok) => {
-                            window.location.href = "../public/index.php/admin"
+                            window.location.href = "../public/index.php/admin/index"
                         })
                     } else if (result.status === 0) {
                         swal("权限不足", "您不是管理员!", "error");

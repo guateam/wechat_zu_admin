@@ -2,10 +2,10 @@ $(document).ready(function() {
     var password = $("#password");
     var username = $("#username");
     var login = $("#login-button");
-    var captcha = false
-    jigsaw.init(document.getElementById('captcha'), function() {
-        captcha = true
-    },3000)
+    //var captcha = false
+    //jigsaw.init(document.getElementById('captcha'), function() {
+    //    captcha = true
+    //},3000)
     $('.refreshIcon').addClass('text-right')
     login.on("click", function() {
         if (password.val() == '') {
@@ -16,7 +16,7 @@ $(document).ready(function() {
             swal("错误", "用户名不能为空", "error");
             error_username();
         } else pass_username();
-        if (captcha) {
+        
             if (password.val() != '' || username.val() != '') {
                 $.post("/wechat_zu/public/index.php/api/admin/login", {
                     username: username.val(),
@@ -40,9 +40,6 @@ $(document).ready(function() {
                     }
                 });
             }
-        } else {
-            swal('错误', '请先验证验证码', 'error')
-        }
     })
 });
 

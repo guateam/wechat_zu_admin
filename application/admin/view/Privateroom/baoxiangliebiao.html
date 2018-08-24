@@ -50,7 +50,7 @@
                 <thead>
                     <tr class="text-c">
                         <th width="25">
-                            <input type="checkbox" name="" value="" class="flat">
+                            <input type="checkbox" name="" value="" class="flat" id='checkall'>
                         </th>
                         <th width="100">编号</th>
                         <th width="100">房间名</th>
@@ -246,12 +246,21 @@
                 })
             });
         }
+        /**
+         * 修复翻页box的代码
+         */
         $('.table').on('draw.dt', function() {
             $('input.flat').iCheck({
                 checkboxClass: 'icheckbox_flat-blue',
                 radioClass: 'iradio_flat-blue'
             });
         });
+        /**
+         * 全选实现的代码
+         * */
+        $('#checkall').on('ifChanged', () => {
+            $("input[name='id']").iCheck('toggle');
+        })
     </script>
 </body>
 

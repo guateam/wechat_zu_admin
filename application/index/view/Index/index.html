@@ -2,57 +2,43 @@
 <html>
 
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>登录</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>后台登录</title>
     <link rel="stylesheet" type="text/css" media="screen" href="__STATIC__/vendor/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="__STATIC__/vendor/jigsaw/jigsaw.css" />
-    <style>
-        .center {
-            margin-top: 15%;
-            margin-left: 37.5%;
-            margin-right: 37.5%;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/vendor/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="__STATIC__/vendor/css/login.css" />
 </head>
 
 <body>
-    <div class="col-md-3 column center">
-        <div class="row">
-            <div class='col-sm-12'>
-                <h2 class="text-center">养生会所管理系统</h2>
+    <div class="m-login-bg">
+        <div class="m-login">
+            <h3>后台系统登录</h3>
+            <div class="m-login-warp">
+                <form class="layui-form">
+                    <div class="layui-form-item">
+                        <input type="text" name="title" required lay-verify="required" placeholder="用户名" autocomplete="off" class="layui-input" id="username">
+                    </div>
+                    <div class="layui-form-item">
+                        <input type="text" name="password" required lay-verify="required" placeholder="密码" autocomplete="off" class="layui-input" id="password">
+                    </div>
+                    <div class="layui-form-item">
+                    </div>
+                    <div class="layui-form-item m-login-btn">
+                        <div class="layui-inline">
+                            <button class="layui-btn layui-btn-normal" id="login-button" type="button">登录</button>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="reset" class="layui-btn layui-btn-primary" onclick="location.href=history.go(-1)">取消</button>
+                        </div>
+                    </div>
+                </form>
             </div>
+            <p class="copyright">Copyright 2015-2016 by XIAODU</p>
         </div>
-
-        <form class="form-horizontal" role="form">
-            <div class="form-group" id="form-username">
-                <label for="inputEmail3" class="col-sm-3 control-label ">用户名</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="username" />
-                </div>
-            </div>
-            <div class="form-group" id="form-password">
-                <label for="inputPassword3" class="col-sm-3 control-label">密码</label>
-                <div class="col-sm-9">
-                    <input type="password" class="form-control" id="password" />
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3"></div>
-                <div class="col-md-8">
-                    <div id='captcha' style="position: relative;"></div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-10">
-                    <button type="button" class="btn btn-default" id="login-button">登录</button>
-                </div>
-            </div>
-        </form>
     </div>
-
-
+    <script src="__STATIC__/vendor/layui/layui.js" type="text/javascript" charset="utf-8"></script>
     <script src="__STATIC__/vendor/jquery/jquery-3.3.1.min.js"></script>
     <script src="__STATIC__/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="__STATIC__/vendor/sweetalert/sweetalert.js"></script>
@@ -61,4 +47,4 @@
     <script src="__STATIC__/js/login.js"></script>
 </body>
 
-</html>
+</html

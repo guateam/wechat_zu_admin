@@ -16,7 +16,8 @@
                     'name'=>$value->name,
                     'roomid'=>$value->room_id,
                     'capacity'=>$value->capacity,
-                    'servicetype'=>$value->service_type
+                    'servicetype'=>$value->service_type,
+                    'servicename'=>\app\api\controller\Servicetype::getservicename($value->service_type)
                 ];
                 array_push($data,$item);
             }

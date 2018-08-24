@@ -9,6 +9,8 @@ class Addprivateroom extends Controller{
         //if(isset($_COOKIE['login'])){
         //    $user=new \app\api\controller\admin();
         //    if($user->checkuser($_COOKIE['userid'])){
+                $servicelist=\app\api\controller\Servicetype::getservicelist();
+                $this->assign('servicelist',$servicelist);
                 return $this->fetch('tianjiafangjian');
         //    }
         //}

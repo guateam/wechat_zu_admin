@@ -12,6 +12,8 @@ class Editprivateroom extends Controller{
                 $room = new \app\api\controller\Privateroom();
                 $data = $room->getroom($id);
                 if($data){
+                    $servicelist=\app\api\controller\Servicetype::getservicelist();
+                    $this->assign('servicelist',$servicelist);
                     $this->assign('data',$data);
                     return $this->fetch('bianjifangjian');
                 }

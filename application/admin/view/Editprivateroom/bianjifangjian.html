@@ -56,7 +56,11 @@
                 <label class="form-label col-xs-4 col-sm-3">
 									<span class="c-red">*</span>可供服务：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="{$data.servicetype}" placeholder="" id="servicetype" name="capacity">
+                    <select id="servicetype" class="input-text">
+						{volist name="servicelist" id="item"}
+							<option value="{$item.id}">{$item.name}</option>
+						{/volist}
+					</select>
                 </div>
             </div>
             <div class="row cl">
@@ -81,6 +85,7 @@
     <script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
     <script src="__STATIC__/vendor/sweetalert/sweetalert.js"></script>
     <script type="text/javascript">
+        $("#servicetype").val('{$data.servicetype}')
         $(function() {
             $('.skin-minimal input').iCheck({
                 checkboxClass: 'icheckbox-blue',

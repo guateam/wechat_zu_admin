@@ -32,13 +32,15 @@
     <article class="page-container">
         <form action="" method="post" class="form form-horizontal" id="form-member-add">
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>姓名：</label>
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>姓名：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="" placeholder="" id="username" name="username">
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>性别：</label>
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>性别：</label>
                 <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                     <div class="radio-box">
                         <input name="sex" type="radio" id="sex-1" checked value="1">
@@ -52,20 +54,22 @@
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机号：</label>
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>手机号：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="" placeholder="" id="mobile" name="mobile">
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>工号：</label>
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>工号：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="" placeholder="" id="job_number">
                 </div>
             </div>
             <div class="row cl">
                 <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-                    <input id="submit-btn" class="btn btn-primary radius" type="button" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+                    <input id="submit-btn" class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
                 </div>
             </div>
         </form>
@@ -84,9 +88,9 @@
     <script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
     <script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
     <script type="text/javascript" src="__STATIC__/vendor/jquery-cookie/jquery.cookie.js"></script>
-    <script type="text/javascript" src="__STATIC__/js/addtechnician.js"></script>
+
     <script type="text/javascript">
-        $(function() {
+        $(function () {
             $('.skin-minimal input').iCheck({
                 checkboxClass: 'icheckbox-blue',
                 radioClass: 'iradio-blue',
@@ -119,12 +123,29 @@
                 onkeyup: false,
                 focusCleanup: true,
                 success: "valid",
-                //submitHandler:function(form){
-                //$(form).ajaxSubmit();
-                //	var index = parent.layer.getFrameIndex(window.name);
-                //parent.$('.btn-refresh').click();
-                //	parent.layer.close(index);
-                //}
+                submitHandler: function (form) {
+                    name = $("#username").val();
+                    gender = $("input:radio[name = 'sex']:checked").val();
+                    phone = $("#mobile").val();
+                    job_number = $("#job_number").val();
+                    $(form).ajaxSubmit({
+                        type: 'post', // 提交方式 get/post
+                        url: '/wechat_zu_admin/public/index.php/api/Technician/add_technician', // 需要提交的 url
+                        data: {
+                            name: name,
+                            gender: gender,
+                            mobile: phone,
+                            job_number: job_number
+                        },
+                        success: function (result) {
+                            if (result.status == 1) {
+                                parent.location.reload()
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                            }
+                        }
+                    });
+                }
             });
         });
     </script>

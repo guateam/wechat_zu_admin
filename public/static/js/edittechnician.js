@@ -10,15 +10,15 @@ $(document).ready(function() {
             gender = $("input:radio[name = 'sex']:checked").val();
             phone = $("#mobile").val();
             job_number = $("#job_number").val();
-
-            $.post("/wechat_zu_admin/public/index.php/api/Technician/update_technician", {
-                ori_job_number: ori_job_number,
-                name: name,
-                gender: gender,
-                mobile: phone,
-                job_number: job_number
-            }).done(function(result) {
-                if (result.status == 1) {
+            
+            $.post("./../../api/Technician/update_technician",{
+                ori_job_number:ori_job_number,
+                name:name,
+                gender:gender,
+                mobile:phone,
+                job_number:job_number
+            }).done(function(result){
+                if(result.status == 1){
                     parent.location.reload()
                     var index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);

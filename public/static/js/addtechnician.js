@@ -3,7 +3,12 @@ $(document).ready(function() {
     var gender = "";
     var phone = "";
     var job_number = "";
+    var pass = false;
+
     $("#submit-btn").on("click", () => {
+        
+
+
         if ($("#username") != '' && $("input:radio[name='sex'][checked]") != '' && $("#mobile") != '' && $("#job_number") != '') {
             name = $("#username").val();
             gender = $("input:radio[name = 'sex']:checked").val();

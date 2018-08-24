@@ -17,11 +17,12 @@ $(document).ready(function() {
             error_username();
         } else pass_username();
         
-            if (password.val() != '' || username.val() != '') {
+        if (password.val() != '' && username.val() != '') {
                 $.post("../public/index.php/api/admin/login", {
                     username: username.val(),
                     password: password.val()
                 }).done(function(result) {
+<<<<<<< HEAD
                     if (result.status === 1) {
                         //$.cookie("userid", result.cookie, {
                         //    path: '/'
@@ -31,6 +32,12 @@ $(document).ready(function() {
                                 window.location.href = "../public/index.php/admin"
                             })
                         //} 
+=======
+                    if (result.status == 1) {
+                        swal("成功", "登录成功!", "success").then((ok) => {
+                            window.location.href = "../public/index.php/admin"
+                        })
+>>>>>>> 3bfa7c13478c3abfab0f28b64d7fd7c528f02a0b
                     } else if (result.status === 0) {
                         swal("权限不足", "您不是管理员!", "error");
                     } else if (result.status === -1) {

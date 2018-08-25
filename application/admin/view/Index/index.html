@@ -13,11 +13,7 @@
     <script type="text/javascript" src="lib/html5shiv.js"></script>
     <script type="text/javascript" src="lib/respond.min.js"></script>
     <![endif]-->
-    <link rel="stylesheet" type="text/css" href="__STATIC__/static/h-ui/css/H-ui.min.css"/>
-    <link rel="stylesheet" type="text/css" href="__STATIC__/static/h-ui.admin/css/H-ui.admin.css"/>
-    <link rel="stylesheet" type="text/css" href="__STATIC__/lib/Hui-iconfont/1.0.8/iconfont.css"/>
-    <link rel="stylesheet" type="text/css" href="__STATIC__/static/h-ui.admin/skin/default/skin.css" id="skin"/>
-    <link rel="stylesheet" type="text/css" href="__STATIC__/static/h-ui.admin/css/style.css"/>
+    {include file="common/common_css"}
     <!--[if IE 6]>
     <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
@@ -51,7 +47,7 @@
                     <li><a data-href="" data-title="订单列表" href="javascript:void(0)">订单列表</a></li>
                 </ul>
                 <ul>
-                    <li><a data-href="/wechat_zu_admin/public/admin/Privateroom/index" data-title="包厢列表" href="javascript:void(0)">包厢列表</a></li>
+                    <li><a data-href="/wechat_zu_admin/public/index.php/admin/Privateroom/index" data-title="包厢列表" href="javascript:void(0)">包厢列表</a></li>
                 </ul>
 
             </dd>
@@ -104,12 +100,7 @@
         <li id="closeall">关闭全部</li>
     </ul>
 </div>
-<!--_footer 作为公共模版分离出去-->
-<script type="text/javascript" src="__STATIC__/lib/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="__STATIC__/lib/layer/2.4/layer.js"></script>
-<script type="text/javascript" src="__STATIC__/static/h-ui/js/H-ui.min.js"></script>
-<script type="text/javascript" src="__STATIC__/static/h-ui.admin/js/H-ui.admin.js"></script>
-<!--/_footer 作为公共模版分离出去-->
+{include file="common/common_script"}
 
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript" src="__STATIC__/lib/jquery.contextmenu/jquery.contextmenu.r2.js"></script>

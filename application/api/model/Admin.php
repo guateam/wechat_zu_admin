@@ -3,6 +3,6 @@ namespace app\api\model;
 use think\Model;
 
 class Admin extends Model{
-    //数据库表单接包人员
+    //管理员
     protected $table = 'admin';
 }

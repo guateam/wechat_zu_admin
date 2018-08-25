@@ -78,9 +78,9 @@
 						<div class="radio-box">
 							{volist name = "$skill_serveid" id = "skill_id" key="ink"}
 							{if condition="$skill_id==$it.id"}
-							<input name="servicetype" type="checkbox" id="type-{$it.id}" value="{$it.id}">
-							{elseif condition="$ink==count($skill_serveid)"}
 							<input name="servicetype" type="checkbox" id="type-{$it.id}" checked value="{$it.id}">
+							{elseif condition="$ink==count($skill_serveid)"}
+							<input name="servicetype" type="checkbox" id="type-{$it.id}"  value="{$it.id}">
 							{/if}
 							{/volist}
 

@@ -19,12 +19,16 @@
                 return json(["status"=>0]);
             }
         }
-        public function delete_technician($job_number){
+        public function delete_technician($job_number=[]){
             $single_number;
             if(count($job_number)==0)return json(["status"=>1]);
             
             for($i=0;$i<count($job_number);$i++){
                 $single_number=$job_number[$i];
+
+                $skill = \app\api\model\Skill::all(["job_number"=>$single_number]);
+                foreach($skill as $sk)$sk->delete();
+
                 $data = UserModel::get(["job_number"=>$single_number]);
                 if($data){
                     $data->delete();
@@ -37,7 +41,18 @@
         public function delete_all(){
 
         }
+        private function check_repeat($mobile,$job_number,$ori_job_number=""){
+            
+                $repeat = UserModel::get(['phone_number'=>$mobile]);
+                if($repeat->job_number !=$ori_job_number)return 0;
+
+                $repeat = UserModel::get(['job_number'=>$job_number]);
+                if($repeat->job_number !=$ori_job_number)return -1;
+            return 1;
+        }
         public function add_technician($name,$gender,$mobile,$job_number,$skill){
+            $repeat = UserModel::get(['phone_number'=>$mobile]);
+            if($repeat)return json(['status'=>0]);
             $data = new UserModel(['name'=>$name,'gender'=>$gender,'phone_number'=>$mobile,'job_number'=>$job_number]);
             $data->save();
             for($i=0;$i<count($skill);$i++){
@@ -47,6 +62,10 @@
             return json(['status'=>1]);
         }
         public function update_technician($ori_job_number,$name,$gender,$mobile,$job_number,$skill){
+
+            $is_repeat = self::check_repeat($mobile,$job_number,$ori_job_number);
+            if($is_repeat!=1)return json(["status"=>$is_repeat]);
+
             $data = UserModel::get(["job_number"=>$ori_job_number]);
             $data->name = $name;
             $data->gender = $gender;

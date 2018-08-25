@@ -37,10 +37,8 @@
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-2">内容：</label>
 				<div class="formControls col-xs-8 col-sm-9">
-					<textarea name="abstract" cols="" rows="" class="textarea" placeholder="说点什么...最少输入10个字符" datatype="*10-100" dragonfly="true"
-					    id="text" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
-					<p class="textarea-numberbar">
-						<em class="textarea-length">0</em>/200</p>
+					<textarea name="abstract" cols="" rows="" class="textarea" placeholder="说点什么..." datatype="*10-100" dragonfly="true"
+					    id="text" nullmsg="备注不能为空！"></textarea>
 				</div>
 			</div>
 			<!--发图片-->
@@ -56,7 +54,7 @@
 			<!--</div>-->
 			<div class="row cl">
 				<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
-					<button  class="btn btn-primary radius" type="submit">
+					<button class="btn btn-primary radius" type="submit">
 						<i class="Hui-iconfont">&#xe632;</i> 发布</button>
 					<button onClick="removeIframe();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
 				</div>
@@ -76,6 +74,8 @@
 	<script type="text/javascript" src="__STATIC__/lib/ueditor/1.4.3/ueditor.all.min.js"></script>
 	<script type="text/javascript" src="__STATIC__/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 	<script type="text/javascript">
+
+
 		$(function () {
 			$('.skin-minimal input').iCheck({
 				checkboxClass: 'icheckbox-blue',

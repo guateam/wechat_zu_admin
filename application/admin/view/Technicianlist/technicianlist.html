@@ -24,26 +24,28 @@
         <i class="Hui-iconfont">&#xe67f;</i> 首页
         <span class="c-gray en">&gt;</span> 技师管理
         <span class="c-gray en">&gt;</span> 技师列表
-        <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新">
+        <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);"
+            title="刷新">
             <i class="Hui-iconfont">&#xe68f;</i>
         </a>
     </nav>
     <div class="page-container">
         <div class="cl pd-5 bg-1 bk-gray mt-20">
             <span class="l">
-				<a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
-					<i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-				<a href="javascript:;" onclick="member_add('添加用户','/wechat_zu_admin/public/index.php/admin/Addtechnician/addtechnician.html','','410')" class="btn btn-primary radius">
-					<i class="Hui-iconfont">&#xe600;</i> 添加技师</a>
-			</span>
+                <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
+                    <i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+                <a href="javascript:;" onclick="member_add('添加用户','/wechat_zu_admin/public/index.php/admin/Addtechnician/addtechnician.html','','410')"
+                    class="btn btn-primary radius">
+                    <i class="Hui-iconfont">&#xe600;</i> 添加技师</a>
+            </span>
             <span class="r">共有数据：
-				<strong>{$count}</strong> 条</span>
+                <strong>{$count}</strong> 条</span>
         </div>
         <div class="mt-20">
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
-                        <th width="40" >选择</th>
+                        <th width="40">选择</th>
                         <th width="100">姓名</th>
                         <th width="40">性别</th>
                         <th width="120">工号</th>
@@ -59,47 +61,48 @@
                     {volist name = "$technicians" id = "it" key="k"}
                     <tr class="text-c">
                         <td>
-                            <input type="checkbox" value="{$it.job_number}" name="{$k}">
+                            <input type="checkbox" value="{$it.job_number}" name="{$k}" class="flat">
                         </td>
                         <td>{$it.name}</td>
                         <td>
                             {if condition="$it.gender=='1'"}男 {else /}女 {/if}
 
-						</td>
-						<td>{$it.job_number}</td>
-						<td>{$it.phone_number}</td>
-						<td class="text-l">7</td>
-						<td>{if condition="is_null($it.inviter)"}无
-							{else /} {$it.inviter}
-							{/if}
-						</td>
-						<td class="td-status">
-							<button onclick="zhidingren('指定介绍人','/wechat_zu_admin/public/index.php/admin/Addinviter/Addinviter.html?jbnb={$it.job_number}','10001','360','400')">指定介绍人</button>
-						</td>
-						<td>
-							<button onclick = "layer_show('详情', '/wechat_zu_admin/public/index.php/admin/Techniciandetail/Techniciandetail/jbnb/{$it.job_number}','500','500','610');">查看详情</button>
-						</td>
-						<td class="td-manage">
-							<a title="编辑" href="javascript:;" onclick="member_edit('编辑','/wechat_zu_admin/public/index.php/admin/Edittechnician/Edittechnician/name/{$it.name}/gender/{$it.gender}/phonenum/{$it.phone_number}/jobnum/{$it.job_number}','4','','410')" class="ml-5" style="text-decoration:none">
-								<i class="Hui-iconfont">&#xe6df;</i>
-							</a>
-							<a title="删除" href="javascript:;" onclick='member_del(this,"{$it.job_number}")' class="ml-5" style="text-decoration:none">
-								<i class="Hui-iconfont">&#xe6e2;</i>
-							</a>
-						</td>
-					</tr>
-					{/volist}
-				</tbody>
-			</table>
-		</div>
-	</div>
+                        </td>
+                        <td>{$it.job_number}</td>
+                        <td>{$it.phone_number}</td>
+                        <td class="text-l">7</td>
+                        <td>{if condition="is_null($it.inviter)"}无 {else /} {$it.inviter} {/if}
+                        </td>
+                        <td class="td-status">
+                            <button onclick="zhidingren('指定介绍人','/wechat_zu_admin/public/index.php/admin/Addinviter/Addinviter.html?jbnb={$it.job_number}','10001','360','400')">指定介绍人</button>
+                        </td>
+                        <td>
+                            <button onclick="layer_show('详情', '/wechat_zu_admin/public/index.php/admin/Techniciandetail/Techniciandetail/jbnb/{$it.job_number}','500','500','610');">查看详情</button>
+                        </td>
+                        <td class="td-manage">
+                            <a title="编辑" href="javascript:;" onclick="member_edit('编辑','/wechat_zu_admin/public/index.php/admin/Edittechnician/Edittechnician/name/{$it.name}/gender/{$it.gender}/phonenum/{$it.phone_number}/jobnum/{$it.job_number}','4','','410')"
+                                class="ml-5" style="text-decoration:none">
+                                <i class="Hui-iconfont">&#xe6df;</i>
+                            </a>
+                            <a title="删除" href="javascript:;" onclick='member_del(this,"{$it.job_number}")' class="ml-5" style="text-decoration:none">
+                                <i class="Hui-iconfont">&#xe6e2;</i>
+                            </a>
+                        </td>
+                    </tr>
+                    {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
     {include file="common/common_script"}
     <!--请在下方写此页面业务相关的脚本-->
     <script type="text/javascript" src="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js"></script>
     <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
+    <script type="text/javascript" src="__STATIC__/vendor/iCheck/icheck.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/vendor/sweetalert/sweetalert2.all.js"></script>
     <script type="text/javascript">
-        $(function() {
+        $(function () {
             $('.table-sort').dataTable({
                 "aaSorting": [
                     [1, "desc"]
@@ -179,67 +182,115 @@
         }
          ***/
 
-		/*用户-删除*/
-		function member_del(obj, id) {
-			layer.confirm('确认要删除吗？', function (index) {
-				$.ajax({
-					type: 'POST',
-					url: '',
-					dataType: 'json',
-					success: function (data) {
-						$.post("/wechat_zu_admin/public/index.php/api/Technician/delete_technician",{
-							job_number:[id]
-						}).done(function(result){
-							if(result.status==1)
-							{
-								$(obj).parents("tr").remove();
-								layer.msg('已删除!', {
-									icon: 1,
-									time: 1000
-								});
-								location.reload();
-							}
-						})
-						
-					},
-					error: function (data) {
-						console.log(data.msg);
-					},
-				});
-			});
-		}
+        /*用户-删除*/
+        function member_del(obj, id) {
+            swal({
+                title: '确认删除该项吗？',
+                text: '',
+                type: 'question',
+                allowOutsideClick: false,
+                showCancelButton: true,
+                confirmButtonColor: '#93c47d',
+                cancelButtonColor: '#ca5943',
+                confirmButtonText: "确认",
+                cancelButtonText: "取消"
+            }).then((result) => {
+                if (result.value) {
+                    swal({
+                        title: '正在处理',
+                        text: '',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCloseButton: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    }).then((result) => {});
+                    $.post("/wechat_zu_admin/public/index.php/api/Technician/delete_technician", {
+                        job_number: [id]
+                    }).done(function (result) {
+                        if (result.status == 1) {
+                            $(obj).parents("tr").remove();
+                            swal("完成", "已删除项目", "success").then((ok) => {
+                                if (ok.value) location.reload();
+                            })
+                        }
+                    })
+                }
+            })
+            /**layer.confirm('确认要删除吗？', function (index) {
+                $.ajax({
+                    type: 'POST',
+                    url: '',
+                    dataType: 'json',
+                    success: function (data) {
+                        layer.msg('', {
+                            time: 1
+                        });
 
-		/*删除-所有*/
-		function datadel() {
-			layer.confirm('确认要删除吗？', function (index) {
-				$.ajax({
-					type: 'POST',
-					url: '',
-					dataType: 'json',
-					success: function (data) {
-						numbers=[];
-						for(var i = 0;i<'{$count}';i++){
-							if($("input:checkbox[name="+(i+1)+"]").is(":checked")){
-								numbers.push($("input:checkbox[name="+(i+1)+"]").val());
-							}
-						}
-						$.post("/wechat_zu_admin/public/index.php/api/Technician/delete_technician",{
-							job_number:numbers
-						}).done(function(result){
-							if(result.status==1)
-							{
-								location.reload();
-							}
-						})
-						
-					},
-					error: function (data) {
-						console.log(data.msg);
-					},
-				});
-			});
-		}
-	</script>
+
+                    },
+                    error: function (data) {
+                        console.log(data.msg);
+                    },
+                });
+            });*/
+        }
+
+        /*删除-所有*/
+        function datadel() {
+            swal({
+                title: '确认删除这些项吗？',
+                text: '',
+                type: 'question',
+                allowOutsideClick: false,
+                showCancelButton: true,
+                confirmButtonColor: '#93c47d',
+                cancelButtonColor: '#ca5943',
+                confirmButtonText: "确认",
+                cancelButtonText: "取消"
+            }).then((result) => {
+                if (result.value) {
+                    swal({
+                        title: '正在处理',
+                        text: '',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCloseButton: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    }).then((result) => {});
+                    numbers = [];
+                    for (var i = 0; i < '{$count}'; i++) {
+                        if ($("input:checkbox[name=" + (i + 1) + "]").is(":checked")) {
+                            numbers.push($("input:checkbox[name=" + (i + 1) + "]").val());
+                        }
+                    }
+                    $.post("/wechat_zu_admin/public/index.php/api/Technician/delete_technician", {
+                        job_number: numbers
+                    }).done(function (result) {
+                        if (result.status == 1) {
+                            swal({
+                                title: '完成',
+                                type:"success",
+                                text: '已经删除所选项目',
+                                allowOutsideClick: true,
+                                showConfirmButton: true,
+                                showCloseButton: false,
+                                confirmButtonText: "确认"
+                            }).then((ok) => {
+                                if (ok.value) {
+                                    location.reload();
+                                }
+                            })
+                        }
+                    })
+
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

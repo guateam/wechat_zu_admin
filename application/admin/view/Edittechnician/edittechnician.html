@@ -67,7 +67,7 @@
 				<label class="form-label col-xs-4 col-sm-3">
 					<span class="c-red">*</span>工号：</label>
 				<div class="formControls col-xs-8 col-sm-9">
-					<input type="text" class="input-text" value="{$technician.job_number}" placeholder="" id="job_number" name="mobile">
+					<input type="text" class="input-text" value="{$technician.job_number}" placeholder="" id="job_number" name="job_number">
 				</div>
 			</div>
 			<div class="row cl">
@@ -76,7 +76,14 @@
 					<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 						{volist name = "$servicelist" id = "it" key="k"}
 						<div class="radio-box">
-							<input name="servicetype" type="checkbox" id="type-{$k}" value="{$it.id}">
+							{volist name = "$skill_serveid" id = "skill_id" key="ink"}
+							{if condition="$skill_id==$it.id"}
+							<input name="servicetype" type="checkbox" id="type-{$it.id}" value="{$it.id}">
+							{elseif condition="$ink==count($skill_serveid)"}
+							<input name="servicetype" type="checkbox" id="type-{$it.id}" checked value="{$it.id}">
+							{/if}
+							{/volist}
+
 							<label for="type-{$k}">{$it.name}</label>
 						</div>
 						{/volist}
@@ -140,6 +147,16 @@
 				focusCleanup: true,
 				success: "valid",
 				submitHandler: function (form) {
+					swal({
+                        title: '正在处理',
+                        text: '',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCloseButton: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    }).then((result) => {});
 					name = $("#username").val();
 					gender = $("input:radio[name = 'sex']:checked").val();
 					phone = $("#mobile").val();
@@ -163,9 +180,18 @@
 						},
 						success: function (result) {
 							if (result.status == 1) {
-								parent.location.reload()
-								var index = parent.layer.getFrameIndex(window.name);
-								parent.layer.close(index);
+								swal("成功", "已修改技师详情", "success",{allowOutsideClick: false}).then((ok) => {
+                                    if (ok.value) {
+                                        parent.location.reload()
+                                        var index = parent.layer.getFrameIndex(
+                                            window.name);
+                                        parent.layer.close(index);
+                                    }
+                                })
+							}else if(result.status == 0){
+								swal("失败","已存在相同手机号的技师","error");
+							}else if(result.status == -1){
+								swal("失败","已存在相同工号的技师","error");
 							}
 						}
 					});

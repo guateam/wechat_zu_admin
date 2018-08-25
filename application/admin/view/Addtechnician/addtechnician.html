@@ -115,8 +115,8 @@
                         required: true,
                         isMobile: true,
                     },
-                    servicetype:{
-                        required:true,
+                    servicetype: {
+                        required: true,
                     },
                     email: {
                         required: true,
@@ -131,12 +131,22 @@
                 focusCleanup: true,
                 success: "valid",
                 submitHandler: function (form) {
+                    swal({
+                        title: '正在处理',
+                        text: '',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCloseButton: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    }).then((result) => {});
                     name = $("#username").val();
                     gender = $("input:radio[name = 'sex']:checked").val();
-                    
+
                     service_id = [];
                     service_type = $('input:checkbox[name="servicetype"]:checked')
-                    $.each(service_type,function(){
+                    $.each(service_type, function () {
                         service_id.push($(this).val());
                     })
                     phone = $("#mobile").val();
@@ -149,13 +159,20 @@
                             gender: gender,
                             mobile: phone,
                             job_number: job_number,
-                            skill:service_id,
+                            skill: service_id,
                         },
                         success: function (result) {
                             if (result.status == 1) {
-                                parent.location.reload()
-                                var index = parent.layer.getFrameIndex(window.name);
-                                parent.layer.close(index);
+                                swal("成功", "已添加新的技师", "success",{allowOutsideClick: false}).then((ok) => {
+                                    if (ok.value) {
+                                        parent.location.reload()
+                                        var index = parent.layer.getFrameIndex(
+                                            window.name);
+                                        parent.layer.close(index);
+                                    }
+                                })
+                            } else {
+                                swal("失败","已存在相同手机号的技师","error");
                             }
                         }
                     });

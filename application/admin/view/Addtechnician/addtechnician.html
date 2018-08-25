@@ -9,9 +9,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <link rel="Bookmark" href="/favicon.ico">
-    <link rel="Shortcut Icon" href="/favicon.ico" />
-
-    {include file="common/common_css"}
+    <link rel="Shortcut Icon" href="/favicon.ico" /> {include file="common/common_css"}
     <!--[if lt IE 9]>
 <script type="text/javascript" src="lib/html5shiv.js"></script>
 <script type="text/javascript" src="lib/respond.min.js"></script>
@@ -66,6 +64,18 @@
                 </div>
             </div>
             <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>服务类型：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    {volist name = "$servicelist" id = "it" key="k"}
+                    <div class="radio-box">
+                        <input name="servicetype" type="checkbox" id="type-{$k}" value="{$it.id}">
+                        <label for="type-{$k}">{$it.name}</label>
+                    </div>
+                    {/volist}
+                </div>
+            </div>
+            <div class="row cl">
                 <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
                     <input id="submit-btn" class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
                 </div>
@@ -75,7 +85,7 @@
 
 
     {include file="common/common_script"}
-    
+
     <!--请在下方写此页面业务相关的脚本-->
     <script type="text/javascript" src="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js"></script>
     <script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
@@ -105,6 +115,9 @@
                         required: true,
                         isMobile: true,
                     },
+                    servicetype:{
+                        required:true,
+                    },
                     email: {
                         required: true,
                         email: true,
@@ -120,6 +133,12 @@
                 submitHandler: function (form) {
                     name = $("#username").val();
                     gender = $("input:radio[name = 'sex']:checked").val();
+                    
+                    service_id = [];
+                    service_type = $('input:checkbox[name="servicetype"]:checked')
+                    $.each(service_type,function(){
+                        service_id.push($(this).val());
+                    })
                     phone = $("#mobile").val();
                     job_number = $("#job_number").val();
                     $(form).ajaxSubmit({
@@ -129,7 +148,8 @@
                             name: name,
                             gender: gender,
                             mobile: phone,
-                            job_number: job_number
+                            job_number: job_number,
+                            skill:service_id,
                         },
                         success: function (result) {
                             if (result.status == 1) {

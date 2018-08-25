@@ -26,7 +26,7 @@
                 <tbody>
                 {volist name = "$technicians" id = "it" key="k"}
                 <tr class="text-c">
-                    <td><input type="checkbox" value="{$it.job_number}" name="inviter"></td>
+                    <td><input type="radio" value="{$it.job_number}" name="inviter"></td>
                     <td>{$it.name}</td>
                 </tr>
                 {/volist}
@@ -60,11 +60,11 @@
  })(jQuery);
 
  var self_job_nb = $.getUrlParam("jbnb");
-$("input:checkbox[value="+self_job_nb+"]").attr("hidden",true);
+$("input:radio[value="+self_job_nb+"]").attr("hidden",true);
 
 $("#btn").on("click",()=>{
-    var choose_jbnb = $("input:checkbox[name='inviter']:checked").val();
-    $.post("/wechat_zu_admin/index.php/api/Technician/set_inviter",{
+    var choose_jbnb = $("input:radio[name='inviter']:checked").val();
+    $.post("/wechat_zu_admin/public/index.php/api/Technician/set_inviter",{
                 job_number:self_job_nb,
                 inviter_job_number:choose_jbnb
             }).done(function(result){

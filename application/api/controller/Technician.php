@@ -37,18 +37,30 @@
         public function delete_all(){
 
         }
-        public function add_technician($name,$gender,$mobile,$job_number){
+        public function add_technician($name,$gender,$mobile,$job_number,$skill){
             $data = new UserModel(['name'=>$name,'gender'=>$gender,'phone_number'=>$mobile,'job_number'=>$job_number]);
             $data->save();
+            for($i=0;$i<count($skill);$i++){
+                $skill_info = new \app\api\model\Skill(['job_number'=>$job_number,'service_id'=>$skill[$i],'extra_income'=>0]);
+                $skill_info->save();
+            }
             return json(['status'=>1]);
         }
-        public function update_technician($ori_job_number,$name,$gender,$mobile,$job_number){
+        public function update_technician($ori_job_number,$name,$gender,$mobile,$job_number,$skill){
             $data = UserModel::get(["job_number"=>$ori_job_number]);
             $data->name = $name;
             $data->gender = $gender;
             $data->phone_number=$mobile;
             $data->job_number=$job_number;
             $data->save();
+            $skill_info = \app\api\model\Skill::all(['job_number'=>$ori_job_number]);
+            foreach($skill_info as $it){
+                $it->delete();
+            }
+            foreach($skill as $sk){
+                $new_skill = new \app\api\model\Skill(['job_number'=>$job_number,'service_id'=>$sk,'extra_income'=>0]);
+                $new_skill->save();
+            }
             return json(["status"=>1]);
         }
 

@@ -1,0 +1,145 @@
+﻿<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+	{include file="common/common_css"}
+	<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+	<title>历史公告</title>
+</head>
+
+<body>
+	<nav class="breadcrumb">
+		<i class="Hui-iconfont">&#xe67f;</i> 首页
+		<span class="c-gray en">&gt;</span> 管理员管理
+		<span class="c-gray en">&gt;</span> 公告管理
+		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);"
+		    title="刷新">
+			<i class="Hui-iconfont">&#xe68f;</i>
+		</a>
+	</nav>
+	<div class="page-container">
+		<div class="cl pd-5 bg-1 bk-gray">
+			<span class="l">
+				<a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
+					<i class="Hui-iconfont">&#xe6e2;</i> 批量删除
+				</a>
+				<a class="btn btn-primary radius" href="javascript:;" onclick="admin_role_add('发布公告','/wechat_zu_admin/public/index.php/admin/Addnotice/index','800')">
+					<i class="Hui-iconfont">&#xe600;</i> 发布公告
+				</a>
+			</span>
+			<span class="r">共有数据：
+				<strong>{$count}</strong> 条</span>
+		</div>
+		<table class="table table-border table-bordered table-hover table-bg">
+			<thead>
+				<tr>
+					<th scope="col" colspan="6">公告管理</th>
+				</tr>
+				<tr class="text-c">
+					<th width="25">选择</th>
+					<th width="200">标题</th>
+					<th width="">内容</th>
+					<th width="70">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{volist name="$notice" id="it" key="k"}
+				<tr class="text-c">
+					<td>
+						<input type="checkbox" value="{$it.ID}" name="{$k}">
+					</td>
+					<td>{$it.title}</td>
+					<td>{$it.text}</td>
+					<td class="f-14">
+						<a title="删除" href="javascript:;" onclick="admin_role_del(this,'{$it.ID}')" class="ml-5" style="text-decoration:none">
+							<i class="Hui-iconfont">&#xe6e2;</i>
+						</a>
+					</td>
+				</tr>
+				{/volist}
+			</tbody>
+		</table>
+	</div>
+	{include file="common/common_script"}
+
+	<!--请在下方写此页面业务相关的脚本-->
+	<script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+	<script type="text/javascript">
+		/*管理员-角色-添加*/
+		function admin_role_add(title, url, w, h) {
+			layer_show(title, url, w, h);
+		}
+		/*管理员-角色-编辑*/
+		function admin_role_edit(title, url, id, w, h) {
+			layer_show(title, url, w, h);
+		}
+		/*管理员-角色-删除*/
+		function admin_role_del(obj, id) {
+			layer.confirm('确认要删除公告吗？', function (index) {
+				$.ajax({
+					type: 'POST',
+					url: '/wechat_zu_admin/public/index.php/api/Notice/delete_notice',
+					data: {
+						ids: [id],
+					},
+					dataType: 'json',
+					success: function (data) {
+						$(obj).parents("tr").remove();
+						layer.msg('已删除!', {
+							icon: 1,
+							time: 1000
+						});
+						location.reload();
+					},
+					error: function (data) {
+						console.log(data.msg);
+					},
+				});
+			});
+		}
+	
+		function datadel(){
+			layer.confirm('确认要删除吗？', function (index) {
+				$.ajax({
+					type: 'POST',
+					url: '',
+					dataType: 'json',
+					success: function (data) {
+						numbers=[];
+						for(var i = 0;i<'{$count}';i++){
+							if($("input:checkbox[name="+(i+1)+"]").is(":checked")){
+								numbers.push($("input:checkbox[name="+(i+1)+"]").val());
+							}
+						}
+						$.post("/wechat_zu_admin/public/index.php/api/Notice/delete_notice",{
+							ids:numbers
+						}).done(function(result){
+							if(result.status==1)
+							{
+								location.reload();
+							}
+						})
+						
+					},
+					error: function (data) {
+						console.log(data.msg);
+					},
+				});
+			});
+		}
+	</script>
+</body>
+
+</html>

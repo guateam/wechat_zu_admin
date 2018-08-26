@@ -95,9 +95,12 @@
          * @param string $skill      技师的技能
          * 
          */
-        public function add_technician($name,$gender,$mobile,$job_number,$skill){
-            $repeat = UserModel::get(['phone_number'=>$mobile]);
-            if($repeat)return json(['status'=>0]);
+        public function add_technician($name,$gender,$mobile,$job_number,$skill=''){
+            if($skill=='')return json(['status'=>-2]);
+
+            $is_repeat = self::check_repeat($mobile,$job_number,$ori_job_number);
+            if($is_repeat!=1)return json(["status"=>$is_repeat]);
+
             $data = new UserModel(['name'=>$name,'gender'=>$gender,'phone_number'=>$mobile,'job_number'=>$job_number]);
             $data->save();
             for($i=0;$i<count($skill);$i++){

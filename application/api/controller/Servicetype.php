@@ -31,4 +31,16 @@
             }
             return $data;
         }
+        /**
+         * 获取服务基础价格
+         * 2018-8-26 创建 袁宜照
+         * @param int $id 服务id
+         */
+        public static function getserviceprice($id){
+            $service= Service::get(['ID'=>$id]);
+            if($service){
+                return $service->price;
+            }
+            return "未知";
+        }
     }

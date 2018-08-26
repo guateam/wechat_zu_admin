@@ -127,7 +127,7 @@
                     swal.showLoading()
                 }
             });
-            $.post("/wechat_zu_admin/public/index.php/api/Appointment/get_appointment", {
+            $.post("__ROOT__/index.php/api/Appointment/get_appointment", {
                 order_id: $("#appointment").val()
             }).done((result) => {
                 if (result) {
@@ -161,7 +161,7 @@
                     swal.showLoading()
                 }
             });
-            $.post("/wechat_zu_admin/public/index.php/api/Serviceorder/get_order", {
+            $.post("__ROOT__/index.php/api/Serviceorder/get_order", {
                 order_id: $('#serviceorder').val()
             }).done((result) => {
                 if (result) {
@@ -210,7 +210,7 @@
                     swal.showLoading()
                 }
             });
-            $.post("/wechat_zu_admin/public/index.php/api/Rate/get_rate", {
+            $.post("__ROOT__/index.php/api/Rate/get_rate", {
                 order_id: $("#rate").val(),
             }).done((result) => {
                 if (result) {

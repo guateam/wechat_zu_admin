@@ -64,7 +64,7 @@ $("input:radio[value="+self_job_nb+"]").attr("hidden",true);
 
 $("#btn").on("click",()=>{
     var choose_jbnb = $("input:radio[name='inviter']:checked").val();
-    $.post("/wechat_zu_admin/public/index.php/api/Technician/set_inviter",{
+    $.post("__ROOT__/index.php/api/Technician/set_inviter",{
                 job_number:self_job_nb,
                 inviter_job_number:choose_jbnb
             }).done(function(result){

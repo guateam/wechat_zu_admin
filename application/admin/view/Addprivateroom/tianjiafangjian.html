@@ -119,7 +119,7 @@
         });
 
         $('#add').click(() => {
-            $.post('/wechat_zu_admin/public/index.php/admin/addprivateroom/add', {
+            $.post('__ROOT__/index.php/admin/addprivateroom/add', {
                 name: $('#name').val(),
                 roomid: $('#roomid').val(),
                 capacity: $('#capacity').val(),

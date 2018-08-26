@@ -7,9 +7,6 @@ class Consumedorder extends Controller{
 
     public function index(){
         $ctrl =new \app\api\controller\Consumedorder();
-        $appo = new \app\api\controller\Appointment();
-        $serveorder = new \app\api\controller\Serviceorder();
-
 
         $order = $ctrl->get_all();
         $this->assign("order",$order);

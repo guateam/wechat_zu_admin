@@ -119,7 +119,7 @@
             });
         });
         $('#edit').click(() => {
-            $.post('/wechat_zu_admin/public/admin/editprivateroom/edit', {
+            $.post('__ROOT__/admin/editprivateroom/edit', {
                 id: '{$data.ID}',
                 name: $('#name').val(),
                 roomid: $('#roomid').val(),

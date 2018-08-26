@@ -34,7 +34,7 @@
             <span class="l">
                 <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
                     <i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-                <a href="javascript:;" onclick="member_add('添加房间','/wechat_zu_admin/public/index.php/admin/addprivateroom','','510')"
+                <a href="javascript:;" onclick="member_add('添加房间','__ROOT__/index.php/admin/addprivateroom','','510')"
                     class="btn btn-primary radius">
                     <i class="Hui-iconfont">&#xe600;</i> 添加房间</a>
             </span>
@@ -79,7 +79,7 @@
                             <a title="停用" href="javascript:;" style="text-decoration:none" onClick="room_stop(this,'10001')" hidden>
                                 <i class="Hui-iconfont">&#xe631;</i>
                             </a>
-                            <a title="编辑" href="javascript:;" onclick="member_edit('编辑','/wechat_zu_admin/public/index.php/admin/editprivateroom/index/id/{$item.ID}','4','','510')" class="ml-5" style="text-decoration:none">
+                            <a title="编辑" href="javascript:;" onclick="member_edit('编辑','__ROOT__/index.php/admin/editprivateroom/index/id/{$item.ID}','4','','510')" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
                             <a title="删除" href="javascript:;" onclick="member_del(this,'{$item.ID}')" class="ml-5" style="text-decoration:none">
@@ -193,7 +193,7 @@
         /*用户-删除*/
         function member_del(obj, id) {
             layer.confirm('确认要删除吗？', function(index) {
-                $.post('/wechat_zu_admin/public/admin/privateroom/delete/id/' + id).done((data) => {
+                $.post('__ROOT__/admin/privateroom/delete/id/' + id).done((data) => {
                     if (data.status == 1) {
                         $(obj).parents("tr").remove();
                         $('#number').text($('#number').text() - 1)
@@ -219,7 +219,7 @@
                 checkbox.each(function() {
                     idlist.push($(this).val())
                 })
-                $.post('/wechat_zu_admin/public/admin/privateroom/deletelist', {
+                $.post('__ROOT__/admin/privateroom/deletelist', {
                     idlist: idlist
                 }).done((data) => {
                     if (data.status == 1) {

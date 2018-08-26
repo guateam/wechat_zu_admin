@@ -15,7 +15,7 @@ $(document).ready(function() {
             phone = $("#mobile").val();
             job_number = $("#job_number").val();
 
-            $.post("/wechat_zu_admin/public/index.php/api/Technician/add_technician", {
+            $.post("__ROOT__/index.php/api/Technician/add_technician", {
                 name: name,
                 gender: gender,
                 mobile: phone,

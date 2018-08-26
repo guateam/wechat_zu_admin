@@ -1,0 +1,318 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    {include file="common/common_css"}
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>订单列表</title>
+</head>
+
+<body>
+    <nav class="breadcrumb">
+        <i class="Hui-iconfont">&#xe67f;</i> 首页
+        <span class="c-gray en">&gt;</span> 服务管理
+        <span class="c-gray en">&gt;</span> 订单列表
+        <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);"
+            title="刷新">
+            <i class="Hui-iconfont">&#xe68f;</i>
+        </a>
+    </nav>
+    <div class="page-container">
+        <div class="text-c"> 日期范围：
+            <input type="text" onfocus="WdatePicker({})" id="datemin" class="input-text Wdate" style="width:120px;"> -
+            <input type="text" onfocus="WdatePicker({})" id="datemax" class="input-text Wdate" style="width:120px;">
+            <button type="submit" class="btn btn-success radius" id="search" name="">
+                <i class="Hui-iconfont">&#xe665;</i> 搜记录
+            </button>
+        </div>
+        <div class="cl pd-5 bg-1 bk-gray mt-20">
+            <span class="r">共有数据：
+                <strong>{$count}</strong> 条</span>
+        </div>
+        <div class="mt-20">
+            <table class="table table-border table-bordered table-hover table-bg table-sort">
+                <thead>
+                    <tr class="text-c">
+                        <th width="40">选择</th>
+                        <th width="130">订单号</th>
+                        <th width="150">时间</th>
+                        <th width="40">预约人</th>
+                        <th width="150">订单状态</th>
+                        <th width="120">付款顾客</th>
+                        <th width="60">支付方式</th>
+                        <th width="150">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {volist name="$order" id="it"}
+                    <tr class="text-c">
+                        <td>
+                            <input type="checkbox" value="1" name="">
+                        </td>
+                        <td>{$it.order_id}</td>
+                        <td>{$it.generated_time}</td>
+                        <td>{$it.user_id}</td>
+                        <td>
+                            {if condition="$it.state==0"}订单取消 {elseif condition="$it.state==1"}预约 {elseif condition="$it.state==2"}服务中 {elseif condition="$it.state==3"}等待支付
+                            {elseif condition="$it.state==4"}支付完成 {elseif condition="$it.state==5"}评价完成 {/if}
+                        </td>
+                        <td class="">{$it.payment_user_id}</td>
+                        <td class="">
+                            {if condition="$it.payment_method==1"}微信支付 {elseif condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡
+                            {elseif condition="$it.payment_method==4"}现金 {else /}未支付 {/if}
+                        </td>
+                        <td class="td-manage">
+                            <button value="{$it.order_id}" id="appointment">预约情况</button>
+                            <button value="{$it.order_id}" id="serviceorder">服务情况</button>
+                            <button value="{$it.order_id}" id="rate">评价情况</button>
+                        </td>
+                    </tr>
+                    {/volist}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {include file="common/common_script"}
+
+    <!--请在下方写此页面业务相关的脚本-->
+    <script type="text/javascript" src="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('.table-sort').dataTable({
+                "aaSorting": [
+                    [1, "desc"]
+                ], //默认第几个排序
+                "bStateSave": true, //状态保存
+                "aoColumnDefs": [
+                    //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+                    {
+                        "orderable": false,
+                        "aTargets": [0, 4, 7]
+                    } // 制定列不参与排序
+                ]
+            });
+        });
+
+        /*用户-添加*/
+        function member_add(title, url, w, h) {
+            layer_show(title, url, w, h);
+        }
+
+        /*用户-查看*/
+        function zhidingren(title, url, id, w, h) {
+            layer_show(title, url, w, h);
+        }
+        $("#appointment").on("click", function () {
+            swal({
+                title: "正在加载",
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                showCloseButton: false,
+                onOpen: () => {
+                    swal.showLoading()
+                }
+            });
+            $.post("/wechat_zu_admin/public/index.php/api/Appointment/get_appointment", {
+                order_id: $("#appointment").val()
+            }).done((result) => {
+                if (result) {
+                    swal({
+                        title: "订单号：" + result.order_id,
+                        html: '<hr><table class="table"><tbody><tr><td>预约人数</td><td>' + result.user_num +
+                            '</td></tr>' +
+                            '<tr><td>服务开始时间</td><td>' + result.appointment_time +
+                            '</td></tr></tbody></table><hr><br>',
+                        allowOutsideClick: false,
+                        showConfirmButton: true,
+                        showCloseButton: false,
+                    })
+                } else {
+                    swal({
+                        title: "失败",
+                        text: "未查询到该订单的预约情况",
+                        type: "info"
+                    });
+                }
+            });
+        })
+
+        $("#serviceorder").on("click", function () {
+            swal({
+                title: "正在加载",
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                showCloseButton: false,
+                onOpen: () => {
+                    swal.showLoading()
+                }
+            });
+            $.post("/wechat_zu_admin/public/index.php/api/Serviceorder/get_order", {
+                order_id: $('#serviceorder').val()
+            }).done((result) => {
+                if (result) {
+                    var html_string =
+                        `<hr><table class="table"><thead><tr><th>项目类型</th><th>项目编号</th>
+                                        <th>技师工号</th><th>包厢号</th><th>项目价格</th></tr></thead><tbody>`;
+                    var total_price = 0;
+                    for (var i = 0; i < result.length; i++) {
+                        var service_type;
+                        if (result[i].service_type == 1) service_type = "店内服务";
+                        else if (result[i].service_type == 2) service_type = "酒水饮料";
+                        else if (result[i].service_type == 3) service_type = "外卖订单";
+                        total_price += result[i].price;
+                        html_string += `<tr><td>` + service_type + `</td><td>` + result[i].item_id +
+                            `</td><td>` + result[i].job_number +
+                            `</td>
+                                    <td>` + result[i].private_room_number +
+                            `</td><td>` + result[i].price + `￥</td></tr>`
+                    }
+                    html_string += `<hr><tr><td>总计</td> <td></td> <td></td> <td></td> <td>` +
+                        total_price + `￥</td> </tr></tbody></table><hr><br>`;
+                    swal({
+                        title: "订单号：" + result[0].order_id,
+                        html: html_string,
+                        allowOutsideClick: false,
+                        showConfirmButton: true,
+                        showCloseButton: false,
+                    })
+                } else {
+                    swal({
+                        title: "失败",
+                        text: "未查询到该订单的服务信息",
+                        type: "info"
+                    });
+                }
+            });
+        })
+
+        $("#rate").on('click', () => {
+            swal({
+                title: "正在加载",
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                showCloseButton: false,
+                onOpen: () => {
+                    swal.showLoading()
+                }
+            });
+            $.post("/wechat_zu_admin/public/index.php/api/Rate/get_rate", {
+                order_id: $("#rate").val(),
+            }).done((result) => {
+                if (result) {
+                    var html_string =
+                        `<hr><table class="table"><thead><tr><th>服务编号</th>
+                                        <th>评分</th><th>客户留言</th></tr></thead><tbody>`;
+                    var total_price = 0;
+                    for (var i = 0; i < result.length; i++) {
+                        html_string += `<tr><td>` + result[i].service_id + `</td><td>` + result[i].score +
+                            `</td><td>` + result[i].comment +
+                            `</td></tr>`
+                    }
+                    swal({
+                        title: "订单号：" + result[0].order_id,
+                        html: html_string,
+                        allowOutsideClick: false,
+                        showConfirmButton: true,
+                        showCloseButton: false,
+                    })
+                } else {
+                    swal({
+                        title: "未评价",
+                        text: "该订单还未评价",
+                        type: "info"
+                    });
+                }
+            });
+        })
+        /***
+         /*用户-停用
+         function member_stop(obj, id) {
+            layer.confirm('确认要停用吗？', function (index) {
+                $.ajax({
+                    type: 'POST',
+                    url: '',
+                    dataType: 'json',
+                    success: function (data) {
+                        $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="member_start(this,id)" href="javascript:;" title="启用"><i class="Hui-iconfont">&#xe6e1;</i></a>');
+                        $(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已停用</span>');
+                        $(obj).remove();
+                        layer.msg('已停用!', {icon: 5, time: 1000});
+                    },
+                    error: function (data) {
+                        console.log(data.msg);
+                    },
+                });
+            });
+        }
+
+         /*用户-启用
+         function member_start(obj, id) {
+            layer.confirm('确认要启用吗？', function (index) {
+                $.ajax({
+                    type: 'POST',
+                    url: '',
+                    dataType: 'json',
+                    success: function (data) {
+                        $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="member_stop(this,id)" href="javascript:;" title="停用"><i class="Hui-iconfont">&#xe631;</i></a>');
+                        $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已启用</span>');
+                        $(obj).remove();
+                        layer.msg('已启用!', {icon: 6, time: 1000});
+                    },
+                    error: function (data) {
+                        console.log(data.msg);
+                    },
+                });
+            });
+        }
+         ***/
+
+        /*用户-编辑*/
+        function member_edit(title, url, id, w, h) {
+            layer_show(title, url, w, h);
+        }
+
+        /***
+         /*密码-修改
+         function change_password(title, url, id, w, h) {
+            layer_show(title, url, w, h);
+        }
+         ***/
+
+        /*用户-删除*/
+        /**
+        function member_del(obj, id) {
+            layer.confirm('确认要删除吗？', function (index) {
+                $.ajax({
+                    type: 'POST',
+                    url: '',
+                    dataType: 'json',
+                    success: function (data) {
+                        $(obj).parents("tr").remove();
+                        layer.msg('已删除!', {icon: 1, time: 1000});
+                    },
+                    error: function (data) {
+                        console.log(data.msg);
+                    },
+                });
+            });
+        }
+        */
+    </script>
+</body>
+
+</html>

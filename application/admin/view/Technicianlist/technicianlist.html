@@ -77,7 +77,7 @@
                             {$sk}&nbsp;&nbsp;
                             {/volist}
                         </td>
-                        <td class="text-l">7</td>
+                        <td class="text-l">{$score[$k-1]}</td>
                         <td>{if condition="is_null($it.inviter)"}无 {else /} {$it.inviter} {/if}
                         </td>
                         <td>{if condition="$it.in_job==1"}在职{else /}离职{/if}

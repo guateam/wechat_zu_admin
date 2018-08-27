@@ -64,4 +64,15 @@
             }
             else return 0;
         }
+
+        public function get_order_by_job_number($job_number){
+            $data = UserModel::all(["job_number"=>$job_number]);
+            $job = [];
+            if($data){
+                foreach($data as $dt){
+                    array_push($job,[$dt->order_id,$dt->service_type,$dt->item_id]);
+                }
+                return $job;
+            }
+        }
     }

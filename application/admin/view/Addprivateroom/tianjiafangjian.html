@@ -14,7 +14,7 @@
 <script type="text/javascript" src="lib/html5shiv.js"></script>
 <script type="text/javascript" src="lib/respond.min.js"></script>
 <![endif]-->
-{include file="common/common_css"}
+    {include file="common/common_css"}
     <!--[if IE 6]>
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
@@ -31,21 +31,21 @@
                 <label class="form-label col-xs-4 col-sm-3">
 					<span class="c-red">*</span>包厢号：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="roomid" name="username">
+                    <input type="text" class="input-text" value="" placeholder="" id="roomid" name="roomid">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-3">
 					<span class="c-red">*</span>包厢名：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="name" name="capacity">
+                    <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-3">
 						<span class="c-red">*</span>容量：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="capacity" name="capacity">
+                    <input type="number" class="input-text" value="1" placeholder="最小1，最大25" id="capacity" name="capacity">
                 </div>
             </div>
             <div class="row cl">
@@ -61,7 +61,7 @@
             </div>
             <div class="row cl">
                 <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-                    <input class="btn btn-primary radius" type="button" value="&nbsp;&nbsp;提交&nbsp;&nbsp;" id='add'>
+                    <button class="btn btn-primary radius" type="button" id='add'>&nbsp;&nbsp;提交&nbsp;&nbsp;</button>
                 </div>
             </div>
         </form>
@@ -104,7 +104,16 @@
                     uploadfile: {
                         required: true,
                     },
-
+                    name: {
+                        required: true
+                    },
+                    capacity: {
+                        required: true,
+                        range: [1, 25]
+                    },
+                    roomid: {
+                        required: true
+                    }
                 },
                 onkeyup: false,
                 focusCleanup: true,
@@ -119,23 +128,29 @@
         });
 
         $('#add').click(() => {
-            $.post('/wechat_zu_admin/public/index.php/admin/addprivateroom/add', {
-                name: $('#name').val(),
-                roomid: $('#roomid').val(),
-                capacity: $('#capacity').val(),
-                servicetype: $('#servicetype').val()
-            }).done((data) => {
-                if (data.status == 1) {
-                    swal('成功', '房间已添加', 'success').then((ok) => {
-                        parent.location.reload()
-                        var index = parent.layer.getFrameIndex(window.name);
-                        //parent.$('.btn-refresh').click();
-                        parent.layer.close(index);
-                    })
-                } else {
-                    swal('失败', '房间添加失败', 'error')
-                }
-            })
+            if ($('#name').val() != '' && $('#roomid').val() != '' && $('#capacity').val() != '') {
+                $.post('/wechat_zu_admin/public/index.php/admin/addprivateroom/add', {
+                    name: $('#name').val(),
+                    roomid: $('#roomid').val(),
+                    capacity: $('#capacity').val(),
+                    servicetype: $('#servicetype').val()
+                }).done((data) => {
+                    if (data.status == 1) {
+                        swal('成功', '房间已添加', 'success').then((ok) => {
+                            parent.location.reload()
+                            var index = parent.layer.getFrameIndex(window.name);
+                            //parent.$('.btn-refresh').click();
+                            parent.layer.close(index);
+                        })
+                    } else if (data.status == -1) {
+                        swal('失败', '房间名或房间号重复', 'error')
+                    } else {
+                        swal('失败', '房间添加失败', 'error')
+                    }
+                })
+            } else {
+                swal('失败', '请输入所有数据', 'error')
+            }
         })
     </script>
     <!--/请在上方写此页面业务相关的脚本-->

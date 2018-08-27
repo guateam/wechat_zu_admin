@@ -69,6 +69,7 @@
                 </thead>
                 <tbody>
                     {volist name="$order" id="it" key="k"}
+                    <p hidden id="state{$k-1}">
                         {if condition="$it.payment_method==1"}微信支付{elseif condition="$it.payment_method==2"}支付宝
                         {elseif condition="$it.payment_method==3"}会员卡{elseif condition="$it.payment_method==4"}现金
                         {else /}未支付{/if}
@@ -87,6 +88,7 @@
                         
                         <td class="td-manage">
                             <button value="{$it.order_id}" onclick="appointment(this)" id="appointment">预约情况</button>
+                            <button value="{$it.order_id}" onclick="serviceorder(this,'{$k-1}')" id="serviceorder">服务情况</button>
                             <button value="{$it.order_id}" onclick="rate(this)" id="rate">评价情况</button>
                         </td>
                     </tr>

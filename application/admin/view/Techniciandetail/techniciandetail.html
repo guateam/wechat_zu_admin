@@ -1,4 +1,3 @@
-<!--_meta 作为公共模版分离出去-->
 <!DOCTYPE HTML>
 <html>
 
@@ -8,8 +7,6 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 	<meta http-equiv="Cache-Control" content="no-siteapp" />
-	<link rel="Bookmark" href="/favicon.ico">
-	<link rel="Shortcut Icon" href="/favicon.ico" />
 	<!--[if lt IE 9]>
 <script type="text/javascript" src="lib/html5shiv.js"></script>
 <script type="text/javascript" src="lib/respond.min.js"></script>
@@ -19,133 +16,77 @@
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
-	<!--/meta 作为公共模版分离出去-->
-
-	<title>添加用户 - H-ui.admin v3.1</title>
+	<title>技师详情</title>
 </head>
 
 <body>
-	<article class="page-container">
-		<form action="" method="post" class="form form-horizontal" id="form-member-add">
-			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-3">姓名：</label>
-				<div class="formControls col-xs-8 col-sm-9">
-					{$technician.name}
-				</div>
-			</div>
-			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-3">性别：</label>
-				<div class="formControls col-xs-8 col-sm-9 skin-minimal">
-					{if condition="$technician.gender==1"} 男 {elseif condition="$technician.gender==2"/} 女 {else /} 未知 {/if}
-				</div>
-			</div>
-			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-3">手机号：</label>
-				<div class="formControls col-xs-8 col-sm-9">
-					{$technician.phone_number}
-				</div>
-			</div>
-			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-3">工号：</label>
-				<div class="formControls col-xs-8 col-sm-9">
-					{$technician.job_number}
-				</div>
-			</div>
-			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-3">掌握技能：</label>
-				{volist name="$skill" id="it"}
-				<div class="formControls col-xs-8 col-sm-9">
-					{$it}
-				</div>
-				{/volist}
-			</div>
-			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-3">身份证号：</label>
-				<div class="formControls col-xs-8 col-sm-9">
-					{$technician.id_number}
-				</div>
-			</div>
-			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-3">身份证照：</label>
-				<div class="formControls col-xs-8 col-sm-9">
-					<img src="{$technician.idcard_photo}" />
-					<img src="{$technician.idcard_photo_2}" />
-				</div>
-			</div>
-			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-3">VCR介绍：</label>
-				<div class="formControls col-xs-8 col-sm-9">
-					<video src="{$technician.vcr}">
-				</div>
-			</div>
-			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-3">文字介绍：</label>
-				<div class="formControls col-xs-8 col-sm-9">
-					{$technician.description}
-				</div>
-			</div>
-			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-3">生日：</label>
-				<div class="formControls col-xs-8 col-sm-9">
-					{$technician.birthday}
-				</div>
-			</div>
-		</form>
-	</article>
-
+	<div class="cl pd-20" style=" background-color:#5bacb6">
+		<img class="avatar size-XL l" src="{$technician.photo}">
+		<dl style="margin-left:80px; color:#fff">
+			<dt>
+				<span class="f-18">{$technician.name}</span>
+				<!--<span class="pl-10 f-12">余额：40</span>-->
+			</dt>
+			<!--<dd class="pt-10 f-12" style="margin-left:0">这家伙很懒，什么也没有留下</dd>-->
+		</dl>
+	</div>
+	<div class="pd-20">
+		<table class="table">
+			<tbody>
+				<tr>
+					<th class="text-r" width="80">性别：</th>
+					<td>{if condition="$technician.gender==1"} 男 {elseif condition="$technician.gender==2"/} 女 {else /} 未知 {/if}</td>
+				</tr>
+				<tr>
+					<th class="text-r">工号：</th>
+					<td>{$technician.job_number}</td>
+				</tr>
+				<tr>
+					<th class="text-r">手机号：</th>
+					<td>{$technician.phone_number}</td>
+				</tr>
+				<tr>
+					<th class="text-r">简介：</th>
+					<td>{$technician.description}</td>
+				</tr>
+				<tr>
+					<th class="text-r">生日：</th>
+					<td>{$technician.birthday}</td>
+				</tr>
+				<tr>
+					<th class="text-r">评分：</th>
+					<td>7</td>
+				</tr>
+				<tr>
+					<th class="text-r">介绍人：</th>
+					<td>刘先生</td>
+				</tr>
+				<tr>
+					<th class="text-r">掌握技能：</th>
+					{volist name="$skill" id="it"}
+					<td>
+						{$it}
+					</td>
+					{/volist}
+				</tr>
+				<tr>
+					<th class="text-r">身份证号：</th>
+					<td>{$technician.id_number}</td>
+				</tr>
+				<tr>
+					<th class="text-r">身份证照：</th>
+						<td><img class="avatar size-XL l" src="{$technician.idcard_photo}"></td>
+						<td><img class="avatar size-XL l" src="{$technician.idcard_photo_2}"></td>
+				</tr>
+			</tbody>
+		</table>
+		<video src="{$technician.vcr}" controls="controls" style="margin: 30px auto 20px 50px ">
+			your browser does not support the video tag
+		</video>
+	</div>
 	{include file="common/common_script"}
+
 	<!--请在下方写此页面业务相关的脚本-->
-	<script type="text/javascript" src="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js"></script>
-	<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
-	<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
-	<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
-	<script type="text/javascript">
-		(function ($) {
-			$.getUrlParam = function (name) {
-				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-				var r = window.location.search.substr(1).match(reg);
-				if (r != null) return unescape(r[2]);
-				return null;
-			}
-		})(jQuery);
-
-		$(function () {
-			$('.skin-minimal input').iCheck({
-				checkboxClass: 'icheckbox-blue',
-				radioClass: 'iradio-blue',
-				increaseArea: '20%'
-			});
-
-			$("#form-member-add").validate({
-				rules: {
-					username: {
-						required: true,
-						minlength: 2,
-						maxlength: 16
-					},
-					sex: {
-						required: true,
-					},
-					mobile: {
-						required: true,
-						isMobile: true,
-					},
-					email: {
-						required: true,
-						email: true,
-					},
-					uploadfile: {
-						required: true,
-					},
-
-				},
-				onkeyup: false,
-				focusCleanup: true,
-				success: "valid",
-			});
-		});
-	</script>
-	<!--/请在上方写此页面业务相关的脚本-->
 </body>
 
 </html>

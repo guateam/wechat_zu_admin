@@ -76,13 +76,25 @@
          * @param string $ori_job_number    修改前的工号(添加新技师时不提供该参数)
          * 
          */
-        private function check_repeat($mobile,$job_number,$ori_job_number=""){
-            
+        private function check_repeat($name,$mobile,$job_number,$ori_job_number){
                 $repeat = UserModel::get(['phone_number'=>$mobile]);
-                if($repeat->job_number !=$ori_job_number)return 0;
-
+                if($repeat){
+                    if($repeat->job_number !=$ori_job_number){
+                        return 0;
+                    }
+                }
                 $repeat = UserModel::get(['job_number'=>$job_number]);
-                if($repeat->job_number !=$ori_job_number)return -1;
+                if($repeat){
+                    if($repeat->job_number !=$ori_job_number){
+                        return -1;
+                    }
+                }
+                $repeat = UserModel::get(['name'=>$name]);
+                if($repeat){
+                    if($repeat->job_number !=$ori_job_number){
+                        return -2;
+                    }
+                }
             return 1;
         }
         /**
@@ -95,13 +107,14 @@
          * @param string $skill      技师的技能
          * 
          */
-        public function add_technician($name,$gender,$mobile,$job_number,$skill=''){
-            if($skill=='')return json(['status'=>-2]);
+        public function add_technician($name,$idcard,$birthday,$gender,$mobile,$job_number,$skill=''){
+            if($skill=='')return json(['status'=>-3]);
 
-            $is_repeat = self::check_repeat($mobile,$job_number,$ori_job_number);
+            $is_repeat = self::check_repeat($name,$mobile,$job_number,"");
             if($is_repeat!=1)return json(["status"=>$is_repeat]);
 
-            $data = new UserModel(['name'=>$name,'gender'=>$gender,'phone_number'=>$mobile,'job_number'=>$job_number]);
+            $data = new UserModel(['name'=>$name,'gender'=>$gender,'phone_number'=>$mobile,
+                                    'job_number'=>$job_number,'birthday'=>$birthday,"id_number"=>$idcard]);
             $data->save();
             for($i=0;$i<count($skill);$i++){
                 $skill_info = new \app\api\model\Skill(['job_number'=>$job_number,'service_id'=>$skill[$i],'extra_income'=>0]);
@@ -121,9 +134,9 @@
          * @param string $skill             修改后的技能
          * 
          */
-        public function update_technician($ori_job_number,$name,$gender,$mobile,$job_number,$skill){
+        public function update_technician($ori_job_number,$name,$idcard,$birthday,$gender,$mobile,$job_number,$skill){
 
-            $is_repeat = self::check_repeat($mobile,$job_number,$ori_job_number);
+            $is_repeat = self::check_repeat($name,$mobile,$job_number,$ori_job_number);
             if($is_repeat!=1)return json(["status"=>$is_repeat]);
 
             $data = UserModel::get(["job_number"=>$ori_job_number]);
@@ -131,6 +144,8 @@
             $data->gender = $gender;
             $data->phone_number=$mobile;
             $data->job_number=$job_number;
+            $data->id_number = $idcard;
+            $data->birthday=$birthday;
             $data->save();
             $skill_info = \app\api\model\Skill::all(['job_number'=>$ori_job_number]);
             foreach($skill_info as $it){
@@ -154,5 +169,20 @@
             $data->inviter=$inviter_job_number;
             $data->save();
             return json(["status"=>1]);
+        }
+        /**
+         * 改变技师在职状态
+         * 2018-8-25    创建    袁宜照
+         * @param string $job_number            技师工号
+         *
+         */
+        public function change_in_job($job_number){
+            $data = UserModel::get(["job_number"=>$job_number]);
+            if($data){
+                $data->in_job=abs($data->in_job-1);
+                $data->save();
+                return json(["status"=>1]);
+            }
+            return json(['status'=>0]);
         }
     }

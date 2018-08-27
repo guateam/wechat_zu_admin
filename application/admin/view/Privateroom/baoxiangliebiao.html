@@ -193,7 +193,7 @@
         /*用户-删除*/
         function member_del(obj, id) {
             layer.confirm('确认要删除吗？', function(index) {
-                $.post('__ROOT__/admin/privateroom/delete/id/' + id).done((data) => {
+                $.post('__ROOT__/index.php/admin/privateroom/delete/id/' + id).done((data) => {
                     if (data.status == 1) {
                         $(obj).parents("tr").remove();
                         $('#number').text($('#number').text() - 1)

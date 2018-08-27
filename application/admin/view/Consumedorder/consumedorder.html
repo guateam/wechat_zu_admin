@@ -180,10 +180,20 @@
                 if (result) {
                     swal({
                         title: "订单号：" + result.order_id,
-                        html: '<hr><table class="table"><tbody><tr><td>预约人数</td><td>' + result.user_num +
-                            '</td></tr>' +
-                            '<tr><td>预约服务时间</td><td>' + result.appointment_time +
-                            '</td></tr></tbody></table><hr><br>',
+                        html: `<hr>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>预约人数</td>
+                                    <td>` + result.user_num +`</td>
+                                </tr>
+                                <tr>
+                                    <td>预约服务时间</td>
+                                    <td>` + result.appointment_time +`</td>
+                                </tr>
+                                </tbody>
+                        </table>
+                        <hr><br>`,
                         allowOutsideClick: false,
                         showConfirmButton: true,
                         showCloseButton: false,
@@ -291,13 +301,22 @@
             }).done((result) => {
                 if (result) {
                     var html_string =
-                        `<hr><table class="table"><thead><tr><th>服务编号</th>
-                                        <th>评分</th><th>客户留言</th></tr></thead><tbody>`;
+                        `<hr><table class="table">
+                                <thead>
+                                    <tr bgcolor="#a2bce8">
+                                        <th>服务编号</th>
+                                        <th>评分</th>
+                                        <th>客户留言</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
                     var total_price = 0;
                     for (var i = 0; i < result.length; i++) {
-                        html_string += `<tr><td>` + result[i].service_id + `</td><td>` + result[i].score +
-                            `</td><td>` + result[i].comment +
-                            `</td></tr>`
+                        html_string += `<tr>
+                                            <td>` + result[i].service_id + `</td>
+                                            <td>` + result[i].score +`</td>
+                                            <td>` + result[i].comment +`</td>
+                                        </tr>`
                     }
                     swal({
                         title: "订单号：" + result[0].order_id,

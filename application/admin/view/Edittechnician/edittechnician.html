@@ -272,8 +272,10 @@
 							} else if (result.status == -2) {
 								swal("失败", "存在相同的技师名，请加标注以区分", "error");
 							} else if (result.status == -3) {
-								swal("失败", "未指定技师的技能", "error");
-							}
+                                swal("失败", "已存在相同的身份证号", "error");
+                            }else if (result.status == -4) {
+                                swal("失败", "未指定技师的技能", "error");
+                            }
 						}
 					});
 				}

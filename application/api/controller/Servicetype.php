@@ -50,6 +50,18 @@
             if($service){
                 return $service->price;
             }
+            return 0;
+        }
+        /**
+         * 获取服务折扣情况
+         * 2018-8-26 创建 袁宜照
+         * @param int $id 服务id
+         */
+        public static function getservicediscount($id){
+            $service= Service::get(['ID'=>$id]);
+            if($service){
+                return $service->discount;
+            }
             return "未知";
         }
         /**

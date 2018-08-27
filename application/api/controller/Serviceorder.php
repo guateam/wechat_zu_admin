@@ -18,6 +18,7 @@
                     if($order->service_type==1){
                         $ctrl = new  \app\api\controller\Servicetype();
                         $price = $ctrl->getserviceprice($order->item_id);
+                        $price *=$ctrl->getservicediscount($order->item_id)/100.0;
                         $order->price=$price;
                     //酒水饮料
                     }else if($order->service_type==2){
@@ -46,6 +47,7 @@
                         if($order->service_type==1){
                             $ctrl = new  \app\api\controller\Servicetype();
                             $price = $ctrl->getserviceprice($order->item_id);
+                            $price *=$ctrl->getservicediscount($order->item_id)/100.0;
                             $order->price=$price;
                         //酒水饮料
                         }else if($order->service_type==2){

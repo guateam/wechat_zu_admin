@@ -31,8 +31,8 @@
     </nav>
     <div class="page-container">
         <div class="text-c"> 日期范围：
-            <input type="text" onfocus="WdatePicker({})" id="datemin" class="input-text Wdate" style="width:120px;"> -
-            <input type="text" onfocus="WdatePicker({})" id="datemax" class="input-text Wdate" style="width:120px;">
+            <input type="text" onfocus="WdatePicker({})" value="" id="datemin" class="input-text Wdate" style="width:120px;"> -
+            <input type="text" onfocus="WdatePicker({})" value="" id="datemax" class="input-text Wdate" style="width:120px;">
             <button type="submit" class="btn btn-success radius" id="search" name="">
                 <i class="Hui-iconfont">&#xe665;</i> 搜记录
             </button>
@@ -45,48 +45,47 @@
             <div class="">
                 <label class="form-label col-xs-4 col-sm-1" style="padding-left: 15px;padding-right: 0">订单类型：</label>
                 <div class="formControls col-xs-3 col-sm-3">
-                    <select name="articletype" class="select">
-                        <option value="0">全部类型</option>
-                        <option value="1">订单取消</option>
-                        <option value="2">预约</option>
-                        <option value="3">服务中</option>
-                        <option value="4">等待支付</option>
-                        <option value="5">支付完成</option>
-                        <option value="6">评价完成</option>
+                    <select name="articletype" class="select" id="down_search">
+                        <option value="全部类型">全部类型</option>
+                        <option value="订单取消">订单取消</option>
+                        <option value="预约">预约</option>
+                        <option value="服务中">服务中</option>
+                        <option value="等待支付">等待支付</option>
+                        <option value="支付完成">支付完成</option>
+                        <option value="评价完成">评价完成</option>
                     </select>
                 </div>
             </div>
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
-                        <th width="40">选择</th>
                         <th width="130">订单号</th>
                         <th width="150">订单生成时间</th>
-                        <th width="40">预约人</th>
+                        <th width="140">预约人用户名及手机号</th>
                         <th width="150">订单状态</th>
-                        <th width="120">付款顾客</th>
-                        <th width="60">支付方式</th>
+                        <th width="120">付款顾客用户名及手机号</th>
                         <th width="150">操作</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {volist name="$order" id="it"}
-                    <tr class="text-c">
-                        <td>
-                            <input type="checkbox" value="1" name="">
-                        </td>
+                    {volist name="$order" id="it" key="k"}
+                    <p hidden id="state">
+                        {if condition="$it.payment_method==1"}微信支付{elseif condition="$it.payment_method==2"}支付宝
+                        {elseif condition="$it.payment_method==3"}会员卡{elseif condition="$it.payment_method==4"}现金
+                        {else /}未支付{/if}
+                    </p>
+                    <tr class="text-c" id="row{$k-1}">
                         <td>{$it.order_id}</td>
-                        <td>{$it.generated_time}</td>
-                        <td>{$it.user_id}</td>
+                        <td id = "time{$k-1}">{$it.generated_time}</td>
                         <td>
+                            {$it.user_id},{$phone[$k-1]}
+                        </td>
+                        <td id="total_state{$k-1}">
                             {if condition="$it.state==0"}订单取消 {elseif condition="$it.state==1"}预约 {elseif condition="$it.state==2"}服务中 {elseif condition="$it.state==3"}等待支付
                             {elseif condition="$it.state==4"}支付完成 {elseif condition="$it.state==5"}评价完成 {/if}
                         </td>
-                        <td class="">{$it.payment_user_id}</td>
-                        <td class="">
-                            {if condition="$it.payment_method==1"}微信支付 {elseif condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡
-                            {elseif condition="$it.payment_method==4"}现金 {else /}未支付 {/if}
-                        </td>
+                        <td class="">{$it.payment_user_id},{$phone2[$k-1]}</td>
+                        
                         <td class="td-manage">
                             <button value="{$it.order_id}" id="appointment">预约情况</button>
                             <button value="{$it.order_id}" id="serviceorder">服务情况</button>
@@ -116,7 +115,7 @@
                     //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
                     {
                         "orderable": false,
-                        "aTargets": [0, 4, 7]
+                        "aTargets": [0, 2, 3]
                     } // 制定列不参与排序
                 ]
             });
@@ -131,6 +130,40 @@
         function zhidingren(title, url, id, w, h) {
             layer_show(title, url, w, h);
         }
+        $("#down_search").on("change",()=>{
+            target=$("#down_search").val();
+            for(var i = 0;i<'{$count}';i++){
+                $("#row"+i).attr("hidden",false);
+                var total_state = $("#total_state"+i).html();
+                var reg = new RegExp(" ","g");
+                total_state = total_state.replace(reg,"");
+                var reg = new RegExp("[\t\n]","g");
+                total_state = total_state.replace(reg,"");
+                if(total_state != target && target!="全部类型")
+                {
+                    $("#row"+i).attr("hidden",true);
+                }
+            }
+        })
+        $("#search").on("click",()=>{
+            var datemin = $('#datemin').val();
+            var datemax =$("#datemax").val();
+            if(datemin > datemax){
+                temp = datemin;
+                datemin=datemax;
+                datemax=temp;
+            }
+            if(datemin !=""&& datemax!=""){
+                for(var i = 0;i<'{$count}';i++){
+                    $("#row"+i).attr("hidden",false);
+                    var time = $("#time"+i).html();
+                    time = time.slice(0,10);
+                    if(time > datemax || time < datemin){
+                        $("#row"+i).attr("hidden",true);
+                    }
+                }
+            }
+        })
         $("#appointment").on("click", function () {
             swal({
                 title: "正在加载",
@@ -180,8 +213,17 @@
             }).done((result) => {
                 if (result) {
                     var html_string =
-                        `<hr><table class="table"><thead><tr><th>项目类型</th><th>项目编号</th>
-                                        <th>技师工号</th><th>包厢号</th><th>折扣</th><th>项目价格</th></tr></thead><tbody>`;
+                        `<hr><table class="table">
+                                <thead>
+                                    <tr bgcolor="#a2bce8">
+                                        <th width="100">项目类型</th>
+                                        <th width="60">项目编号</th>
+                                        <th width="80">技师工号</th>
+                                        <th width="80">包厢号</th>
+                                        <th width="60">项目价格</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
                     var total_price = 0;
                     for (var i = 0; i < result.length; i++) {
                         var service_type;
@@ -189,14 +231,34 @@
                         else if (result[i].service_type == 2) service_type = "酒水饮料";
                         else if (result[i].service_type == 3) service_type = "外卖订单";
                         total_price += result[i].price;
-                        html_string += `<tr><td>` + service_type + `</td><td>` + result[i].item_id +
-                            `</td><td>` + result[i].job_number +
-                            `</td>
-                                    <td>` + result[i].private_room_number +
-                            `</td><td>` + result[i].price + `￥</td></tr>`
+                        clr = "#d4d4d4";
+                        if(i%2==0)clr="ffffff"
+                        html_string += `<tr bgcolor="`+clr+`">
+                                            <td>` + service_type + `</td>
+                                            <td>` + result[i].item_id +`</td>
+                                            <td>` + result[i].job_number +`</td>
+                                            <td>` + result[i].private_room_number +`</td>
+                                            <td>` + result[i].price + `￥</td>
+                                        </tr>`
                     }
-                    html_string += `<hr><tr><td>总计</td> <td></td> <td></td> <td></td> <td></td> <td>` +
-                        total_price + `￥</td> </tr></tbody></table><hr><br>`;
+                    state = $("#state").html();
+                    html_string += `<tr bgcolor="#dae8ff">
+                                        <td>总计</td>
+                                        <td></td>
+                                        <td></td> 
+                                        <td></td> 
+                                        <td>` +total_price + `￥</td>
+                                    </tr>
+                                    <tr bgcolor="#dae8ff">
+                                        <td>支付状态</td>
+                                        <td></td> 
+                                        <td></td> 
+                                        <td></td>  
+                                        <td>`+state+`</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <hr><br>`;
                     swal({
                         title: "订单号：" + result[0].order_id,
                         html: html_string,

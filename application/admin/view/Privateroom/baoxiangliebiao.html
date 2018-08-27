@@ -250,8 +250,11 @@
         /**
          * 全选实现的代码
          * */
-        $('#checkall').on('ifChanged', () => {
-            $("input[name='id']").iCheck('toggle');
+        $('#checkall').on('ifChecked', () => {
+            $("input[name='id']").iCheck('check');
+        })
+        $('#checkall').on('ifUnchecked', () => {
+            $("input[name='id']").iCheck('uncheck');
         })
     </script>
 </body>

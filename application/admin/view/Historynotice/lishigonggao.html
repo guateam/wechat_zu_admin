@@ -49,9 +49,9 @@
 				</tr>
 				<tr class="text-c">
 					<th width="25">选择</th>
+					<th width="160">日期</th>
 					<th width="150">标题</th>
 					<th width="">内容</th>
-					<th width="160">日期</th>
 					<th width="70">操作</th>
 				</tr>
 			</thead>
@@ -61,9 +61,9 @@
 					<td>
 						<input type="checkbox" value="{$it.ID}" name="{$k}">
 					</td>
+					<td>{$it.date}</td>
 					<td>{$it.title}</td>
 					<td>{$it.text}</td>
-					<td>{$it.date}</td>
 					<td class="f-14">
 						<a title="删除" href="javascript:;" onclick="admin_role_del(this,'{$it.ID}')" class="ml-5" style="text-decoration:none">
 							<i class="Hui-iconfont">&#xe6e2;</i>

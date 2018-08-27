@@ -3,9 +3,9 @@ namespace app\admin\controller;
 use think\Controller;
 use \app\api\model\ServiceType as UserModel;
 
-class AddService extends Controller{
+class Addservice extends Controller{
 
-    public function AddService(){
+    public function Addservice(){
         $ctrl = new \app\api\controller\Servicetype();
         return $this->fetch('addservice');
     }

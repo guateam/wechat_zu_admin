@@ -9,7 +9,7 @@
          * 
          */
         public function count_all(){
-            $data = UserModel::all();
+            $data = Service::all();
             return count($data);
         }
         /**

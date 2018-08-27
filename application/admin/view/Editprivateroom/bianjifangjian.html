@@ -129,7 +129,7 @@
         });
         $('#edit').click(() => {
             if ($('#name').val() != '' && $('#roomid').val() != '' && $('#capacity').val() != '') {
-                $.post('/wechat_zu_admin/public/admin/editprivateroom/edit', {
+                $.post('__ROOT__/index.php/public/admin/editprivateroom/edit', {
                     id: '{$data.ID}',
                     name: $('#name').val(),
                     roomid: $('#roomid').val(),

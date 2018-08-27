@@ -129,7 +129,7 @@
 
         $('#add').click(() => {
             if ($('#name').val() != '' && $('#roomid').val() != '' && $('#capacity').val() != '') {
-                $.post('/wechat_zu_admin/public/index.php/admin/addprivateroom/add', {
+                $.post('__ROOT__/index.php/public/index.php/admin/addprivateroom/add', {
                     name: $('#name').val(),
                     roomid: $('#roomid').val(),
                     capacity: $('#capacity').val(),

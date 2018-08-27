@@ -87,9 +87,9 @@
                         <td class="">{$it.payment_user_id},{$phone2[$k-1]}</td>
                         
                         <td class="td-manage">
-                            <button value="{$it.order_id}" id="appointment">预约情况</button>
-                            <button value="{$it.order_id}" id="serviceorder">服务情况</button>
-                            <button value="{$it.order_id}" id="rate">评价情况</button>
+                            <button value="{$it.order_id}" onclick="appointment(this)" id="appointment">预约情况</button>
+                            <button value="{$it.order_id}" onclick="serviceorder(this)" id="serviceorder">服务情况</button>
+                            <button value="{$it.order_id}" onclick="rate(this)" id="rate">评价情况</button>
                         </td>
                     </tr>
                     {/volist}
@@ -120,7 +120,8 @@
                 ]
             });
         });
-
+        var time_button_click = false;
+        var down_click = false;
         /*用户-添加*/
         function member_add(title, url, w, h) {
             layer_show(title, url, w, h);
@@ -146,6 +147,7 @@
             }
         })
         $("#search").on("click",()=>{
+
             var datemin = $('#datemin').val();
             var datemax =$("#datemax").val();
             if(datemin > datemax){
@@ -164,7 +166,8 @@
                 }
             }
         })
-        $("#appointment").on("click", function () {
+        
+        function appointment(e){
             swal({
                 title: "正在加载",
                 allowOutsideClick: false,
@@ -175,7 +178,7 @@
                 }
             });
             $.post("__ROOT__/index.php/api/Appointment/get_appointment", {
-                order_id: $("#appointment").val()
+                order_id: $(e).val()
             }).done((result) => {
                 if (result) {
                     swal({
@@ -206,9 +209,8 @@
                     });
                 }
             });
-        })
-
-        $("#serviceorder").on("click", function () {
+        }
+        function serviceorder(e){
             swal({
                 title: "正在加载",
                 allowOutsideClick: false,
@@ -219,7 +221,7 @@
                 }
             });
             $.post("__ROOT__/index.php/api/Serviceorder/get_order", {
-                order_id: $('#serviceorder').val()
+                order_id: $(e).val()
             }).done((result) => {
                 if (result) {
                     var html_string =
@@ -284,9 +286,8 @@
                     });
                 }
             });
-        })
-
-        $("#rate").on('click', () => {
+        }
+        function rate(e){
             swal({
                 title: "正在加载",
                 allowOutsideClick: false,
@@ -297,7 +298,7 @@
                 }
             });
             $.post("__ROOT__/index.php/api/Rate/get_rate", {
-                order_id: $("#rate").val(),
+                order_id: $(e).val(),
             }).done((result) => {
                 if (result) {
                     var html_string =
@@ -333,7 +334,9 @@
                     });
                 }
             });
-        })
+        }
+
+        
         /***
          /*用户-停用
          function member_stop(obj, id) {

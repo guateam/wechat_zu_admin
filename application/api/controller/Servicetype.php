@@ -4,6 +4,15 @@
     use \app\api\model\Servicetype as Service;
     class Servicetype extends Controller{
         /**
+         * 获取服务总数
+         * 2018-8-27    创建   赖品钊
+         * 
+         */
+        public function count_all(){
+            $data = UserModel::all();
+            return count($data);
+        }
+        /**
          * 获取服务种类
          * 2018-8-24 创建 张煜
          * @param int $id 服务所属id

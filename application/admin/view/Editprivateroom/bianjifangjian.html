@@ -129,7 +129,7 @@
         });
         $('#edit').click(() => {
             if ($('#name').val() != '' && $('#roomid').val() != '' && $('#capacity').val() != '') {
-                $.post('__ROOT__/index.php/public/admin/editprivateroom/edit', {
+                $.post('__ROOT__/index.php/admin/editprivateroom/edit', {
                     id: '{$data.ID}',
                     name: $('#name').val(),
                     roomid: $('#roomid').val(),

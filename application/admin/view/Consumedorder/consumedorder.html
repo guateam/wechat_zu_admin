@@ -80,10 +80,7 @@
                         <td>
                             {$it.user_id},{$phone[$k-1]}
                         </td>
-                        <td id="total_state{$k-1}">
-                            {if condition="$it.state==0"}订单取消 {elseif condition="$it.state==1"}预约 {elseif condition="$it.state==2"}服务中 {elseif condition="$it.state==3"}等待支付
-                            {elseif condition="$it.state==4"}支付完成 {elseif condition="$it.state==5"}评价完成 {/if}
-                        </td>
+                        <td id="total_state{$k-1}">{if condition="$it.state==0"}订单取消 {elseif condition="$it.state==1"}预约 {elseif condition="$it.state==2"}服务中 {elseif condition="$it.state==3"}等待支付{elseif condition="$it.state==4"}支付完成 {elseif condition="$it.state==5"}评价完成 {/if}</td>
                         <td class="">{$it.payment_user_id},{$phone2[$k-1]}</td>
                         
                         <td class="td-manage">
@@ -105,8 +102,7 @@
     <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
     <script type="text/javascript">
-        $(function () {
-            $('.table-sort').dataTable({
+    var  table = $('.table-sort').DataTable({
                 "aaSorting": [
                     [1, "desc"]
                 ], //默认第几个排序
@@ -119,6 +115,22 @@
                     } // 制定列不参与排序
                 ]
             });
+$.fn.dataTable.ext.search.push(
+    function( settings, data, dataIndex ) {
+        var min  = $('#datemin').val();
+        var max =$("#datemax").val();
+        var time = data[1]; // use data for the age column
+        if(min=="" || max=="")return true;
+
+        if ( ( time>=min  && time<=max )  )
+        {
+            return true;
+        }
+        return false;
+    }
+);
+        $(function () {
+            
         });
         var time_button_click = false;
         var down_click = false;
@@ -133,38 +145,14 @@
         }
         $("#down_search").on("change",()=>{
             target=$("#down_search").val();
-            for(var i = 0;i<'{$count}';i++){
-                $("#row"+i).attr("hidden",false);
-                var total_state = $("#total_state"+i).html();
-                var reg = new RegExp(" ","g");
-                total_state = total_state.replace(reg,"");
-                var reg = new RegExp("[\t\n]","g");
-                total_state = total_state.replace(reg,"");
-                if(total_state != target && target!="全部类型")
-                {
-                    $("#row"+i).attr("hidden",true);
-                }
+            if(target!="全部类型")table.columns(3).search(target).draw();
+            else{
+                table.columns(3).search("").draw();
             }
+
         })
         $("#search").on("click",()=>{
-
-            var datemin = $('#datemin').val();
-            var datemax =$("#datemax").val();
-            if(datemin > datemax){
-                temp = datemin;
-                datemin=datemax;
-                datemax=temp;
-            }
-            if(datemin !=""&& datemax!=""){
-                for(var i = 0;i<'{$count}';i++){
-                    $("#row"+i).attr("hidden",false);
-                    var time = $("#time"+i).html();
-                    time = time.slice(0,10);
-                    if(time > datemax || time < datemin){
-                        $("#row"+i).attr("hidden",true);
-                    }
-                }
-            }
+            table.draw();
         })
         
         function appointment(e){

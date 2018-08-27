@@ -32,6 +32,9 @@
          * @param mixed $servicetype 房间可提供的服务类型
          */
         public function add($name,$roomid,$capacity,$servicetype){
+            if(Room::get(['name'=>$name]) || Room::get(['room_id'=>$roomid])){
+                return -1;
+            }
             $room=new Room();
             $room->data([
                 'name'=>$name,
@@ -76,6 +79,13 @@
          * @param mixed $servicetype 房间可提供的服务类型
          */
         public function edit($id,$name,$roomid,$capacity,$servicetype){
+            if(Room::get(['name'=>$name]) || Room::get(['room_id'=>$roomid])){
+                $room1=Room::get(['name'=>$name]);
+                $room2=Room::get(['room_id'=>$roomid]);
+                if($room1->ID!=$id || $room2->ID!=$id){
+                    return -1;
+                }
+            }
             $room = Room::get(['ID'=>$id]);
             if($room){
                 $room->data([

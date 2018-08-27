@@ -233,8 +233,6 @@
                     })
                     phone = $("#mobile").val();
                     job_number = $("#job_number").val();
-                    alert(idcard);
-                    alert(birthday);
                     $(form).ajaxSubmit({
                         type: 'post', // 提交方式 get/post
                         url: '__ROOT__/index.php/api/Technician/add_technician', // 需要提交的 url
@@ -266,6 +264,8 @@
                             } else if (result.status == -2) {
                                 swal("失败", "存在相同的技师名，请加标注以区分", "error");
                             } else if (result.status == -3) {
+                                swal("失败", "已存在相同的身份证号", "error");
+                            }else if (result.status == -4) {
                                 swal("失败", "未指定技师的技能", "error");
                             }
                         }

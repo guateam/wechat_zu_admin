@@ -61,14 +61,14 @@
   }
  })(jQuery);
 
- var self_job_nb = $.getUrlParam("jbnb");
-$("input:radio[value="+self_job_nb+"]").attr("hidden",true);
-$("input:radio[value="+self_job_nb+"]").attr("disabled",true);
+$("input:radio[value="+'{$self_job_number}'+"]").attr("hidden",true);
+$("input:radio[value="+'{$self_job_number}'+"]").attr("disabled",true);
 
 $("#btn").on("click",()=>{
     var choose_jbnb = $("input:radio[name='inviter']:checked").val();
+    alert(choose_jbnb);
     $.post("__ROOT__/index.php/api/Technician/set_inviter",{
-                job_number:self_job_nb,
+                job_number:'{$self_job_number}',
                 inviter_job_number:choose_jbnb
             }).done(function(result){
                 if(result.status==1){

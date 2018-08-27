@@ -125,4 +125,47 @@
             }
             return json(['status'=>0]);
         }
+
+        /**
+         * 删除指定id的服务
+         * 2018-8-27    创建   赖品钊
+         * @param array|string $id ID列表
+         * 
+         */
+        public function delete_service($id=[]){
+            $single_number;
+            if(count($id)==0)return json(["status"=>1]);
+            
+            for($i=0;$i<count($id);$i++){
+                $single_number=$id[$i];
+
+                $data = Service::get(["id"=>$single_number]);
+                if($data){
+                    $data->delete();
+                }else{
+                    return json(["status"=>0]);
+                }
+            }
+            return json(["status"=>1]);
+        }
+        /**
+         * 添加服务
+         * 2018-8-27    创建   赖品钊
+         * @param string $name                  服务名称
+         * @param string $duration              基础时间
+         * @param string $price                 价格
+         * @param string $discount              折扣
+         * @param string $commission_ratio      提成比例
+         * @param string $info                  服务介绍
+         * @param string $image                 服务介绍图
+         * 
+         */
+        public function add_service($name,$duration,$price,$discount,$commission_ratio,$info,$image){
+
+            $data = new Service(['name'=>$name,'duration'=>$duration,'price'=>$price,
+                                    'discount'=>$discount,'commission_ratio'=>$commission_ratio,
+                                    'info'=>$info,'image'=>$image]);
+            $data->save();
+            return json(['status'=>1]);
+        }
     }

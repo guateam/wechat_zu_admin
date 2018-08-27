@@ -1,0 +1,186 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="Bookmark" href="/favicon.ico">
+    <link rel="Shortcut Icon" href="/favicon.ico" /> {include file="common/common_css"}
+    <!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+
+    <!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+
+    <title>添加用户 - H-ui.admin v3.1</title>
+</head>
+
+<body>
+    <article class="page-container">
+        <form action="" method="post" class="form form-horizontal" id="form-member-add">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>服务名称：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>服务基础时长：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="duration" name="duration">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>服务基础价格（单位：分）：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="price">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>折扣：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="discount" name="discount">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>提成比例：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="commission_ratio" name="commission_ratio">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>服务介绍：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="info" name="info">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>服务介绍图：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="image" name="image">
+                </div>
+            </div>
+            <div class="row cl">
+                <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                    <input id="submit-btn" class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+                </div>
+            </div>
+        </form>
+    </article>
+
+
+    {include file="common/common_script"}
+
+    <!--请在下方写此页面业务相关的脚本-->
+    <script type="text/javascript" src="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+    <script type="text/javascript" src="__STATIC__/vendor/jquery-cookie/jquery.cookie.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('.skin-minimal input').iCheck({
+                checkboxClass: 'icheckbox-blue',
+                radioClass: 'iradio-blue',
+                increaseArea: '20%'
+            });
+
+            $("#form-member-add").validate({
+                rules: {
+                    name: {
+                        required: true,
+                    },
+                    duration: {
+                        required: true,
+                    },
+                    price: {
+                        required: true,
+                    },
+                    discount: {
+                        required: true,
+                    },
+                    commission_ratio: {
+                        required: true,
+                    },
+                    info: {
+                        required: true,
+                    },
+                    image: {
+                        required: true,
+                    },
+                },
+                onkeyup: false,
+                focusCleanup: true,
+                success: "valid",
+                submitHandler: function (form) {
+                    swal({
+                        title: '正在处理',
+                        text: '',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCloseButton: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    }).then((result) => {});
+                    name = $("#name").val();
+                    duration = $("#duration").val();
+                    price = $("#price").val();
+                    discount = $("#discount").val();
+                    commission_ratio = $("#commission_ratio").val();
+                    info = $("#info").val();
+                    image = $("#image").val();
+                    $(form).ajaxSubmit({
+                        type: 'post', // 提交方式 get/post
+                        url: '__ROOT__/index.php/api/ServiceType/add_service', // 需要提交的 url
+                        data: {
+                            name: name,
+                            duration:duration,
+                            price:price,
+                            discount: discount,
+                            commission_ratio: commission_ratio,
+                            info: info,
+                            image: image,
+                        },
+                        success: function (result) {
+                            if (result.status == 1) {
+                                swal("成功", "已添加新的技师", "success", {
+                                    allowOutsideClick: false
+                                }).then((ok) => {
+                                    if (ok.value) {
+                                        parent.location.reload()
+                                        var index = parent.layer.getFrameIndex(
+                                            window.name);
+                                        parent.layer.close(index);
+                                    }
+                                })
+                            } else {
+                                swal("失败", "保存失败", "error");
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <!--/请在上方写此页面业务相关的脚本-->
+</body>
+
+</html>

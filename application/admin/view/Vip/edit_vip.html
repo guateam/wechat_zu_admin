@@ -1,4 +1,3 @@
-
 <!DOCTYPE HTML>
 <html>
 
@@ -78,16 +77,6 @@
                 </div>
             </div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-3">
-                    <span class="c-red">*</span>服务类型：</label>
-                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                    {volist name = "$servicelist" id = "it" key="k"}
-                    <div class="radio-box">
-                        <input name="servicetype" type="checkbox" id="type-{$k}" value="{$it.id}">
-                        <label for="type-{$k}">{$it.name}</label>
-                    </div>
-                    {/volist}
-                </div>
             </div>
             <div class="row cl">
                 <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
@@ -108,64 +97,6 @@
     <script type="text/javascript" src="__STATIC__/vendor/jquery-cookie/jquery.cookie.js"></script>
 
     <script type="text/javascript">
-        // 身份证号验证 
-        function isIdCard(cardid) {
-            //身份证正则表达式(18位) 
-            var isIdCard2 = /^[1-9]\d{5}(19\d{2}|[2-9]\d{3})((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])(\d{4}|\d{3}X)$/i;
-            var stard = "10X98765432"; //最后一位身份证的号码
-            var first = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]; //1-17系数
-            var sum = 0;
-            if (!isIdCard2.test(cardid)) {
-                return false;
-            }
-            var year = cardid.substr(6, 4);
-            var month = cardid.substr(10, 2);
-            var day = cardid.substr(12, 2);
-            var birthday = cardid.substr(6, 8);
-            if (birthday != dateToString(new Date(year + '/' + month + '/' + day))) { //校验日期是否合法
-                return false;
-            }
-            for (var i = 0; i < cardid.length - 1; i++) {
-                sum += cardid[i] * first[i];
-            }
-            var result = sum % 11;
-            var last = stard[result]; //计算出来的最后一位身份证号码
-            if (cardid[cardid.length - 1].toUpperCase() == last) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        function dateToString(date) {
-            if (date instanceof Date) {
-                var year = date.getFullYear();
-                var month = date.getMonth() + 1;
-                month = month < 10 ? '0' + month : month;
-                var day = date.getDate();
-                day = day < 10 ? '0' + day : day;
-                return year + month + day;
-            }
-            return '';
-        }
-
-        function isDate(date) {
-            var isDate = /^\d{4}(\-|\/|\.)\d{1,2}\1\d{1,2}$/;
-            if (isDate.test(date)) return true;
-            else return false;
-        }
-        jQuery.validator.addMethod("isIdCard",
-            function (value, element) {
-                return this.optional(element) || (isIdCard(value));
-            },
-            "身份证号非法！");
-        jQuery.validator.addMethod("isDate",
-            function (value, element) {
-                return this.optional(element) || (isDate(value));
-            },
-            "日期格式错误");
-
-
 
         $(function () {
             $('.skin-minimal input').iCheck({
@@ -221,54 +152,8 @@
                         onOpen: () => {
                             swal.showLoading()
                         }
-                    }).then((result) => {});
-                    name = $("#username").val();
-                    gender = $("input:radio[name = 'sex']:checked").val();
-                    idcard = $("#id_number").val();
-                    birthday = $("#birthday").val();
-                    service_id = [];
-                    service_type = $('input:checkbox[name="servicetype"]:checked')
-                    $.each(service_type, function () {
-                        service_id.push($(this).val());
-                    })
-                    phone = $("#mobile").val();
-                    job_number = $("#job_number").val();
-                    $(form).ajaxSubmit({
-                        type: 'post', // 提交方式 get/post
-                        url: '__ROOT__/index.php/api/Technician/add_technician', // 需要提交的 url
-                        data: {
-                            name: name,
-                            idcard:idcard,
-                            birthday:birthday,
-                            gender: gender,
-                            mobile: phone,
-                            job_number: job_number,
-                            skill: service_id,
-                        },
-                        success: function (result) {
-                            if (result.status == 1) {
-                                swal("成功", "已添加新的技师", "success", {
-                                    allowOutsideClick: false
-                                }).then((ok) => {
-                                    if (ok.value) {
-                                        parent.location.reload()
-                                        var index = parent.layer.getFrameIndex(
-                                            window.name);
-                                        parent.layer.close(index);
-                                    }
-                                })
-                            } else if (result.status == 0) {
-                                swal("失败", "已存在相同手机号的技师", "error");
-                            } else if (result.status == -1) {
-                                swal("失败", "已存在相同工号的技师", "error");
-                            } else if (result.status == -2) {
-                                swal("失败", "存在相同的技师名，请加标注以区分", "error");
-                            } else if (result.status == -3) {
-                                swal("失败", "已存在相同的身份证号", "error");
-                            }else if (result.status == -4) {
-                                swal("失败", "未指定技师的技能", "error");
-                            }
-                        }
+                    }).then((result) => {
+
                     });
                 }
             });

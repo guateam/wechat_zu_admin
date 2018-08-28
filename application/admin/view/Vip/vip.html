@@ -59,6 +59,10 @@
                         <td>{$it.discount_ratio}%</td>
                         <td>{$it.extra_duration}分钟</td>
                         <td class="td-manage">
+                            <a title="编辑" href="javascript:;" onclick="member_edit('编辑','__ROOT__/index.php/admin/Vip/edit/vip/{$it}')"
+                                class="ml-5" style="text-decoration:none">
+                                <i class="Hui-iconfont">&#xe6df;</i>
+                            </a>
                             <a title="删除" href="javascript:;" onclick="member_del(this,'{$it.ID}')" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6e2;</i>
                             </a>

@@ -27,4 +27,14 @@ class Editprivateroom extends Controller{
         $data=$room->edit($id,$name,$roomid,$capacity,$servicetype);
         return json(['status'=>$data]);
     }
+    public function checkname($id,$name){
+        $room=new \app\api\controller\Privateroom();
+        $data=$room->checknamewithid($id,$name);
+        return json(['status'=>$data]);
+    }
+    public function checkroomid($id,$roomid){
+        $room=new \app\api\controller\Privateroom();
+        $data=$room->checkroomidwithid($id,$roomid);
+        return json(['status'=>$data]);
+    }
 }

@@ -10,4 +10,14 @@
                 return $data;
             }
         }
+
+        public function delete_customer($id){
+            foreach($id as $i){
+                $cus = UserModel::get(["ID"=>$i]);
+                if($cus){
+                    $cus->delete();
+                }
+            }
+            return ['status'=>1];
+        }
     }

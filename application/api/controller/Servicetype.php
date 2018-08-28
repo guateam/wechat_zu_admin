@@ -80,10 +80,10 @@
          * @param int $price    服务价格，单位：分
          * 
          */
-        public static function update_price($id,$price){
+        public static function update_price($id,$value){
             $service= Service::get(['ID'=>$id]);
             if($service){
-                $service->price = $price;
+                $service->price = $value;
                 $service->save();
                 return json(['status'=>1]);
             }
@@ -96,10 +96,10 @@
          * @param int $ratio    折扣比例，单位：百分比
          * 
          */
-        public static function update_discount($id,$ratio){
+        public static function update_discount($id,$value){
             $service= Service::get(['ID'=>$id]);
             if($service){
-                $service->discount = $ratio;
+                $service->discount = $value;
                 $service->save();
                 return json(['status'=>1]);
             }
@@ -112,10 +112,10 @@
          * @param int $dura     时长，单位：分钟
          * 
          */
-        public static function update_duration($id,$dura){
+        public static function update_duration($id,$value){
             $service= Service::get(['ID'=>$id]);
             if($service){
-                $service->duration = $dura;
+                $service->duration = $value;
                 $service->save();
                 return json(['status'=>1]);
             }
@@ -128,10 +128,10 @@
          * @param int $ratio    提成比例，单位：百分比
          * 
          */
-        public static function update_commission($id,$ratio){
+        public static function update_commission($id,$value){
             $service= Service::get(['ID'=>$id]);
             if($service){
-                $service->commission_ratio = $ratio;
+                $service->commission = $value;
                 $service->save();
                 return json(['status'=>1]);
             }
@@ -167,15 +167,15 @@
          * @param string $duration              基础时间
          * @param string $price                 价格
          * @param string $discount              折扣
-         * @param string $commission_ratio      提成比例
+         * @param string $commission            提成金额
          * @param string $info                  服务介绍
          * @param string $image                 服务介绍图
          * 
          */
-        public function add_service($name,$duration,$price,$discount,$commission_ratio,$info,$image){
+        public function add_service($name,$duration,$price,$discount,$commission,$info,$image){
 
             $data = new Service(['name'=>$name,'duration'=>$duration,'price'=>$price,
-                                    'discount'=>$discount,'commission_ratio'=>$commission_ratio,
+                                    'discount'=>$discount,'commission'=>((int)$commission)*100,
                                     'info'=>$info,'image'=>$image]);
             $data->save();
             return json(['status'=>1]);

@@ -59,7 +59,7 @@
                 <label class="form-label col-xs-4 col-sm-3">
                     <span class="c-red">*</span>提成比例：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="commission_ratio" name="commission_ratio">
+                    <input type="text" class="input-text" value="" placeholder="" id="commission" name="commission">
                 </div>
             </div>
             <div class="row cl">
@@ -116,7 +116,7 @@
                     discount: {
                         required: true,
                     },
-                    commission_ratio: {
+                    commission: {
                         required: true,
                     },
                     info: {
@@ -144,7 +144,7 @@
                     duration = $("#duration").val();
                     price = $("#price").val();
                     discount = $("#discount").val();
-                    commission_ratio = $("#commission_ratio").val();
+                    commission = $("#commission").val();
                     info = $("#info").val();
                     image = $("#image").val();
                     $(form).ajaxSubmit({
@@ -155,7 +155,7 @@
                             duration:duration,
                             price:price,
                             discount: discount,
-                            commission_ratio: commission_ratio,
+                            commission: commission,
                             info: info,
                             image: image,
                         },

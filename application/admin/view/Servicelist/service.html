@@ -33,7 +33,7 @@
 				<th width="100">项目名称</th>
 				<th width="100">价格</th>
 				<th width="80">时长</th>
-				<th width="80">提成比例</th>
+				<th width="80">提成金额</th>
 				<th width="100">折扣</th>
 				<th width="100">操作</th>
 			</tr>
@@ -45,16 +45,28 @@
 				<td>{$it.name}</td>
 				<td>{$it.price/100}￥
 					<a title="修改价格" href="javascript:;"
-					   onclick="show_swal('价格')" class="ml-5"
+					   onclick="show_swal('价格','{$it.ID}')" class="ml-5"
 					   style="text-decoration:none">
 						<i class="Hui-iconfont">&#xe6df;</i>
 				    </a>
 				</td>
-				<td>{$it.duration}分钟</td>
-				<td>{$it.commission_ratio}%</td>
-				<td>{if condition="$it.discount!=100"}{$it.discount}{else /}不打{/if}折
+				<td>{$it.duration}分钟
+                    <a title="修改时长" href="javascript:;"
+					   onclick="show_swal('时长','{$it.ID}')" class="ml-5"
+					   style="text-decoration:none">
+						<i class="Hui-iconfont">&#xe6df;</i>
+				    </a>
+                </td>
+				<td>{$it.commission/100}元
+                    <a title="修改提成" href="javascript:;"
+                    onclick="show_swal('提成','{$it.ID}')" class="ml-5"
+                    style="text-decoration:none">
+                     <i class="Hui-iconfont">&#xe6df;</i>
+                 </a>
+                </td>
+				<td>{if condition="$it.discount!=100"}原价的{$it.discount}%{else /}不打折{/if}
 					<a title="修改折扣" href="javascript:;"
-					   onclick="member_edit('修改折扣','xiugaizhekou.html','10001','360','200')" class="ml-5"
+					   onclick="show_swal('折扣','{$it.ID}')" class="ml-5"
 					   style="text-decoration:none">
 						<i class="Hui-iconfont">&#xe6df;</i>
 					</a>
@@ -101,26 +113,48 @@
     function zhidingren(title, url, id, w, h) {
         layer_show(title, url, w, h);
     }
-	function show_swal(fun){
+	function show_swal(fun,id){
 		swal({
 			title:"请输入要修改的"+fun,
 			input:'text',
 			showCancelButton: true,
 			allowOutsideClick: false,
-			onClose:()=>{
-				swal({
+		}).then((result)=>{
+            var str = "";
+            var dict={
+                "价格":"update_price",
+                "折扣":"update_discount",
+                "时长":"update_duration",
+                "提成":"update_commission"
+            }
+            str = dict[fun];
+			if(result.value!=''){
+                swal({
 					title:'正在执行',
 					allowOutsideClick: false,
 					showCancelButton: false,
 					showConfirmButton: false,
 					onOpen:()=>{swal.showLoading()}
 				})
-			}
-		}).then((result)=>{
-			var str = "";
-			
-			if(result.value!=''){
-				$.post("__ROOT__/index.php/api/Servicetype/")
+                var val = result.value;
+                if(fun=="价格" || fun=="提成") val*=100;
+				$.post("__ROOT__/index.php/api/Servicetype/"+str,{
+                    id:id,
+                    value:val
+                }).done((bk)=>{
+                    if(bk.status==1){
+                        swal({
+                            title:"完成修改",
+                            type:"success"
+                        });
+                        location.reload();
+                    }else{
+                        swal({
+                            title:"该服务不存在",
+                            type:"error"
+                        });
+                    }
+                })
 			}
 				
 		})

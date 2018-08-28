@@ -17,8 +17,13 @@ class Consumedorder extends Controller{
             if($info){
                 array_push($user,$info->phone_number);
             }
+            else{
+                array_push($user,"找不到该顾客");
+            }
             if($info2){
                 array_push($payer,$info2->phone_number);
+            }else{
+                array_push($user,"找不到该顾客");
             }
         }
         $this->assign("order",$order);

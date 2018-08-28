@@ -12,6 +12,8 @@ class Edittechnician extends Controller{
         $skill_list = $skill_ctrl->get_skill_service_id($jobnum);
         $service_list = $serve_ctrl->getservicelist();
         $technician = $ctrl->get_technician($jobnum);
+        $btday = $technician->birthday;
+        $technician->birthday = substr($btday,0,10);
         $this->assign("servicelist",$service_list);
         $this->assign("technician",$technician);
         $this->assign("skill_serveid",$skill_list);

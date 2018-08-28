@@ -119,6 +119,7 @@ $.fn.dataTable.ext.search.push(
     function( settings, data, dataIndex ) {
         var min  = $('#datemin').val();
         var max =$("#datemax").val();
+        max+=" 23:59:59"
         var time = data[1]; // use data for the age column
         if(min=="" || max=="")return true;
 
@@ -301,7 +302,9 @@ $.fn.dataTable.ext.search.push(
                                 <tbody>`;
                     var total_price = 0;
                     for (var i = 0; i < result.length; i++) {
-                        html_string += `<tr>
+                        clr = "#d4d4d4";
+                        if(i%2==0)clr="ffffff"
+                        html_string += `<tr bgcolor="`+clr+`">
                                             <td>` + result[i].service_id + `</td>
                                             <td>` + result[i].score +`</td>
                                             <td>` + result[i].comment +`</td>

@@ -35,6 +35,6 @@
             if($data){
                 return $data;
             }
-            else return 0;
+            else return null;
         }
     }

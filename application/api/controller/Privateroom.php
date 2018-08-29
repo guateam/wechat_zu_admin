@@ -79,10 +79,15 @@
          * @param mixed $servicetype 房间可提供的服务类型
          */
         public function edit($id,$name,$roomid,$capacity,$servicetype){
-            if(Room::get(['name'=>$name]) || Room::get(['room_id'=>$roomid])){
+            if(Room::get(['name'=>$name])){
                 $room1=Room::get(['name'=>$name]);
-                $room2=Room::get(['room_id'=>$roomid]);
-                if($room1->ID!=$id || $room2->ID!=$id){
+                if($room1->ID!=$id){
+                    return -1;
+                }
+            }
+            if(Room::get(['room_id'=>$roomid])){
+                $room1=Room::get(['room_id'=>$roomid]);
+                if($room1->ID!=$id){
                     return -1;
                 }
             }
@@ -117,5 +122,55 @@
                 ];
             }
             return $data;
+        }
+        /**
+         * 检查房间名是否正确
+         * 2018-8-28 创建 张煜
+         * @param mixed $name 房间名
+         */
+        public function checkname($name){
+            $room=Room::get(['name'=>$name]);
+            if($room){
+                return 0;
+            }
+            return 1;
+        }
+        /**
+         * 检查房间号是否正确
+         * 2018-8-28 创建 张煜
+         * @param mixed $id 房间号
+         */
+        public function checkroomid($id){
+            $room=Room::get(['room_id'=>$id]);
+            if($room){
+                return 0;
+            }
+            return 1;
+        }
+        /**
+         * 检查房间名是否可以修改
+         * 2018-8-28 创建 张煜
+         * @param int $id 包厢的内部id
+         * @param mixed $name
+         */
+        public function checknamewithid($id,$name){
+            $room=Room::get(['name'=>$name]);
+            if($room){
+                return $room->ID==$id?1:0;
+            }
+            return 1;
+        }
+        /**
+         * 检查房间号是否可修改
+         * 2018-8-28 创建 张煜
+         * @param int $id 包厢内部id
+         * @param mixed $roomid 房间号
+         */
+        public function checkroomidwithid($id,$roomid){
+            $room=Room::get(['room_id'=>$roomid]);
+            if($room){
+                return $room->ID==$id?1:0;
+            }
+            return 1;
         }
     }

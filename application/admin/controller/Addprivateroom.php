@@ -21,4 +21,14 @@ class Addprivateroom extends Controller{
         $data=$room->add($name,$roomid,$capacity,$servicetype);
         return json(['status'=>$data]);
     }
+    public function checkname($name){
+        $room=new \app\api\controller\Privateroom();
+        $data=$room->checkname($name);
+        return json(['status'=>$data]);
+    }
+    public function checkroomid($id){
+        $room=new \app\api\controller\Privateroom();
+        $data=$room->checkroomid($id);
+        return json(['status'=>$data]);
+    }
 }

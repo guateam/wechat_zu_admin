@@ -46,6 +46,7 @@
                         <th width="40">性别</th>
                         <th width="120">手机</th>
                         <th width="150">VIP等级</th>
+                        <th width="150">充值总额</th>
                         <th width="130">注册时间</th>
                         <th width="100">操作</th>
                     </tr>
@@ -57,6 +58,7 @@
                         <td>{if condition="$it.gender==1"}男{elseif condition="$it.gender==2"}女{else /}未知{/if}</td>
                         <td>{$it.phone_number}</td>
                         <td>{$it.level}</td>
+                        <td>{$chargelist[$k-1]}元</td>
                         <td>{$it.registration_date}</td>
                         <td class="td-manage">
                             <a title="删除" href="javascript:;" onclick="member_del(this,'{$it.ID}')" class="ml-5" style="text-decoration:none">

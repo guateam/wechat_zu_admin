@@ -50,6 +50,10 @@
 					<td>{$technician.description}</td>
 				</tr>
 				<tr>
+					<th class="text-r">充卡数额：</th>
+					<td>{$charge}元</td>
+				</tr>
+				<tr>
 					<th class="text-r">生日：</th>
 					<td>{$technician.birthday}</td>
 				</tr>
@@ -63,11 +67,11 @@
 				</tr>
 				<tr>
 					<th class="text-r">掌握技能：</th>
-					{volist name="$skill" id="it"}
 					<td>
-						{$it}
-					</td>
+					{volist name="$skill" id="it"}
+					{$it}
 					{/volist}
+					</td>
 				</tr>
 				<tr>
 					<th class="text-r">身份证号：</th>
@@ -75,12 +79,12 @@
 				</tr>
 				<tr>
 					<th class="text-r">身份证照：</th>
-						<td><img class="avatar size-XL l" src="{$technician.idcard_photo}"></td>
-						<td><img class="avatar size-XL l" src="{$technician.idcard_photo_2}"></td>
+						<td><img class="avatar size-XL l" src="{$technician.idcard_photo}" style="width:150px;height:120px;margin-right: 10px"></td>
+						<td><img class="avatar size-XL l" src="{$technician.idcard_photo_2}" style="width:150px;height:120px;margin-right: 10px"></td>
 				</tr>
 			</tbody>
 		</table>
-		<video src="{$technician.vcr}" controls="controls" style="margin: 30px auto 20px 50px ">
+		<video src="{$technician.vcr}" controls="controls" style="margin: 30px 30px ;width: 400px;height: 300px;">
 			your browser does not support the video tag
 		</video>
 	</div>

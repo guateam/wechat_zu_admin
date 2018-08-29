@@ -186,7 +186,8 @@
                             type:"post",
                             url:"__ROOT__/index.php/api/Technician/check_name",
                             data:{
-                                name:function(){return $("#username").val();}
+                                name:function(){return $("#username").val();},
+								ori_number:'{$technician.job_number}'
                             }
                         }
 					},
@@ -197,7 +198,8 @@
                             type:"post",
                             url:"__ROOT__/index.php/api/Technician/check_idnumber",
                             data:{
-                                num:function(){return $("#id_number").val();}
+                                num:function(){return $("#id_number").val();},
+								ori_number:'{$technician.job_number}'
                             }
                         },
 					},
@@ -207,7 +209,8 @@
                             type:"post",
                             url:"__ROOT__/index.php/api/Technician/check_job_number",
                             data:{
-                                num:function(){return $("#job_number").val();}
+                                num:function(){return $("#job_number").val();},
+								ori_number:'{$technician.job_number}'
                             }
                         }
                     },
@@ -225,7 +228,8 @@
                             type:"post",
                             url:"__ROOT__/index.php/api/Technician/check_phone_number",
                             data:{
-                                num:function(){return $("#mobile").val();}
+                                num:function(){return $("#mobile").val();},
+								ori_number:'{$technician.job_number}'
                             }
                         }
 					},

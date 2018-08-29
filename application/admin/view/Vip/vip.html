@@ -32,8 +32,9 @@
     <div class="page-container">
         <div class="cl pd-5 bg-1 bk-gray mt-20">
             <span class="l">
-                <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
-                    <i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+                <a href="javascript:;" onclick="member_add('添加VIP等级','__ROOT__/index.php/admin/Addvip/index','','610')"
+                    class="btn btn-primary radius">
+                    <i class="Hui-iconfont">&#xe600;</i> 添加VIP等级</a>
             </span>
             <span class="r">共有数据：
                 <strong>{$count}</strong> 条</span>
@@ -59,11 +60,11 @@
                         <td>{$it.discount_ratio}%</td>
                         <td>{$it.extra_duration}分钟</td>
                         <td class="td-manage">
-                            <a title="编辑" href="javascript:;" onclick="member_edit('编辑','__ROOT__/index.php/admin/Vip/edit/vip/{$it}')"
+                            <a title="编辑" href="javascript:;" onclick="member_edit('编辑','__ROOT__/index.php/admin/Editvip/index/vip/{$it.level}',500,700,400)"
                                 class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
-                            <a title="删除" href="javascript:;" onclick="member_del(this,'{$it.ID}')" class="ml-5" style="text-decoration:none">
+                            <a title="删除" href="javascript:;" onclick="member_del(this,'{$it.level}')" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6e2;</i>
                             </a>
                         </td>
@@ -108,48 +109,48 @@
             layer_show(title, url, w, h);
         }
 
-        
+
         /*用户-编辑*/
         function member_edit(title, url, id, w, h) {
             layer_show(title, url, w, h);
         }
 
         /*用户-删除*/
-        function member_del(obj, id) {
+        function member_del(obj, lv) {
             swal({
-                    title: '确认删除该客户吗？',
-                    text: '',
-                    type: 'question',
-                    allowOutsideClick: false,
-                    showCancelButton: true,
-                    confirmButtonColor: '#93c47d',
-                    cancelButtonColor: '#ca5943',
-                    confirmButtonText: "确认",
-                    cancelButtonText: "取消"
-                }).then((result) => {
-                    if (result.value) {
-                        swal({
-                            title: '正在处理',
-                            text: '',
-                            allowOutsideClick: false,
-                            showConfirmButton: false,
-                            showCloseButton: false,
-                            onOpen: () => {
-                                swal.showLoading()
-                            }
-                        }).then((result) => {});
-                        $.post("__ROOT__/index.php/api/Customer/delete_customer", {
-                            id: [id]
-                        }).done(function(result) {
-                            if (result.status == 1) {
-                                $(obj).parents("tr").remove();
-                                swal("完成", "已删除项目", "success").then((ok) => {
-                                    if (ok.value) location.reload();
-                                })
-                            }
-                        })
-                    }
-                })
+                title: '确认删除该VIP等级吗？',
+                text: '',
+                type: 'question',
+                allowOutsideClick: false,
+                showCancelButton: true,
+                confirmButtonColor: '#93c47d',
+                cancelButtonColor: '#ca5943',
+                confirmButtonText: "确认",
+                cancelButtonText: "取消"
+            }).then((result) => {
+                if (result.value) {
+                    swal({
+                        title: '正在处理',
+                        text: '',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCloseButton: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    }).then((result) => {});
+                    $.post("__ROOT__/index.php/api/Vipinformation/delete", {
+                        lv: [lv]
+                    }).done(function (result) {
+                        if (result.status == 1) {
+                            $(obj).parents("tr").remove();
+                            swal("完成", "已删除项目", "success").then((ok) => {
+                                if (ok.value) location.reload();
+                            })
+                        }
+                    })
+                }
+            })
         }
     </script>
 </body>

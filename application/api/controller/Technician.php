@@ -84,7 +84,9 @@
                 if($name!=""){
                     $repeat = UserModel::get(['name'=>$name]);
                     if($repeat){
-                        return -2;
+                        if($repeat->job_number !=$ori_job_number){
+                            return -2;
+                        }
                     }
                 }
 
@@ -109,31 +111,35 @@
             return 1;
         }
         
-        public function check_name($name){
+        public function check_name($name,$ori_number=""){
             $repeat = UserModel::get(['name'=>$name]);
             if($repeat){
-                return false;
+                if($repeat->job_number != $ori_number)
+                    return false;
             }
             return true;
         }
-        public function check_phone_number($num){
+        public function check_phone_number($num,$ori_number=""){
             $repeat = UserModel::get(['phone_number'=>$num]);
             if($repeat){
-                return false;
+                if($repeat->job_number != $ori_number)
+                    return false;
             }
             return true;
         }
-        public function check_job_number($num){
+        public function check_job_number($num,$ori_number=""){
             $repeat = UserModel::get(['job_number'=>$num]);
             if($repeat){
-                return false;
+                if($repeat->job_number != $ori_number)
+                    return false;
             }
             return true;
         }
-        public function check_idnumber($num){
+        public function check_idnumber($num,$ori_number=""){
             $repeat = UserModel::get(['id_number'=>$num]);
             if($repeat){
-                return false;
+                if($repeat->job_number != $ori_number)
+                    return false;
             }
             return true;
         }

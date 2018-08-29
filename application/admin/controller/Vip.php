@@ -12,9 +12,4 @@ class Vip extends Controller{
         return $this->fetch('vip');
 
     }
-
-    public function edit($vip){
-        $this->assign("vip",$vip);
-        return $this->fetch("edit_vip");
-    }
 }

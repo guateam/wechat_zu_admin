@@ -71,12 +71,23 @@
         /**
          * 检测技师录入是否有重复信息
          * 2018-8-24    创建   袁宜照
+         * @param string $name              录入的姓名
          * @param string $mobile            录入的手机号
          * @param string $job_number        录入的工号
+         * @param string $idcard            录入的身份证号
          * @param string $ori_job_number    修改前的工号(添加新技师时不提供该参数)
          * 
+         * 
          */
-        private function check_repeat($name,$mobile,$job_number,$idcard,$ori_job_number){
+        public function check_repeat($name="",$mobile="",$job_number="",$idcard="",$ori_job_number=""){
+                	    
+                if($name!=""){
+                    $repeat = UserModel::get(['name'=>$name]);
+                    if($repeat){
+                        return -2;
+                    }
+                }
+
                 $repeat = UserModel::get(['phone_number'=>$mobile]);
                 if($repeat){
                     if($repeat->job_number !=$ori_job_number){
@@ -89,12 +100,6 @@
                         return -1;
                     }
                 }
-                $repeat = UserModel::get(['name'=>$name]);
-                if($repeat){
-                    if($repeat->job_number !=$ori_job_number){
-                        return -2;
-                    }
-                }
                 $repeat = UserModel::get(['id_number'=>$idcard]);
                 if($repeat){
                     if($repeat->job_number !=$ori_job_number){
@@ -102,6 +107,35 @@
                     }
                 }
             return 1;
+        }
+        
+        public function check_name($name){
+            $repeat = UserModel::get(['name'=>$name]);
+            if($repeat){
+                return false;
+            }
+            return true;
+        }
+        public function check_phone_number($num){
+            $repeat = UserModel::get(['phone_number'=>$num]);
+            if($repeat){
+                return false;
+            }
+            return true;
+        }
+        public function check_job_number($num){
+            $repeat = UserModel::get(['job_number'=>$num]);
+            if($repeat){
+                return false;
+            }
+            return true;
+        }
+        public function check_idnumber($num){
+            $repeat = UserModel::get(['id_number'=>$num]);
+            if($repeat){
+                return false;
+            }
+            return true;
         }
         /**
          * 添加技师

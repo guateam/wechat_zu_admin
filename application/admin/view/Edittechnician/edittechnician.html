@@ -61,13 +61,6 @@
 			</div>
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-3">
-					<span class="c-red">*</span>工号：</label>
-				<div class="formControls col-xs-8 col-sm-9">
-					<input type="text" class="input-text" value="{$technician.job_number}" placeholder="" id="job_number" name="job_number">
-				</div>
-			</div>
-			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-3">
 					<span class="c-red">*</span>身份证号：</label>
 				<div class="formControls col-xs-8 col-sm-9">
 					<input type="text" class="input-text" value="{$technician.id_number}" placeholder="" id="id_number" name="id_number">
@@ -188,12 +181,36 @@
 					username: {
 						required: true,
 						minlength: 2,
-						maxlength: 16
+						maxlength: 16,
+						remote:{
+                            type:"post",
+                            url:"__ROOT__/index.php/api/Technician/check_name",
+                            data:{
+                                name:function(){return $("#username").val();}
+                            }
+                        }
 					},
 					id_number: {
 						required: true,
 						isIdCard:true,
+						remote:{
+                            type:"post",
+                            url:"__ROOT__/index.php/api/Technician/check_idnumber",
+                            data:{
+                                num:function(){return $("#id_number").val();}
+                            }
+                        },
 					},
+					job_number:{
+                        required:true,
+                        remote:{
+                            type:"post",
+                            url:"__ROOT__/index.php/api/Technician/check_job_number",
+                            data:{
+                                num:function(){return $("#job_number").val();}
+                            }
+                        }
+                    },
 					birthday:{
 						required:true,
 						isDate:true,
@@ -204,6 +221,13 @@
 					mobile: {
 						required: true,
 						isMobile: true,
+						remote:{
+                            type:"post",
+                            url:"__ROOT__/index.php/api/Technician/check_phone_number",
+                            data:{
+                                num:function(){return $("#mobile").val();}
+                            }
+                        }
 					},
 					email: {
 						required: true,
@@ -214,6 +238,20 @@
 					},
 
 				},
+				messages:{
+                    username:{
+                        remote:"名字重复，请加以区分"
+                    },
+                    id_number:{
+                        remote:"身份证号已存在"
+                    },
+                    job_number:{
+                        remote:"工号已存在"
+                    },
+                    mobile:{
+                        remote:"手机号已存在"
+                    }
+                },
 				onkeyup: false,
 				focusCleanup: true,
 				success: "valid",

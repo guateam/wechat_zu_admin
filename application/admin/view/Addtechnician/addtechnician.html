@@ -1,4 +1,3 @@
-
 <!DOCTYPE HTML>
 <html>
 
@@ -9,12 +8,12 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <link rel="Bookmark" href="/favicon.ico">
-    <link rel="Shortcut Icon" href="/favicon.ico" /> 
+    <link rel="Shortcut Icon" href="/favicon.ico" />
     <!--[if lt IE 9]>
 <script type="text/javascript" src="lib/html5shiv.js"></script>
 <script type="text/javascript" src="lib/respond.min.js"></script>
 <![endif]-->
-{include file="common/common_css"}
+    {include file="common/common_css"}
     <!--[if IE 6]>
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
@@ -60,7 +59,7 @@
                 <label class="form-label col-xs-4 col-sm-3">
                     <span class="c-red">*</span>工号：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="job_number">
+                    <input type="text" class="input-text" value="" placeholder="" name="job_number" id="job_number">
                 </div>
             </div>
             <div class="row cl">
@@ -165,36 +164,75 @@
             },
             "日期格式错误");
 
-
-
+        function check_name(name) {
+            var deferred = $.Deferred();
+            $.ajax({
+                url: "__ROOT__/index.php/api/Technician/check_repeat/name/" + name,
+            }).done((result) => {
+                if (result != 1) {
+                    deferred.reject();
+                } else deferred.resolve();
+            });
+            return deferred.state() == "resolved" ? true : false;
+        }
         $(function () {
             $('.skin-minimal input').iCheck({
                 checkboxClass: 'icheckbox-blue',
                 radioClass: 'iradio-blue',
                 increaseArea: '20%'
             });
-
             $("#form-member-add").validate({
                 rules: {
                     username: {
                         required: true,
                         minlength: 2,
-                        maxlength: 16
+                        maxlength: 16,
+                        remote:{
+                            type:"post",
+                            url:"__ROOT__/index.php/api/Technician/check_name",
+                            data:{
+                                name:function(){return $("#username").val();}
+                            }
+                        }
                     },
                     id_number: {
-						required: true,
-						isIdCard:true,
-					},
-					birthday:{
-						required:true,
-						isDate:true,
-					},
+                        required: true,
+                        isIdCard: true,
+                        remote:{
+                            type:"post",
+                            url:"__ROOT__/index.php/api/Technician/check_idnumber",
+                            data:{
+                                num:function(){return $("#id_number").val();}
+                            }
+                        }
+                    },
+                    job_number:{
+                        required:true,
+                        remote:{
+                            type:"post",
+                            url:"__ROOT__/index.php/api/Technician/check_job_number",
+                            data:{
+                                num:function(){return $("#job_number").val();}
+                            }
+                        }
+                    },
+                    birthday: {
+                        required: true,
+                        isDate: true,
+                    },
                     sex: {
                         required: true,
                     },
                     mobile: {
                         required: true,
                         isMobile: true,
+                        remote:{
+                            type:"post",
+                            url:"__ROOT__/index.php/api/Technician/check_phone_number",
+                            data:{
+                                num:function(){return $("#mobile").val();}
+                            }
+                        }
                     },
                     servicetype: {
                         required: true,
@@ -207,6 +245,20 @@
                         required: true,
                     },
 
+                },
+                messages:{
+                    username:{
+                        remote:"名字重复，请加以区分"
+                    },
+                    id_number:{
+                        remote:"身份证号已存在"
+                    },
+                    job_number:{
+                        remote:"工号已存在"
+                    },
+                    mobile:{
+                        remote:"手机号已存在"
+                    }
                 },
                 onkeyup: false,
                 focusCleanup: true,
@@ -238,8 +290,8 @@
                         url: '__ROOT__/index.php/api/Technician/add_technician', // 需要提交的 url
                         data: {
                             name: name,
-                            idcard:idcard,
-                            birthday:birthday,
+                            idcard: idcard,
+                            birthday: birthday,
                             gender: gender,
                             mobile: phone,
                             job_number: job_number,
@@ -265,7 +317,7 @@
                                 swal("失败", "存在相同的技师名，请加标注以区分", "error");
                             } else if (result.status == -3) {
                                 swal("失败", "已存在相同的身份证号", "error");
-                            }else if (result.status == -4) {
+                            } else if (result.status == -4) {
                                 swal("失败", "未指定技师的技能", "error");
                             }
                         }

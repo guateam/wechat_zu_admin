@@ -158,6 +158,13 @@
                     return json(["status"=>0]);
                 }
             }
+            foreach($id as $i){
+                $dt =  \app\api\model\Skill::all(["service_id"=>$i]);
+                foreach($dt as $sk){
+                    $sk->delete();
+                }
+            }
+
             return json(["status"=>1]);
         }
         /**

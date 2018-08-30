@@ -50,11 +50,12 @@
                         </th>
                         <th width="80">姓名</th>
                         <th width="40">性别</th>
-                        <th width="120">工号</th>
+                        <th width="90">工号</th>
                         <th width="100">手机号</th>
                         <th width="100">技能</th>
                         <th width="30">评分</th>
-                        <th width="130">介绍人工号</th>
+                        <th width="60">充卡数额</th>
+                        <th width="90">介绍人工号</th>
                         <th width="50">离职情况</th>
                         <th width="70">指定介绍人</th>
                         <th width="70">查看详情</th>
@@ -78,6 +79,7 @@
                             {volist name="$skills[$k-1]" id="sk"} {$sk}&nbsp;&nbsp; {/volist}
                         </td>
                         <td class="text-l">{if condition="$score[$k-1]==0"}无{else /}{$score[$k-1]}{/if}</td>
+                        <td>{$charge[$k-1]}￥</td>
                         <td>{if condition="is_null($it.inviter)"}无 {else /} {$it.inviter} {/if}
                         </td>
                         <td>{if condition="$it.in_job==1"}在职{else /}离职{/if}
@@ -120,14 +122,14 @@
         $(function () {
             $('.table-sort').dataTable({
                 "aaSorting": [
-                    [1, "desc"]
+                    [7, "desc"]
                 ], //默认第几个排序
                 "bStateSave": true, //状态保存
                 "aoColumnDefs": [
                     //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
                     {
                         "orderable": false,
-                        "aTargets": [0, 7, 8, 9]
+                        "aTargets": [0, 1, 2, 3,4]
                     } // 制定列不参与排序
                 ]
             });

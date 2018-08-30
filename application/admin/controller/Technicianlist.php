@@ -10,13 +10,23 @@ class Technicianlist extends Controller{
         $sk = new \app\api\controller\Skill();
         $so = new \app\api\controller\Serviceorder();
         $rt = new \app\api\controller\Rate();
+        $recharge_ctrl = new \app\api\controller\Rechargerecord();
 
         $skill = [];
         //所有技师的订单ID序列
         $order = [];
         $aver_score = [];
-
+        $charge = [];
         $technicians = $ctrl->get_all_technician();
+        foreach($technicians as $tc){
+            $money = $recharge_ctrl->get_by_jobnumber($tc->job_number);
+            $money = $money->getdata();
+            if($money['status'] ==1)array_push($charge,$money['charge']);
+            else{
+                array_push($charge,0);
+            }
+        }
+
         foreach($technicians as $tc){
             $sk_name = $sk->get_skill_name($tc->job_number);
             if($sk_name){
@@ -52,6 +62,7 @@ class Technicianlist extends Controller{
         $this->assign("technicians",$technicians);
         $this->assign("count",$count);
         $this->assign("score",$aver_score);
+        $this->assign("charge",$charge);
         return $this->fetch();
     }
 }

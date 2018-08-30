@@ -15,13 +15,13 @@
     <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
-    <title>上钟情况</title>
+    <title>考勤情况</title>
 </head>
 <body>
     <nav class="breadcrumb">
         <i class="Hui-iconfont">&#xe67f;</i> 首页
         <span class="c-gray en">&gt;</span> 技师管理
-        <span class="c-gray en">&gt;</span> 上钟情况
+        <span class="c-gray en">&gt;</span> 考勤情况
         <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);"
             title="刷新">
             <i class="Hui-iconfont">&#xe68f;</i>
@@ -46,32 +46,20 @@
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
-                        <th width="130">技师工号</th>
-                        <th width="130">钟类</th>
-                        <th width="150">服务名</th>
-                        <th width="140">包厢号</th>
-                        <th width="150">时间</th>
-                        <th width="120">业绩</th>
-                        <th width="150">提成</th>
+                        <th width="130">考勤类型</th>
+                        <th width="130">考勤时间</th>
+                        <th width="150">技师工号</th>
+
                     </tr>
                 </thead>
                 <tbody>
-                    {volist name="$clock" id="it" key="k"}
-                    {volist name ="$it.key_info" id="info" key = "f"}
+                    {volist name="$attendance" id="it" key="k"}
                     <tr class="text-c" id="row{$k-1}">
-                        <td>{$info.job_number}</td>
-                        <td>{if condition="$info.clock_type==1"}排钟{else /}点钟{/if}</td>
-                        <td id="time{$k-1}">{$info.service_name}</td>
-                        <td>
-                            {$info.room_number}
-                        </td>
-                        <td id="total_state{$k-1}">{$info.time}</td>
-                        <td class="">{$info.income}元</td>
-                        <td>{$info.bonus}元</td>
+                        <td>{if condition="$it.sign_type==1"}签到{else /}签退{/if}</td>
+                        <td>{$it.check_time}</td>
+                        <td id="time{$k-1}">{$it.job_number}</td>
                     </tr>
                     {/volist}
-                    {/volist}
-
                 </tbody>
             </table>
         </div>

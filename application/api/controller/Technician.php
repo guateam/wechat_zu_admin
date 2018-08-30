@@ -212,9 +212,19 @@
          */
         public function set_inviter($job_number,$inviter_job_number){
             $data = UserModel::get(["job_number"=>$job_number]);
-            $data->inviter=$inviter_job_number;
-            $data->save();
-            return json(["status"=>1]);
+            if($data){
+                $data->inviter=$inviter_job_number;
+                $data->save();
+                return json(["status"=>1]);
+            }
+            // $ctrl = new \app\api\controller\Inviteship();
+            // $result = $ctrl->add($inviter_job_number,$job_number,0);
+            // $result = $result->getdata();
+            // if($result['status']!=1)
+            // {
+            //     return json(['status'=>0]);
+            // }
+            return json(["status"=>0]);
         }
         /**
          * 改变技师在职状态

@@ -64,7 +64,7 @@
                      <i class="Hui-iconfont">&#xe6df;</i>
                  </a>
                 </td>
-				<td>{if condition="$it.discount!=100"}原价的{$it.discount}%{else /}不打折{/if}
+				<td>{if condition="$it.discount!=100"}{$it.discount}折{else /}不打折{/if}
 					<a title="修改折扣" href="javascript:;"
 					   onclick="show_swal('折扣','{$it.ID}')" class="ml-5"
 					   style="text-decoration:none">

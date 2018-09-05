@@ -37,4 +37,15 @@
             }
             else return null;
         }
+
+
+        public function change_bad($id){
+            $data = UserModel::get(["ID"=>$id]);
+            if($data){
+                $data->bad = abs($data->bad - 3);
+                $data->save();
+                return json(['status'=>1]);
+            }
+            return json(['status'=>0]);
+        }
     }

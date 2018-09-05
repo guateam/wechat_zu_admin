@@ -1,4 +1,4 @@
-﻿<!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html>
 
 <head>
@@ -23,7 +23,7 @@
     <nav class="breadcrumb">
         <i class="Hui-iconfont">&#xe67f;</i> 首页
         <span class="c-gray en">&gt;</span> 客户管理
-        <span class="c-gray en">&gt;</span> 会员列表
+        <span class="c-gray en">&gt;</span> 评论审核
         <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);"
             title="刷新">
             <i class="Hui-iconfont">&#xe68f;</i>
@@ -42,27 +42,23 @@
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
-                        <th width="100">用户名</th>
-                        <th width="40">性别</th>
-                        <th width="120">手机</th>
-                        <th width="150">VIP等级</th>
-                        <th width="150">充值总额</th>
-                        <th width="130">注册时间</th>
-                        <th width="100">操作</th>
+                        <th width="40">订单号</th>
+                        <th width="100">服务名</th>
+                        <th width="40">评分</th>
+                        <th width="200">留言</th>
+                        <th width="60">是否恶评</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {volist name="$customer" id="it" key="k"}
+                    {volist name="$comment" id="it" key="k"}
                     <tr class="text-c">
-                        <td>{$it.ID}</td>
-                        <td>{if condition="$it.gender==1"}男{elseif condition="$it.gender==2"}女{else /}未知{/if}</td>
-                        <td>{$it.phone_number}</td>
-                        <td>{$it.level}</td>
-                        <td>{$chargelist[$k-1]}元</td>
-                        <td>{$it.registration_date}</td>
-                        <td class="td-manage">
-                            <a title="删除" href="javascript:;" onclick="member_del(this,'{$it.ID}')" class="ml-5" style="text-decoration:none">
-                                <i class="Hui-iconfont">&#xe6e2;</i>
+                        <td>{$it.order_id}</td>
+                        <td>{$it.service_id}</td>
+                        <td>{$it.score}分</td>
+                        <td>{$it.comment}</td>
+                        <td>{if condition="$it.bad==1"}否{else /}<span style="color:red">是</span>{/if}
+                            <a title="改变恶评状态" href="javascript:;" onclick="change_bad('{$it.ID}')" class="ml-5" style="text-decoration:none">
+                                <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
                         </td>
                     </tr>
@@ -87,7 +83,7 @@
                 //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
                 {
                     "orderable": false,
-                    "aTargets": [5]
+                    "aTargets": []
                 } // 制定列不参与排序
             ]
         });
@@ -148,13 +144,48 @@
         }
          ***/
 
-       
-        /*用户-添加*/
-        function member_add(title, url, w, h) {
+        /*用户-编辑*/
+        function member_edit(title, url, id, w, h) {
             layer_show(title, url, w, h);
         }
-
-
+        function change_bad(id) {
+            swal({
+                title: '确认修改吗？',
+                text: '',
+                type: 'question',
+                allowOutsideClick: false,
+                showCancelButton: true,
+                confirmButtonColor: '#93c47d',
+                cancelButtonColor: '#ca5943',
+                confirmButtonText: "确认",
+                cancelButtonText: "取消"
+            }).then((result) => {
+                if (result.value) {
+                    swal({
+                        title: "正在更改",
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCloseButton: false,
+                        onOpen: () => {
+                            swal.showLoading();
+                        }
+                    });
+                    $.post("__ROOT__/index.php/api/Rate/change_bad", {
+                        id: id
+                    }).done((result) => {
+                        if (result.status == 0) {
+                            swal({
+                                title: "失败",
+                                text: "改变失败",
+                                type: "error"
+                            });
+                        } else {
+                            location.reload();
+                        }
+                    })
+                }
+            });
+        }
         /***
         /*密码-修改
         function change_password(title, url, id, w, h) {

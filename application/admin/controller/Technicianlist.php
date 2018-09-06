@@ -42,19 +42,23 @@ class Technicianlist extends Controller{
         //单个技师的订单序列
         foreach($order as $od){
             $total_score = 0;
-            $score_count=1;
+            $score_count=0;
             if($od){
-                $score_count = count($od);
                 //单个订单
                 foreach($od as $orderinfo){
                     $all_rate = $rt->get_service_rate($orderinfo[0],$orderinfo[2]);
                     if($all_rate){
                         foreach($all_rate as $rate){
-                        $total_score+=$rate->score;
+                            if($rate->bad==1)
+                            {
+                                $score_count+=1;
+                                $total_score+=$rate->score;
+                            }
                         }
                     }
                 }
             }
+            if($score_count==0)$score_count = 1;
             array_push($aver_score,$total_score/$score_count);
         }
         $count = $ctrl->count_all();

@@ -39,24 +39,50 @@
                 <strong>{$count}</strong> 条</span>
         </div>
         <div class="mt-20">
+            <div class="">
+                <label class="form-label col-xs-3 col-sm-1" style="padding-left: 15px;padding-right: 0">技师查询：</label>
+                <div class="formControls col-xs-2 col-sm-2">
+                    <select name="articletype" class="select" id="down_search">
+                        <option value="全部">全部</option>
+                        {volist name="$tech" id="it"}
+                        <option value="{$it.job_number}">{$it.job_number}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="">
+                    <label class="form-label col-xs-1 col-sm-1" style="padding-left: 15px;padding-right: 0">评分查询：</label>
+                    <div class="formControls col-xs-1 col-sm-1">
+                        <select name="articletype" class="select" id="score_search">
+                            <option value="全部">全部</option>
+                            <option value="1分">1分</option>
+                            <option value="2分">2分</option>
+                            <option value="3分">3分</option>
+                            <option value="4分">4分</option>
+                            <option value="5分">5分</option>
+                        </select>
+                    </div>
+                </div>
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
                         <th width="40">订单号</th>
+                        <th width="60">技师工号</th>
                         <th width="100">服务名</th>
                         <th width="40">评分</th>
                         <th width="200">留言</th>
-                        <th width="60">是否恶评</th>
+                        <th width="60">顾客端是否显示</th>
                     </tr>
                 </thead>
                 <tbody>
                     {volist name="$comment" id="it" key="k"}
                     <tr class="text-c">
                         <td>{$it.order_id}</td>
+                        <td>{$it.job_number}</td>
                         <td>{$it.service_id}</td>
                         <td>{$it.score}分</td>
                         <td>{$it.comment}</td>
-                        <td>{if condition="$it.bad==1"}否{else /}<span style="color:red">是</span>{/if}
+                        <td>{if condition="$it.bad==1"}是{else /}<span style="color:red">否</span>{/if}
                             <a title="改变恶评状态" href="javascript:;" onclick="change_bad('{$it.ID}')" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
@@ -87,11 +113,26 @@
                 } // 制定列不参与排序
             ]
         });
-
+        table.columns(3).search("").draw();
         $(function () {
 
         });
+        $("#down_search").on("change", () => {
+            target = $("#down_search").val();
+            if (target != "全部") table.columns(1).search(target).draw();
+            else {
+                table.columns(1).search("").draw();
+            }
 
+        })
+        $("#score_search").on("change", () => {
+            target = $("#score_search").val();
+            if (target != "全部") table.columns(3).search(target).draw();
+            else {
+                table.columns(3).search("").draw();
+            }
+
+        })
         /*用户-添加*/
         function member_add(title, url, w, h) {
             layer_show(title, url, w, h);
@@ -148,6 +189,7 @@
         function member_edit(title, url, id, w, h) {
             layer_show(title, url, w, h);
         }
+
         function change_bad(id) {
             swal({
                 title: '确认修改吗？',
@@ -196,40 +238,40 @@
         /*用户-删除*/
         function member_del(obj, id) {
             swal({
-                    title: '确认删除该客户吗？',
-                    text: '',
-                    type: 'question',
-                    allowOutsideClick: false,
-                    showCancelButton: true,
-                    confirmButtonColor: '#93c47d',
-                    cancelButtonColor: '#ca5943',
-                    confirmButtonText: "确认",
-                    cancelButtonText: "取消",
-                    width:70,
-                }).then((result) => {
-                    if (result.value) {
-                        swal({
-                            title: '正在处理',
-                            text: '',
-                            allowOutsideClick: false,
-                            showConfirmButton: false,
-                            showCloseButton: false,
-                            onOpen: () => {
-                                swal.showLoading()
-                            }
-                        }).then((result) => {});
-                        $.post("__ROOT__/index.php/api/Customer/delete_customer", {
-                            id: [id]
-                        }).done(function(result) {
-                            if (result.status == 1) {
-                                $(obj).parents("tr").remove();
-                                swal("完成", "已删除项目", "success").then((ok) => {
-                                    if (ok.value) location.reload();
-                                })
-                            }
-                        })
-                    }
-                })
+                title: '确认删除该客户吗？',
+                text: '',
+                type: 'question',
+                allowOutsideClick: false,
+                showCancelButton: true,
+                confirmButtonColor: '#93c47d',
+                cancelButtonColor: '#ca5943',
+                confirmButtonText: "确认",
+                cancelButtonText: "取消",
+                width: 70,
+            }).then((result) => {
+                if (result.value) {
+                    swal({
+                        title: '正在处理',
+                        text: '',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCloseButton: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    }).then((result) => {});
+                    $.post("__ROOT__/index.php/api/Customer/delete_customer", {
+                        id: [id]
+                    }).done(function (result) {
+                        if (result.status == 1) {
+                            $(obj).parents("tr").remove();
+                            swal("完成", "已删除项目", "success").then((ok) => {
+                                if (ok.value) location.reload();
+                            })
+                        }
+                    })
+                }
+            })
         }
     </script>
 </body>

@@ -180,7 +180,7 @@
          * @param string $skill             修改后的技能
          * 
          */
-        public function update_technician($ori_job_number,$name,$idcard,$birthday,$gender,$mobile,$job_number,$skill){
+        public function update_technician($ori_job_number,$name,$idcard,$birthday,$gender,$mobile,$job_number,$skill,$level){
 
             $is_repeat = self::check_repeat($name,$mobile,$job_number,$idcard,$ori_job_number);
             if($is_repeat!=1)return json(["status"=>$is_repeat]);
@@ -192,6 +192,7 @@
             $data->job_number=$job_number;
             $data->id_number = $idcard;
             $data->birthday=$birthday;
+            $data->level = $level;
             $data->save();
             $skill_info = \app\api\model\Skill::all(['job_number'=>$ori_job_number]);
             foreach($skill_info as $it){

@@ -68,9 +68,17 @@
 			</div>
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-3">
+					<span class="c-red">*</span>技师等级：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="{$technician.level}" placeholder="" id="level" name="level">
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">
 					<span class="c-red">*</span>生日：</label>
 				<div class="formControls col-xs-8 col-sm-9">
-					<input type="text" onfocus="WdatePicker({})" class="input-text" value="{$technician.birthday}" placeholder="" id="birthday" name="birthday">
+					<input type="text" onfocus="WdatePicker({})" class="input-text" value="{$technician.birthday}" placeholder="" id="birthday"
+					    name="birthday">
 				</div>
 			</div>
 			<div class="row cl">
@@ -80,7 +88,8 @@
 					{volist name = "$servicelist" id = "it" key="k"}
 					<div class="radio-box">
 						{volist name = "$skill_serveid" id = "skill_id" key="ink"} {if condition="$skill_id==$it.id"}
-						<input name="servicetype" type="checkbox" id="type-{$it.id}" checked value="{$it.id}"> {elseif condition="$ink==count($skill_serveid)"}
+						<input name="servicetype" type="checkbox" id="type-{$it.id}" checked value="{$it.id}"> {elseif
+						condition="$ink==count($skill_serveid)"}
 						<input name="servicetype" type="checkbox" id="type-{$it.id}" value="{$it.id}"> {/if} {/volist}
 
 						<label for="type-{$k}">{$it.name}</label>
@@ -144,10 +153,10 @@
 			}
 			return '';
 		}
-		
-		function isDate(date){
+
+		function isDate(date) {
 			var isDate = /^\d{4}(\-|\/|\.)\d{1,2}\1\d{1,2}$/;
-			if(isDate.test(date))return true;
+			if (isDate.test(date)) return true;
 			else return false;
 		}
 		jQuery.validator.addMethod("isIdCard",
@@ -155,7 +164,7 @@
 				return this.optional(element) || (isIdCard(value));
 			},
 			"身份证号非法！");
-			jQuery.validator.addMethod("isDate",
+		jQuery.validator.addMethod("isDate",
 			function (value, element) {
 				return this.optional(element) || (isDate(value));
 			},
@@ -182,41 +191,50 @@
 						required: true,
 						minlength: 2,
 						maxlength: 16,
-						remote:{
-                            type:"post",
-                            url:"__ROOT__/index.php/api/Technician/check_name",
-                            data:{
-                                name:function(){return $("#username").val();},
-								ori_number:'{$technician.job_number}'
-                            }
-                        }
+						remote: {
+							type: "post",
+							url: "__ROOT__/index.php/api/Technician/check_name",
+							data: {
+								name: function () {
+									return $("#username").val();
+								},
+								ori_number: '{$technician.job_number}'
+							}
+						}
 					},
 					id_number: {
 						required: true,
-						isIdCard:true,
-						remote:{
-                            type:"post",
-                            url:"__ROOT__/index.php/api/Technician/check_idnumber",
-                            data:{
-                                num:function(){return $("#id_number").val();},
-								ori_number:'{$technician.job_number}'
-                            }
-                        },
+						isIdCard: true,
+						remote: {
+							type: "post",
+							url: "__ROOT__/index.php/api/Technician/check_idnumber",
+							data: {
+								num: function () {
+									return $("#id_number").val();
+								},
+								ori_number: '{$technician.job_number}'
+							}
+						},
 					},
-					job_number:{
-                        required:true,
-                        remote:{
-                            type:"post",
-                            url:"__ROOT__/index.php/api/Technician/check_job_number",
-                            data:{
-                                num:function(){return $("#job_number").val();},
-								ori_number:'{$technician.job_number}'
-                            }
-                        }
-                    },
-					birthday:{
+					job_number: {
+						required: true,
+						remote: {
+							type: "post",
+							url: "__ROOT__/index.php/api/Technician/check_job_number",
+							data: {
+								num: function () {
+									return $("#job_number").val();
+								},
+								ori_number: '{$technician.job_number}'
+							}
+						}
+					},
+					level:{
 						required:true,
-						isDate:true,
+					},
+					birthday: {
+						required: true,
+						isDate: true,
 					},
 					sex: {
 						required: true,
@@ -224,14 +242,16 @@
 					mobile: {
 						required: true,
 						isMobile: true,
-						remote:{
-                            type:"post",
-                            url:"__ROOT__/index.php/api/Technician/check_phone_number",
-                            data:{
-                                num:function(){return $("#mobile").val();},
-								ori_number:'{$technician.job_number}'
-                            }
-                        }
+						remote: {
+							type: "post",
+							url: "__ROOT__/index.php/api/Technician/check_phone_number",
+							data: {
+								num: function () {
+									return $("#mobile").val();
+								},
+								ori_number: '{$technician.job_number}'
+							}
+						}
 					},
 					email: {
 						required: true,
@@ -242,20 +262,20 @@
 					},
 
 				},
-				messages:{
-                    username:{
-                        remote:"名字重复，请加以区分"
-                    },
-                    id_number:{
-                        remote:"身份证号已存在"
-                    },
-                    job_number:{
-                        remote:"工号已存在"
-                    },
-                    mobile:{
-                        remote:"手机号已存在"
-                    }
-                },
+				messages: {
+					username: {
+						remote: "名字重复，请加以区分"
+					},
+					id_number: {
+						remote: "身份证号已存在"
+					},
+					job_number: {
+						remote: "工号已存在"
+					},
+					mobile: {
+						remote: "手机号已存在"
+					}
+				},
 				onkeyup: false,
 				focusCleanup: true,
 				success: "valid",
@@ -273,12 +293,13 @@
 					name = $("#username").val();
 					gender = $("input:radio[name = 'sex']:checked").val();
 					idcard = $("#id_number").val();
-					birthday=$("#birthday").val();
+					birthday = $("#birthday").val();
 					phone = $("#mobile").val();
-					job_number = $("#job_number").val();
+					//job_number = $("#job_number").val();
 					ori_job_number = '{$technician.job_number}';
 					service_id = [];
 					service_type = $('input:checkbox[name="servicetype"]:checked')
+					level = $('#level').val();
 					$.each(service_type, function () {
 						service_id.push($(this).val());
 					})
@@ -288,12 +309,13 @@
 						data: {
 							ori_job_number: ori_job_number,
 							name: name,
-							idcard:idcard,
-							birthday:birthday,
+							idcard: idcard,
+							birthday: birthday,
 							gender: gender,
 							mobile: phone,
-							job_number: job_number,
+							job_number: '{$technician.job_number}',
 							skill: service_id,
+							level:level,
 						},
 						success: function (result) {
 							if (result.status == 1) {
@@ -314,10 +336,10 @@
 							} else if (result.status == -2) {
 								swal("失败", "存在相同的技师名，请加标注以区分", "error");
 							} else if (result.status == -3) {
-                                swal("失败", "已存在相同的身份证号", "error");
-                            }else if (result.status == -4) {
-                                swal("失败", "未指定技师的技能", "error");
-                            }
+								swal("失败", "已存在相同的身份证号", "error");
+							} else if (result.status == -4) {
+								swal("失败", "未指定技师的技能", "error");
+							}
 						}
 					});
 				}

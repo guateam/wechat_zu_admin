@@ -13,8 +13,13 @@ class Comment extends Controller{
 
             if($name){
                 $so = $svod->get_order($rt->order_id);
-                $rt->service_id = $name;
-                $rt->job_number = $so[0]->job_number;
+                if($so !=0 ){
+                    $rt->service_id = $name;
+                    $rt->job_number = $so[0]->job_number;
+                }else{
+                    $rt->service_id = "无";
+                    $rt->job_number = "无";
+                }
             }
         }
         $tech = \app\api\model\Technician::all();

@@ -8,6 +8,6 @@ class Attendance extends Controller{
         $att = \app\api\model\Attendance::all();
         $this->assign("attendance",$att);
         $this->assign("count",count($att));
-        return $this->fetch('attendance');
+        return $this->fetch('Attendance/attendance');
     }
 }

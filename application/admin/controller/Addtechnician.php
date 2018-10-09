@@ -9,6 +9,6 @@ class Addtechnician extends Controller{
         $ctrl = new \app\api\controller\Servicetype();
         $service_list = $ctrl->getservicelist();
         $this->assign("servicelist",$service_list);
-        return $this->fetch();
+        return $this->fetch('Addtechnician/addtechnician');
     }
 }

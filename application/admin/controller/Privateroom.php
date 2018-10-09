@@ -12,7 +12,7 @@ class Privateroom extends Controller{
                 $privateroom=new \app\api\controller\Privateroom();
                 $data=$privateroom->getroomlist();
                 $this->assign('data',$data);
-                return $this->fetch('baoxiangliebiao');
+                return $this->fetch('Privateroom/baoxiangliebiao');
         //    }
         //}
         //return $this->error('请先登录','index/index/index');

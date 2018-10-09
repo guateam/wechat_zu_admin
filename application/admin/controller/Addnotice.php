@@ -7,6 +7,6 @@ class Addnotice extends Controller{
 
     public function index(){
 
-        return $this->fetch("fabugonggao");
+        return $this->fetch("Addnotice/fabugonggao");
     }
 }

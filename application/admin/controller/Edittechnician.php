@@ -17,6 +17,6 @@ class Edittechnician extends Controller{
         $this->assign("servicelist",$service_list);
         $this->assign("technician",$technician);
         $this->assign("skill_serveid",$skill_list);
-        return $this->fetch();
+        return $this->fetch('Edittechnician/edittechnician');
     }
 }

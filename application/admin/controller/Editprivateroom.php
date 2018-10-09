@@ -15,7 +15,7 @@ class Editprivateroom extends Controller{
                     $servicelist=\app\api\controller\Servicetype::getservicelist();
                     $this->assign('servicelist',$servicelist);
                     $this->assign('data',$data);
-                    return $this->fetch('bianjifangjian');
+                    return $this->fetch('Editprivateroom/bianjifangjian');
                 }
                 return $this->error('404未知的房间');
         //    }

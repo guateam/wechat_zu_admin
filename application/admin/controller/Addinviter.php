@@ -11,6 +11,6 @@ class Addinviter extends Controller{
         $count = $ctrl->count_all();
         $this->assign("technicians",$technicians);
         $this->assign("self_job_number",$jbnb);
-        return $this->fetch();
+        return $this->fetch("Addinviter/addinviter");
     }
 }

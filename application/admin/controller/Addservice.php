@@ -7,6 +7,6 @@ class Addservice extends Controller{
 
     public function Addservice(){
         $ctrl = new \app\api\controller\Servicetype();
-        return $this->fetch('addservice');
+        return $this->fetch('Addservice/addservice');
     }
 }

@@ -58,6 +58,6 @@ class Clock extends Controller{
         }
         $this->assign("clock",$clock);
         $this->assign("count",count($clock));
-        return $this->fetch("clock");
+        return $this->fetch("Clock/clock");
     }
 }

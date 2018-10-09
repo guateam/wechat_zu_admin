@@ -9,6 +9,6 @@ class Rechargerecord extends Controller{
         $record =$ctrl->get_all();
         $this->assign("record",$record);
         $this->assign("count",count($record));
-        return $this->fetch('recharge');
+        return $this->fetch('Rechargerecord/recharge');
     }
 }

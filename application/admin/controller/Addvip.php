@@ -5,6 +5,6 @@ use \app\api\model\Vipinformation as VipModel;
 
 class Addvip extends Controller{
 public function index(){
-        return $this->fetch("addvip");
+        return $this->fetch("Addvip/addvip");
     }
 }

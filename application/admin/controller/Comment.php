@@ -26,6 +26,6 @@ class Comment extends Controller{
         $this->assign("comment",$att);
         $this->assign("count",count($att));
         $this->assign("tech",$tech);
-        return $this->fetch('comment');
+        return $this->fetch('Comment/comment');
     }
 }

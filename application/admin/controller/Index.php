@@ -9,7 +9,7 @@ class Index extends Controller{
         //if(isset($_COOKIE['login'])){
         //    $user=new \app\api\controller\admin();
         //    if($user->checkuser($_COOKIE['userid'])){
-                return $this->fetch('index');
+                return $this->fetch('Index/Index');
         //    }
         //}
         //return $this->error('请先登录','index/index/index');

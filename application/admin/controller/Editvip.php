@@ -7,6 +7,6 @@ class Editvip extends Controller{
 public function index($vip){
         $info = VipModel::get(["level"=>$vip]);
         $this->assign("vip",$info);
-        return $this->fetch("editvip");
+        return $this->fetch("Editvip/editvip");
     }
 }

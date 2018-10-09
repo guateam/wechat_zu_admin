@@ -23,7 +23,7 @@ class Customer extends Controller{
         $this->assign("customer",$customer);
         $this->assign("count",count($customer));
         $this->assign("chargelist",$chargelist);
-        return $this->fetch('customer');
+        return $this->fetch('Customer/customer');
 
     }
 }

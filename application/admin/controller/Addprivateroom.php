@@ -11,7 +11,7 @@ class Addprivateroom extends Controller{
         //    if($user->checkuser($_COOKIE['userid'])){
                 $servicelist=\app\api\controller\Servicetype::getservicelist();
                 $this->assign('servicelist',$servicelist);
-                return $this->fetch('tianjiafangjian');
+                return $this->fetch('Addprivateroom/tianjiafangjian');
         //    }
         //}
         //return $this->error('请先登录','index/index/index');

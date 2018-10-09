@@ -9,7 +9,7 @@ class Vip extends Controller{
         $vip = VipModel::all();
         $this->assign("vip",$vip);
         $this->assign("count",count($vip));
-        return $this->fetch('vip');
+        return $this->fetch('Vip/vip');
 
     }
 }

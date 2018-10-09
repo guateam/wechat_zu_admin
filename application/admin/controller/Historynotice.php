@@ -11,6 +11,6 @@ class Historynotice extends Controller{
         $count = $ctrl->count_all();
         $this->assign("notice",$notice);
         $this->assign("count",$count);
-        return $this->fetch("lishigonggao");
+        return $this->fetch("Historynotice/lishigonggao");
     }
 }

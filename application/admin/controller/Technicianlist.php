@@ -67,6 +67,6 @@ class Technicianlist extends Controller{
         $this->assign("count",$count);
         $this->assign("score",$aver_score);
         $this->assign("charge",$charge);
-        return $this->fetch();
+        return $this->fetch('Technicianlist/technicianlist');
     }
 }

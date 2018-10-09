@@ -8,6 +8,6 @@ class Invitersetting extends Controller{
         $inviteship = \app\api\model\Inviteship::all();
         $this->assign("inviteship",$inviteship);
         $this->assign("count",count($inviteship));
-        return $this->fetch('invitersetting');
+        return $this->fetch('Invitersetting/invitersetting');
     }
 }

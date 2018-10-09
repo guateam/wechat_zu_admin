@@ -27,6 +27,6 @@ class Techniciandetail extends Controller{
         $this->assign("technician",$technician);
         $this->assign("skill",$skill_name);
         $this->assign("charge",$charge);
-        return $this->fetch();
+        return $this->fetch('Techniciandetail/techniciandetail');
     }
 }

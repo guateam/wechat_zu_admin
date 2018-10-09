@@ -10,6 +10,6 @@ class Servicelist extends Controller{
         $count = $ctrl->count_all();
         $this->assign("servicelist",$servicelist);
         $this->assign("count",$count);
-        return $this->fetch('service');
+        return $this->fetch('Servicelist/service');
     }
 }

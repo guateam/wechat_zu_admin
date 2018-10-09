@@ -30,6 +30,6 @@ class Consumedorder extends Controller{
         $this->assign("phone",$user);
         $this->assign("phone2",$payer);
         $this->assign("count",count($order));
-        return $this->fetch('consumedorder');
+        return $this->fetch('Consumedorder/consumedorder');
     }
 }

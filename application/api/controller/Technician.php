@@ -242,4 +242,47 @@
             }
             return json(['status'=>0]);
         }
+        /**
+         * 获取技师的业绩
+         */
+        public static function get_yeji($job_number){
+            $so = \app\api\model\Serviceorder::all(['job_number'=>$job_number]);
+            $invited = \app\api\model\Technician::all(['inviter'=>$job_number]);
+            $price = 0;
+            $come_frome_other = 0;
+            $lost = 0;
+            if($so){
+                foreach($so as $svod){
+                    $item=\app\api\model\Servicetype::get(['ID'=>$svod->item_id]);
+                    $skill = \app\api\model\Skill::get(['service_id'=>$svod->item_id,'job_number'=>$job_number]);
+                    $lost+=$skill->lost/100;
+                    $price+=$item->commission/100;
+                }
+            }
+            if($invited){
+                foreach($invited as $inv){
+                    $data = self::get_yeji($inv->job_number);
+                    $come_frome_other += $data['lost'];
+                }
+            }
+            return [
+                'job_number'=>$job_number,
+                'status'=>1,
+                'earn'=>$price,
+                'come_from_other'=>$come_frome_other,
+                'lost'=>$lost,
+                'final_salary'=>$price+$come_frome_other-$lost
+                ];
+        }
+        /**
+         * 获取所有技师的业绩
+         */
+        public function get_all_yeji(){
+            $data = [];
+            $technicians = \app\api\model\Technician::all();
+            foreach($technicians as $tech){
+                array_push($data,self::get_yeji($tech->job_number));
+            }
+            return $data;
+        }
     }

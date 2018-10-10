@@ -215,6 +215,24 @@
             $data = UserModel::get(["job_number"=>$job_number]);
             if($data){
                 $data->inviter=$inviter_job_number;
+                $old_data = \app\api\model\Inviteship::get(['inviter_job_number'=>$inviter_job_number,'freshman_job_number'=>$job_number]);
+                if(!$old_data){
+                    $new_data = new \app\api\model\Inviteship();
+                    $new_data->data([
+                        'inviter_job_number'=>$inviter_job_number,
+                        'freshman_job_number'=>$job_number,
+                        'persentage'=>0
+                    ]);
+                    $new_data->save();
+                }else{
+                    $old_data->data([
+                        'inviter_job_number'=>$inviter_job_number,
+                        'freshman_job_number'=>$job_number,
+                        'perssentage'=>0
+                    ]);
+                    $old_data->save();
+                }
+                
                 $data->save();
                 return json(["status"=>1]);
             }

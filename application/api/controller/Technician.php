@@ -247,21 +247,21 @@
          */
         public static function get_yeji($job_number){
             $so = \app\api\model\Serviceorder::all(['job_number'=>$job_number]);
-            $invited = \app\api\model\Technician::all(['inviter'=>$job_number]);
+            $invited = \app\api\model\Inviteship::all(['inviter_job_number'=>$job_number]);
             $price = 0;
             $come_frome_other = 0;
             $lost = 0;
             if($so){
                 foreach($so as $svod){
                     $item=\app\api\model\Servicetype::get(['ID'=>$svod->item_id]);
-                    $skill = \app\api\model\Skill::get(['service_id'=>$svod->item_id,'job_number'=>$job_number]);
-                    $lost+=$skill->lost/100;
+                    $per = $invited->persentage/100;
+                    $lost+= ($item->commission/100)*$per;
                     $price+=$item->commission/100;
                 }
             }
             if($invited){
                 foreach($invited as $inv){
-                    $data = self::get_yeji($inv->job_number);
+                    $data = self::get_yeji($inv->freshman_job_number);
                     $come_frome_other += $data['lost'];
                 }
             }

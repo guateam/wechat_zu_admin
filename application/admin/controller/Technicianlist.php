@@ -31,6 +31,8 @@ class Technicianlist extends Controller{
             $sk_name = $sk->get_skill_name($tc->job_number);
             if($sk_name){
                 array_push($skill,$sk_name);
+            }else{
+                array_push($skill,"无");
             }
             $od = $so->get_order_by_job_number($tc->job_number);
             if($od){

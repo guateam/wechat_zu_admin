@@ -31,7 +31,6 @@
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
-                        <th width="25"><input type="checkbox" name="" value=""></th>
                         <th width="100">工号</th>
                         <th width="100">营业额</th>
                         <th width="80">来自推荐</th>
@@ -42,7 +41,6 @@
                 <tbody>
                     {volist name="$yeji" id="it"}
                     <tr class="text-c">
-                        <td><input type="checkbox" value="1" name=""></td>
                         <td>{$it.job_number}</td>
                         <td>{$it.earn}￥</td>
                         <td>{$it.come_from_other}￥</td>

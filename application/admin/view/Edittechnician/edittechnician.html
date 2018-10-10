@@ -87,11 +87,12 @@
 				<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 					{volist name = "$servicelist" id = "it" key="k"}
 					<div class="radio-box">
-						{volist name = "$skill_serveid" id = "skill_id" key="ink"} {if condition="$skill_id==$it.id"}
-						<input name="servicetype" type="checkbox" id="type-{$it.id}" checked value="{$it.id}"> {elseif
-						condition="$ink==count($skill_serveid)"}
-						<input name="servicetype" type="checkbox" id="type-{$it.id}" value="{$it.id}"> {/if} {/volist}
-
+						{volist name = "$skill_serveid" id = "skill_id" key="ink"} 
+							{if condition="$skill_id==$it.id"}
+							<input name="servicetype" type="checkbox" id="type-{$it.id}" checked value="{$it.id}"> 
+							{/if}
+						{/volist}
+						<input name="servicetype" type="checkbox" id="type-{$it.id}" value="{$it.id}"> 
 						<label for="type-{$k}">{$it.name}</label>
 					</div>
 					{/volist}

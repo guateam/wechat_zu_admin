@@ -265,14 +265,28 @@
          */
         public static function get_yeji($job_number){
             $so = \app\api\model\Serviceorder::all(['job_number'=>$job_number]);
+            //该技师邀请的人
             $invited = \app\api\model\Inviteship::all(['inviter_job_number'=>$job_number]);
+            //邀请该技师的人
+            $self_p =  \app\api\model\Inviteship::get(['freshman_job_number'=>$job_number]);
+            //收入
             $price = 0;
+            //点钟数量
+            $dian = 0;
+            //排钟数量
+            $pai = 0;
+            //来自邀请的人的收入
             $come_frome_other = 0;
+            //付给邀请自己的人的钱
             $lost = 0;
+
             if($so){
                 foreach($so as $svod){
+                    if($svod->clock_type == 1)$pai++;
+                    else if($svod->clock_type == 2)$dian++;
                     $item=\app\api\model\Servicetype::get(['ID'=>$svod->item_id]);
-                    $per = $invited->persentage/100;
+                    $per = 0;
+                    if($self_p)$per = $self_p->persentage/100;
                     $lost+= ($item->commission/100)*$per;
                     $price+=$item->commission/100;
                 }
@@ -286,6 +300,8 @@
             return [
                 'job_number'=>$job_number,
                 'status'=>1,
+                'pai'=>$pai,
+                'dian'=>$dian,
                 'earn'=>$price,
                 'come_from_other'=>$come_frome_other,
                 'lost'=>$lost,

@@ -32,6 +32,8 @@
                 <thead>
                     <tr class="text-c">
                         <th width="100">工号</th>
+                        <th width="80">排钟数量</th>
+                        <th width="80">点钟数量</th>
                         <th width="100">营业额</th>
                         <th width="80">来自推荐</th>
                         <th width="80">支付给推荐</th>
@@ -42,6 +44,8 @@
                     {volist name="$yeji" id="it"}
                     <tr class="text-c">
                         <td>{$it.job_number}</td>
+                        <td>{$it.pai}</td>
+                        <td>{$it.dian}</td>
                         <td>{$it.earn}￥</td>
                         <td>{$it.come_from_other}￥</td>
                         <td>{$it.lost}元</td>

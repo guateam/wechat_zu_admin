@@ -29,6 +29,7 @@
                 <thead>
                     <tr class="text-c">
                         <th width="100">被打赏工号</th>
+                        <th width="100">打赏人</th>
                         <th width="100">打赏金额</th>
                         <th width="80">打赏日期</th>
                     </tr>
@@ -37,6 +38,7 @@
                     {volist name="list" id="vo"}
                     <tr class="text-c">
                         <td>{$vo.technician_id}</td>
+                        <td>{$vo.user_id}</td>
                         <td>￥{$vo.salary/100.00}</td>
                         <td>{$vo.date}</td>
                     </tr>

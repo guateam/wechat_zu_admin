@@ -17,9 +17,22 @@ class Consumedorder extends Controller{
             $info2 = $cs->get_customer($od->payment_user_id);
             $so = \app\api\model\Serviceorder::all(['order_id'=>$od->order_id]);
             $str = "";
+            $exist = [];
             foreach($so as  $s){
-                $str = $str.$s->job_number.',';
+                $repeat = false;
+                foreach($exist as $ex){
+                    if($ex == $s->job_number){
+                        $repeat = true;
+                        break;
+                    }
+                }
+                if(!$repeat){
+                    $str = $str.$s->job_number.',';
+                    array_push($exist,$s->job_number);
+                }
+               
             }
+            $str = substr($str,0,strlen($str)-1);
             array_push($tech,$str);
             if($info){
                 array_push($user,$info->phone_number);

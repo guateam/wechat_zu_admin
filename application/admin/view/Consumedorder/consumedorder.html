@@ -67,7 +67,7 @@
                         <th width="150">订单生成时间</th>
                         <th width="140">预约人用户名及手机号</th>
                         <th width="150">订单状态</th>
-                        <th width="1" hidden>技师编号</th>
+                        <th width="100" >技师编号</th>
                         <th width="120">付款顾客用户名及手机号</th>
                         <th width="150">操作</th>
                     </tr>
@@ -89,7 +89,7 @@
                             {elseif condition="$it.state==3"}等待支付{elseif condition="$it.state==4"}支付完成 {elseif
                             condition="$it.state==5"}评价完成
                             {/if}</td>
-                        <td hidden>
+                        <td >
                             {$tech[$k-1]}
                         </td>
                         <td class="">{$it.payment_user_id},{$phone2[$k-1]}</td>

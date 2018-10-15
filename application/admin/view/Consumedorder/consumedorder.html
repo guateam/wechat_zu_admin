@@ -31,13 +31,14 @@
     </nav>
     <div class="page-container">
         <div class="text-c"> 日期范围：
-            <input type="text" onfocus="WdatePicker({})" value="" id="datemin" class="input-text Wdate" style="width:120px;"> -
+            <input type="text" onfocus="WdatePicker({})" value="" id="datemin" class="input-text Wdate" style="width:120px;">
+            -
             <input type="text" onfocus="WdatePicker({})" value="" id="datemax" class="input-text Wdate" style="width:120px;">
             <button type="submit" class="btn btn-success radius" id="search" name="">
                 <i class="Hui-iconfont">&#xe665;</i> 搜记录
             </button>
             <button type="button" onclick="location.reload()" class="btn btn-success radius" id="refresh" name="">
-                     清空筛选条件
+                清空筛选条件
             </button>
         </div>
         <div class="cl pd-5 bg-1 bk-gray mt-20">
@@ -66,22 +67,31 @@
                         <th width="150">订单生成时间</th>
                         <th width="140">预约人用户名及手机号</th>
                         <th width="150">订单状态</th>
+                        <th width="1" hidden>技师编号</th>
                         <th width="120">付款顾客用户名及手机号</th>
                         <th width="150">操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     {volist name="$order" id="it" key="k"}
-                    <p hidden id="state{$k-1}">{if condition="$it.payment_method==1"}微信支付{elseif condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif condition="$it.payment_method==4"}现金 {else /}未支付{/if}</p>
+                    <p hidden id="state{$k-1}">{if condition="$it.payment_method==1"}微信支付{elseif
+                        condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif
+                        condition="$it.payment_method==4"}现金 {else /}未支付{/if}</p>
                     <tr class="text-c" id="row{$k-1}">
                         <td>{$it.order_id}</td>
                         <td id="time{$k-1}">{$it.generated_time}</td>
                         <td>
                             {$it.user_id},{$phone[$k-1]}
                         </td>
-                        <td id="total_state{$k-1}">{if condition="$it.state==0"}订单取消 {elseif condition="$it.state==1"}预约 {elseif condition="$it.state==2"}服务中
-                            {elseif condition="$it.state==3"}等待支付{elseif condition="$it.state==4"}支付完成 {elseif condition="$it.state==5"}评价完成
+
+                        <td id="total_state{$k-1}">{if condition="$it.state==0"}订单取消 {elseif
+                            condition="$it.state==1"}预约 {elseif condition="$it.state==2"}服务中
+                            {elseif condition="$it.state==3"}等待支付{elseif condition="$it.state==4"}支付完成 {elseif
+                            condition="$it.state==5"}评价完成
                             {/if}</td>
+                        <td hidden>
+                            {$tech[$k-1]}
+                        </td>
                         <td class="">{$it.payment_user_id},{$phone2[$k-1]}</td>
 
                         <td class="td-manage">
@@ -254,15 +264,16 @@
                             `￥</td>
                                         </tr>`
                     }
-                    state = $("#state" + k).html().replace(/^[\t\n\s]$/,'');
+                    state = $("#state" + k).html().replace(/^[\t\n\s]$/, '');
                     alert(state);
                     is_pay = "未支付"
-                    if(state!="未支付")is_pay="已支付";
+                    if (state != "未支付") is_pay = "已支付";
 
-                    if(clr == "#d4d4d4")clr="#ffffff";
+                    if (clr == "#d4d4d4") clr = "#ffffff";
                     else clr = "#d4d4d4"
                     html_string +=
-                        `<tr bgcolor="`+clr+`">
+                        `<tr bgcolor="` + clr +
+                        `">
                                         <td>总计</td>
                                         <td></td>
                                         <td></td> 
@@ -279,15 +290,17 @@
                                         <td>` +
                         is_pay +
                         `</td>
-                                    </tr>`
-                                    ;
-                            if(state!="未支付")html_string+=`
+                                    </tr>`;
+                    if (state != "未支付") html_string +=
+                        `
                             <tr>
                                     <td>支付方式</td>
                                         <td></td> 
                                         <td></td> 
                                         <td></td> 
-                                        <td>`+state+`</td>
+                                        <td>` +
+                        state +
+                        `</td>
                              </tr>
                             </tbody>
                             </table>

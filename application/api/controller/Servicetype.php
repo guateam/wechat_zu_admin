@@ -137,7 +137,68 @@
             }
             return json(['status'=>0]);
         }
+        /**
+         * 为服务上传缩略图
+         */
+        public function upload($name,$duration,$price,$discount,$commission,$info){
+            $dir = $_SERVER['DOCUMENT_ROOT']."/photo/";
+            $save_dir = "/photo/";
+            $bg = false;
+            if(isset($_POST['bg']))$bg = $_POST['bg'];
+            $allowedExts = array("gif", "jpeg", "jpg", "png","PNG");
+            $temp = explode(".", $_FILES["image"]["name"]);
+            $extension = end($temp);        // 获取文件后缀名
 
+            $dict=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u',
+                    'v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P',
+                    'Q','R','S','T','U','V','W','X','Y','Z','1','2','3','4','5','6','7','8','9','0'];
+            $rnd_str = "";
+            for($i = 0;$i<7;$i++){
+                $idx = rand(0,count($dict)-1);
+                $rnd_str.=$dict[$idx];    
+            }
+
+            if ((
+                ($_FILES["image"]["type"] == "image/jpeg") 
+                ||  ($_FILES["image"]["type"] == "image/jpg")
+                || ($_FILES["image"]["type"] == "image/x-png")
+                || ($_FILES["image"]["type"] == "image/png"))   
+            ){
+                if ($_FILES["image"]["error"] > 0)
+                {
+                    return json_encode(["state"=>$_FILES["image"]["error"]]);
+                }
+                else
+                {
+                    // echo "上传文件名: " . $_FILES["file"]["name"] . "<br>";
+                    // echo "文件类型: " . $_FILES["file"]["type"] . "<br>";
+                    // echo "文件大小: " . ($_FILES["file"]["size"] / 1024) . " kB<br>";
+                    // echo "文件临时存储的位置: " . $_FILES["file"]["tmp_name"];
+
+                    // 判断当期目录下的 upload 目录是否存在该文件
+                    // 如果没有 upload 目录，你需要创建它，upload 目录权限为 777
+                    if (file_exists( $dir . $_FILES["image"]["name"]))
+                    {
+                        return json_encode(["state"=>'文件已经存在']);
+                    }
+                    else
+                    {
+                        $tm = date("ymdhis",time());
+                        $sv = $save_dir.$rnd_str.$tm.$_FILES["image"]["name"];
+                        $tm=$dir.$rnd_str.$tm.$_FILES["image"]["name"];
+
+                        // 如果 upload 目录不存在该文件则将文件上传到 upload 目录下
+                        move_uploaded_file($_FILES["image"]["tmp_name"],$tm );
+                        $svtp = self::add_service($name,$duration,$price,$discount,$commission,$info,$sv);
+
+                        return json_encode(["state"=>1,'url'=>$sv]);
+                    }
+                }
+
+            }else{
+               return json_encode(["state"=>"格式错误:".$_FILES["image"]["type"]]);
+            }
+        }
         /**
          * 删除指定id的服务
          * 2018-8-27    创建   赖品钊
@@ -179,7 +240,7 @@
          * @param string $image                 服务介绍图
          * 
          */
-        public function add_service($name,$duration,$price,$discount,$commission,$info,$image){
+        public static function add_service($name,$duration,$price,$discount,$commission,$info,$image){
 
             $data = new Service(['name'=>$name,'duration'=>$duration,'price'=>$price,
                                     'discount'=>$discount,'commission'=>((int)$commission)*100,

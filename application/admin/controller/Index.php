@@ -9,7 +9,7 @@ class Index extends Controller{
         //if(isset($_COOKIE['login'])){
         //    $user=new \app\api\controller\admin();
         //    if($user->checkuser($_COOKIE['userid'])){
-                shell_exec('python /wechat_zu_admin/public/static/timer.py');
+                //shell_exec('python /wechat_zu_admin/public/static/timer.py');
                 return $this->fetch('Index/Index');
         //    }
         //}

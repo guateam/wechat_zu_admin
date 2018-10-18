@@ -9,6 +9,6 @@ class Tip extends Controller{
         $data=$tip->gettiplist();
         $this->assign('count',count($data));
         $this->assign('list',$data);
-        return $this->fetch('tip');
+        return $this->fetch('Tip/tip');
     }
 }

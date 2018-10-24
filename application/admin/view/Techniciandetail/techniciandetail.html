@@ -21,7 +21,11 @@
 
 <body>
 	<div class="cl pd-20" style=" background-color:#5bacb6">
-		<img class="avatar size-XL l" src="{$technician.photo}">
+		<form id="upload" action="__ROOT__/index.php/api/Technician/upload" method="post" enctype='multipart/form-data'>
+			<img class="avatar size-XL l" src="{$technician.photo}">
+			<input type="file" id="file" name="file">
+		</form>
+
 		<dl style="margin-left:80px; color:#fff">
 			<dt>
 				<span class="f-18">{$technician.name}</span>
@@ -56,9 +60,9 @@
 				<tr>
 					<th class="text-r">掌握技能：</th>
 					<td>
-					{volist name="$skill" id="it"}
-					{$it}
-					{/volist}
+						{volist name="$skill" id="it"}
+						{$it}
+						{/volist}
 					</td>
 				</tr>
 				<tr>
@@ -67,8 +71,8 @@
 				</tr>
 				<tr>
 					<th class="text-r">身份证照：</th>
-						<td><img class="avatar size-XL l" src="{$technician.idcard_photo}" style="width:150px;height:120px;margin-right: 10px"></td>
-						<td><img class="avatar size-XL l" src="{$technician.idcard_photo_2}" style="width:150px;height:120px;margin-right: 10px"></td>
+					<td><img class="avatar size-XL l" src="{$technician.idcard_photo}" style="width:150px;height:120px;margin-right: 10px"></td>
+					<td><img class="avatar size-XL l" src="{$technician.idcard_photo_2}" style="width:150px;height:120px;margin-right: 10px"></td>
 				</tr>
 			</tbody>
 		</table>
@@ -79,6 +83,28 @@
 	{include file="common/common_script"}
 
 	<!--请在下方写此页面业务相关的脚本-->
+	<script type="text/javascript" src="__STATIC__/lib/jquery/1.9.1/jquery.js"></script>
+
+	<script>
+		$("#file").on("change", () => {
+			form = document.getElementById('upload');
+			dt = new FormData(form);
+			dt.append("job_number",'{$technician.job_number}');
+			$.ajax({
+				url: "__ROOT__/index.php/api/Technician/upload",
+				type: "POST",
+				data: dt,
+				processData: false, // tell jQuery not to process the data
+				contentType: false, // tell jQuery not to set contentType
+				success:function(res){
+					res = JSON.parse(res);
+					if(res.state == 1){
+						window.location.reload();
+					}
+				}
+			});
+		})
+	</script>
 </body>
 
 </html>

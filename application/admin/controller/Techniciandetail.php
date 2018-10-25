@@ -24,6 +24,7 @@ class Techniciandetail extends Controller{
            array_push($skill_name,$serve_ctrl->getservicename($sk->service_id));
         }
         $technician->birthday=substr($technician->birthday,0,10);
+
         $this->assign("technician",$technician);
         $this->assign("skill",$skill_name);
         $this->assign("charge",$charge);

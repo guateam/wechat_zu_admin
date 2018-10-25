@@ -67,18 +67,27 @@
 				</tr>
 				<tr>
 					<th class="text-r">身份证号：</th>
-					<td>{$technician.id_number}</td>
+					<td>
+						{$technician.id_number}
+					</td>
 				</tr>
 				<tr>
 					<th class="text-r">身份证照：</th>
+					{if condition="$technician.idcard_photo!='' "}
 					<td><img class="avatar size-XL l" src="{$technician.idcard_photo}" style="width:150px;height:120px;margin-right: 10px"></td>
+					{/if}
+					{if condition="$technician.idcard_photo!='' "}
 					<td><img class="avatar size-XL l" src="{$technician.idcard_photo_2}" style="width:150px;height:120px;margin-right: 10px"></td>
+					{/if}
+					{if condition="$technician.idcard_photo!='' && $technician.idcard_photo!=''"}
+					无
+					{/if}
 				</tr>
 			</tbody>
 		</table>
-		<video src="{$technician.vcr}" controls="controls" style="margin: 30px 30px ;width: 400px;height: 300px;">
+		<!-- <video src="{$technician.vcr}" controls="controls" style="margin: 30px 30px ;width: 400px;height: 300px;">
 			your browser does not support the video tag
-		</video>
+		</video> -->
 	</div>
 	{include file="common/common_script"}
 

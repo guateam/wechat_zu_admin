@@ -6,7 +6,11 @@
     class Rechargerecord extends Controller{
 
         public function get_all(){
-            return UserModel::all();
+            $all = UserModel::all();
+            for($i=0;$i<count($all);$i++){
+                $all[$i]->generated_time = date('Y-m-d H:i:s',$all[$i]->generated_time);
+            }
+            return $all;
         }
         /**
          * 获取某个工号的技师一段时间内的充卡额，默认本月

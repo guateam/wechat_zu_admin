@@ -1,4 +1,4 @@
-﻿<!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html>
 
 <head>
@@ -16,85 +16,42 @@
 	<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
 	<script>DD_belatedPNG.fix('*');</script>
 	<![endif]-->
-    <title>项目列表</title>
+    <title>店铺信息</title>
 </head>
 
 <body>
     <div class="page-container">
         <div class="cl pd-5 bg-1 bk-gray mt-20">
-            <span class="l">
-                <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
-                    <i class="Hui-iconfont">&#xe6e2;</i>
-                    批量删除
-                </a>
-                <a href="javascript:;" onclick="member_add('添加服务','__ROOT__/index.php/admin/Addservice/addservice','','510')"
-                    class="btn btn-primary radius">
-                    <i class="Hui-iconfont">&#xe600;</i>
-                    添加项目
-                </a>
-
-                {if condition="$shop.appoint_allow==1"}
-                <a href="javascript:;" onclick="change_state()" class="btn btn-danger radius">禁止预约</a>
-                <span>预约状态:开放</span>
-                {else /}
-                <a href="javascript:;" onclick="change_state()" class="btn btn-success radius">开放预约</a>
-                <span>预约状态:禁止</span>
-                {/if}
-
+            <span class="r">
+                共有数据：<strong>{$count}</strong>
+                条
             </span>
-            <span class="r">共有数据：<strong>{$count}</strong>条</span>
         </div>
         <div class="mt-20">
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
-                        <th width="25"><input type="checkbox" name="" value=""></th>
-                        <th width="100">项目名称</th>
-                        <th width="100">价格</th>
-                        <th width="80">时长</th>
-                        <th width="80">提成金额</th>
-                        <th width="100">跳转链接</th>
-                        <th width="50">是否允许设定等级</th>
-                        <th width="100">操作</th>
+                        <th width="100">店铺名称</th>
+                        <th width="80">店铺地址</th>
+                        <th width="80">开业时间</th>
+                        <th width="100">关门时间</th>
+                        <th width="80">联系电话</th>
+                        <th width="80">ip地址</th>
+                        <th width="80">轮播图设置</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {volist name="$servicelist" id="it"}
+                    {volist name="$shop" id="it"}
                     <tr class="text-c">
-                        <td><input type="checkbox" value="1" name=""></td>
                         <td>{$it.name}</td>
-                        <td>{$it.price/100}￥
-                            <a title="修改价格" href="javascript:;" onclick="show_swal('价格','{$it.ID}')" class="ml-5" style="text-decoration:none">
-                                <i class="Hui-iconfont">&#xe6df;</i>
-                            </a>
-                        </td>
-                        <td>{$it.duration}分钟
-                            <a title="修改时长" href="javascript:;" onclick="show_swal('时长','{$it.ID}')" class="ml-5" style="text-decoration:none">
-                                <i class="Hui-iconfont">&#xe6df;</i>
-                            </a>
-                        </td>
-                        <td>{$it.commission/100}元
-                            <a title="修改提成" href="javascript:;" onclick="show_swal('提成','{$it.ID}')" class="ml-5" style="text-decoration:none">
-                                <i class="Hui-iconfont">&#xe6df;</i>
-                            </a>
-                        </td>
+                        <td>{$it.position}</td>
+                        <td>{$it.open_time}</td>
+                        <td>{$it.close_time}</td>
+                        <td>{$it.phone}</td>
+                        <td>{$it.ip_address}</td>
                         <td>
-                            {$it.dir}
-                            <a title="修改链接" href="javascript:;" onclick="show_swal('链接','{$it.ID}')" class="ml-5" style="text-decoration:none">
+                            <a title="轮播图设置" onclick="edit_pic('轮播图设置','__ROOT__/index.php/admin/Shop/pic?id={$it.ID}',900,600)" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>
-                            </a>
-                        </td>
-                        <td>
-                            {if condition="$it.have_level==0"}不可{else /}可{/if}
-                            <a title="修改" href="javascript:;" onclick="change('{$it.ID}')" class="ml-5" style="text-decoration:none">
-                                <i class="Hui-iconfont">&#xe6df;</i>
-                            </a>
-
-                        </td>
-                        <td class="td-manage">
-                            <a title="删除该项目" href="javascript:;" onclick="member_del(this,'{$it.ID}')" class="ml-5"
-                                style="text-decoration:none">
-                                <i class="Hui-iconfont">&#xe6e2;</i>
                             </a>
                         </td>
                     </tr>
@@ -113,43 +70,25 @@
         $(function () {
             $('.table-sort').dataTable({
                 "aaSorting": [
-                    [1, "desc"]
+                    [2, "desc"]
                 ], //默认第几个排序
                 "bStateSave": true, //状态保存
                 "aoColumnDefs": [
                     //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
                     {
                         "orderable": false,
-                        "aTargets": [0, 1, 4]
+                        "aTargets": [0, 1, 4,5,6]
                     } // 制定列不参与排序
                 ]
             });
         });
 
         /*用户-添加*/
-        function member_add(title, url, w, h) {
+        function edit_pic(title, url, w, h) {
             layer_show(title, url, w, h);
         }
 
-        function change(svid) {
-            swal({
-                title: '正在修改',
-                allowOutsideClick: false,
-                showCancelButton: false,
-                showConfirmButton: false,
-                onOpen: () => {
-                    swal.showLoading()
-                }
-            })
-            $.post("__ROOT__/index.php/api/Servicetype/update_have_level", {
-                id: svid
-            }).done((res) => {
-                if (res.status == 1) {
-                    swal.close();
-                    location.reload();
-                }
-            })
-        }
+
 
         function show_swal(fun, id) {
             swal({
@@ -163,11 +102,10 @@
                     "价格": "update_price",
                     "折扣": "update_discount",
                     "时长": "update_duration",
-                    "提成": "update_commission",
-                    "链接": "update_dir",
+                    "提成": "update_commission"
                 }
                 str = dict[fun];
-                if (result.value) {
+                if (result.value != '') {
                     swal({
                         title: '正在执行',
                         allowOutsideClick: false,
@@ -200,29 +138,11 @@
 
             })
         }
-
-
         /*用户-编辑*/
         function member_edit(title, url, id, w, h) {
             layer_show(title, url, w, h);
         }
 
-        function change_state() {
-            swal({
-                title: '正在处理',
-                text: '',
-                allowOutsideClick: false,
-                showConfirmButton: false,
-                showCloseButton: false,
-                onOpen: () => {
-                    swal.showLoading()
-                }
-            })
-            $.post("__ROOT__/index.php/api/Shop/change_state").done((res)=>{
-                swal.close();
-                location.reload();
-            })
-        }
         /*用户-删除*/
         function member_del(obj, id) {
             swal({
@@ -257,7 +177,6 @@
                     })
                 }
             })
-
         }
     </script>
 </body>

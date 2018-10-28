@@ -38,4 +38,27 @@
             }
             return $data;
         }
+
+        public function get_all(){
+            $skill = UserModel::all();
+            $result = [];
+            for($i=0;$i<count($skill);$i++){
+                $name = \app\api\model\Skilllevel::get(['ID'=>$skill[$i]->level]);
+                $sk_name = \app\api\model\Servicetype::get(['ID'=>$skill[$i]->service_id]);
+                array_push($result,[
+                    'job_number'=>$skill[$i]->job_number,
+                    'id'=>$skill[$i]->service_id,
+                    'name'=>$name->name,
+                    'sk_name'=>$sk_name->name,
+                    'can_change'=>$sk_name->have_level,
+                ]);
+            }
+            return $result;
+        }
+
+        public function change_lv($job_number,$service_id,$new_lv){
+            $skill = UserModel::get(['job_number'=>$job_number,'service_id'=>$service_id]);
+            $skill->level = $new_lv;
+            $skill->save();
+        }
     }

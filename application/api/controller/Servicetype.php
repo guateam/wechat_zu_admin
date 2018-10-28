@@ -121,6 +121,31 @@
             }
             return json(['status'=>0]);
         }
+        public static function update_dir($id,$value){
+            $service= Service::get(['ID'=>$id]);
+            if($service){
+                $service->dir = $value;
+                $service->save();
+                return json(['status'=>1]);
+            }
+            return json(['status'=>0]);
+        }
+        public function update_have_level($id){
+            $service= Service::get(['ID'=>$id]);
+            if($service){
+                if($service->have_level == 0)
+                {
+                    $service->have_level = 1;
+                }
+                else
+                {
+                    $service->have_level = 0;
+                }
+                $service->save();
+                return json(['status'=>1]);
+            }
+            return json(['status'=>0]);
+        }
         /**
          * 修改特定服务的提成比例
          * 2018-8-27 创建 袁宜照

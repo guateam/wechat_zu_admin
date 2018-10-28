@@ -106,7 +106,7 @@
 				processData: false, // tell jQuery not to process the data
 				contentType: false, // tell jQuery not to set contentType
 				success:function(res){
-					res = JSON.parse(res);
+					res = JSON.parse(res)
 					if(res.state == 1){
 						window.location.reload();
 					}

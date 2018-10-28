@@ -10,7 +10,8 @@ class Customer extends Controller{
         $recharge = $ctrl->get_all();
         $customer = UserModel::all();
         $chargelist = [];
-        foreach($customer as $cus){
+        foreach($customer as $index => $cus){
+            $customer[$index]->registration_date = date("Y-m-d H:i:s",$customer[$index]->registration_date);
             $money = 0;
             foreach($recharge as $rec){
                 if($rec->user_id == $cus->ID){

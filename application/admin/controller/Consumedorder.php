@@ -12,7 +12,9 @@ class Consumedorder extends Controller{
         $tech = [];
         $user = [];
         $payer = [];
-        foreach($order as $od){
+        foreach($order as $index => $od){
+            //时间戳显示为日期字符串
+            $order[$index]->generated_time = date('Y-m-d H:i:s', $order[$index]->generated_time);
             $info = $cs->get_customer($od->user_id);
             $info2 = $cs->get_customer($od->payment_user_id);
             $so = \app\api\model\Serviceorder::all(['order_id'=>$od->order_id]);

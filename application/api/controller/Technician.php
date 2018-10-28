@@ -160,7 +160,7 @@
             if($is_repeat!=1)return json(["status"=>$is_repeat]);
 
             $data = new UserModel(['name'=>$name,'gender'=>$gender,'phone_number'=>$mobile,
-                                    'job_number'=>$job_number,'birthday'=>$birthday,"id_number"=>$idcard]);
+                                    'job_number'=>$job_number,'birthday'=>$birthday,"id_number"=>$idcard,'entry_date'=>time()]);
             $data->save();
             for($i=0;$i<count($skill);$i++){
                 $skill_info = new \app\api\model\Skill(['job_number'=>$job_number,'service_id'=>$skill[$i],'extra_income'=>0]);
@@ -352,12 +352,6 @@
                 {
                     // 判断当期目录下的 upload 目录是否存在该文件
                     // 如果没有 upload 目录，你需要创建它，upload 目录权限为 777
-                    if (file_exists( $dir . $_FILES["file"]["name"]))
-                    {
-                        return json_encode(["state"=>'文件已经存在']);
-                    }
-                    else
-                    {
                         $tm = date("ymdhis",time());
                         $sv = $save_dir.$rnd_str.$tm.$_FILES["file"]["name"];
                         $tm=$dir.$rnd_str.$tm.$_FILES["file"]["name"];
@@ -381,7 +375,6 @@
                         {
                            return json_encode(["state"=>0]);
                         }
-                    }
                 }
 
             }

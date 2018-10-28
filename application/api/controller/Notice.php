@@ -10,6 +10,9 @@
          */
         public function get_all_notice(){
             $data = UserModel::all();
+            for($i=0;$i<count($data);$i++){
+                $data[$i]->date = date("Y-m-d H:i:s",$data[$i]->date);
+            }
             return $data;
         }
         /**
@@ -19,7 +22,7 @@
          * @param   string    $text   公告正文 
          */
         public function add_notice($title,$text){
-            $data = new UserModel(['title'=>$title,'text'=>$text]);
+            $data = new UserModel(['title'=>$title,'text'=>$text,'date'=>time()]);
             $data->save();
             return json(['status'=>1]);
         }

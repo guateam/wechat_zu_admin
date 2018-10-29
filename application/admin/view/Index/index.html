@@ -46,6 +46,19 @@
     </header>
     <aside class="Hui-aside">
         <div class="menu_dropdown bk_2">
+            <dl id="menu-shop">
+                <dt>
+                    <i class="Hui-iconfont">&#xe622;</i>店铺管理
+                    <i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i>
+                </dt>
+                <dd>
+                    <ul>
+                        <li>
+                            <a data-href="__ROOT__/index.php/admin/Shop/index" data-title="店铺信息" href="javascript:;">店铺信息</a>
+                        </li>
+                    </ul>
+                </dd>
+            </dl>
             <dl id="menu-product">
                 <dt>
                     <i class="Hui-iconfont">&#xe620;</i> 服务管理
@@ -92,10 +105,14 @@
                 <dd>
                     <ul>
                         <li>
-                            <a data-href="__ROOT__/index.php/admin/Technicianlist/technicianlist" data-title="技师列表" href="javascript:void(0)">技师列表</a>
+                            <a data-href="__ROOT__/index.php/admin/Technicianlist/technicianlist" data-title="技师列表"
+                                href="javascript:void(0)">技师列表</a>
                         </li>
                         <li>
                             <a data-href="__ROOT__/index.php/admin/Invitersetting/index" data-title="推荐人设置" href="javascript:void(0)">推荐人设置</a>
+                        </li>
+                        <li>
+                            <a data-href="__ROOT__/index.php/admin/Skilllevel/index" data-title="技能等级" href="javascript:void(0)">技能等级</a>
                         </li>
                         <li>
                             <a data-href="__ROOT__/index.php/admin/Clock/index" data-title="本日上钟" href="javascript:void(0)">本日上钟情况</a>
@@ -186,7 +203,7 @@
     <script type="text/javascript" src="__STATIC__/lib/jquery.contextmenu/jquery.contextmenu.r2.js"></script>
 
     <script type="text/javascript">
-        $(function() {
+        $(function () {
             /*$("#min_title_list li").contextMenu('Huiadminmenu', {
                 bindings: {
                     'closethis': function(t) {

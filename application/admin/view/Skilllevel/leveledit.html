@@ -22,6 +22,10 @@
 <body>
     <div class="page-container">
         <div class="cl pd-5 bg-1 bk-gray mt-20">
+            <a href="javascript:;" onclick="member_add()" class="btn btn-primary radius">
+                <i class="Hui-iconfont">&#xe600;</i>
+                添加等级
+            </a>
             <span class="r">
                 共有数据：<strong>{$count}</strong>条
             </span>
@@ -30,30 +34,18 @@
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
-                        <th width="100">技师工号</th>
-                        <th width="100">技能名称</th>
-                        <th width="80">技能等级</th>
+                        <th width="100">等级ID</th>
+                        <th width="100">名称</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {volist name="$skill" id="it"}
+                    {volist name="$level" id="it"}
                     <tr class="text-c">
-                        <td>{$it.job_number}</td>
-                        <td>{$it.sk_name}</td>
-                        <td>
-                            {if condition="$it.can_change==1"}
-                            <select onchange="change_level('{$it.job_number}','{$it.id}',this.value)">
-                                {volist name="$level" id="lv"}
-                                {if condition="$lv.name == $it.name"}
-                                <option value="{$lv.ID}" selected >{$lv.name}</option>
-                                {else /}
-                                <option value="{$lv.ID}" >{$lv.name}</option>
-                                {/if}
-                                {/volist}
-                            </select>
-                            {else /}
-                                该服务无法设置等级
-                            {/if}
+                        <td>{$it.ID}</td>
+                        <td>{$it.name}
+                            <a title="修改名称" onclick="change_name('{$it.ID}')">
+                                <i class="Hui-iconfont">&#xe6df;</i>
+                            </a>
                         </td>
                     </tr>
                     {/volist}
@@ -71,22 +63,45 @@
         $(function () {
             $('.table-sort').dataTable({
                 "aaSorting": [
-                    [0, "desc"]
+                    [0, "asc"]
                 ], //默认第几个排序
                 "bStateSave": true, //状态保存
                 "aoColumnDefs": [
                     //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
                     {
                         "orderable": false,
-                        "aTargets": [1, 2]
+                        "aTargets": [1]
                     } // 制定列不参与排序
                 ]
             });
         });
 
         /*用户-添加*/
-        function member_add(title, url, w, h) {
-            layer_show(title, url, w, h);
+        function member_add(val) {
+            swal({
+                title: "请输入新的的等级名称",
+                input: 'text',
+                showCancelButton: true,
+                allowOutsideClick: false,
+            }).then((result) => {
+                if (result.value) {
+                    swal({
+                        title: '正在执行',
+                        allowOutsideClick: false,
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    })
+                    var val = result.value;
+                    $.post("__ROOT__/index.php/api/Skilllevel/add", {
+                        name: val,
+                    }).done((res) => {
+                        location.reload();
+                    })
+                }
+            })
         }
 
         /*用户-查看*/
@@ -94,13 +109,31 @@
             layer_show(title, url, w, h);
         }
 
-        function change_level(job_number, service_id,new_lv) {
-            $.post("__ROOT__/index.php/api/Skill/change_lv",{
-                job_number:job_number,
-                service_id:service_id,
-                new_lv,new_lv
-            }).done((res)=>{
-                location.reload();
+        function change_name(lv_id) {
+            swal({
+                title: "请输入等级名称",
+                input: 'text',
+                showCancelButton: true,
+                allowOutsideClick: false,
+            }).then((result) => {
+                if (result.value) {
+                    swal({
+                        title: '正在执行',
+                        allowOutsideClick: false,
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    })
+                    var val = result.value;
+                    $.post("__ROOT__/index.php/api/Skilllevel/change_name", {
+                        id: lv_id,
+                        name: val,
+                    }).done((res) => {
+                        location.reload();
+                    })
+                }
             })
         }
         /*用户-编辑*/
@@ -110,7 +143,7 @@
 
 
         /*用户-删除*/
-        function member_del(obj, id) {
+        function del(lv_id, name) {
             swal({
                 title: '确认删除该项吗？',
                 text: '',

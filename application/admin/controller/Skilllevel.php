@@ -3,7 +3,6 @@ namespace app\admin\controller;
 use think\Controller;
 
 class Skilllevel extends Controller{
-
     public function index(){
         $ctrl_sk = new \app\api\controller\Skill();
         $ctrl_lv = new \app\api\controller\Skilllevel();
@@ -14,5 +13,14 @@ class Skilllevel extends Controller{
         $this->assign("level",$level);
         $this->assign("count",$count);
         return $this->fetch('Skilllevel/skilllevel');
+    }
+
+    public function level_edit(){
+        $level = \app\api\model\Skilllevel::all();
+
+        $this->assign('level',$level);
+        $this->assign('count',count($level));
+
+        return $this->fetch('Skilllevel/leveledit');
     }
 }

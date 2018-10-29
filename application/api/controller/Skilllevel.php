@@ -8,4 +8,20 @@
             $all = UserModel::all();
             return $all;
         }
+
+        /**
+         * 根据等级名称ID修改等级名称
+         */
+        public function change_name($id,$name){
+            $skill_name = \app\api\model\Skilllevel::get(['ID'=>$id]);
+            $skill_name->name = $name;
+            $skill_name->save();
+            return json(['status'=>1]);
+        }
+
+        public function add($name){
+            $skill = new \app\api\model\Skilllevel(['name'=>$name]);
+            $skill->save();
+            return json(['status'=>1]);
+        }
     }

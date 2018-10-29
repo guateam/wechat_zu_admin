@@ -363,10 +363,11 @@
                                 unlink($_SERVER['DOCUMENT_ROOT'].$tc->photo);
                             }
                             move_uploaded_file($_FILES["file"]["tmp_name"],$tm );
-                            $tf = new \app\api\model\Technicianphoto();
-                            $tf->job_number = $job_number;
-                            $tf->img = $sv;
-                            $tf->save();
+                            //上传头像不需要视为技师的上传项目
+                            // $tf = new \app\api\model\Technicianphoto();
+                            // $tf->job_number = $job_number;
+                            // $tf->img = $sv;
+                            // $tf->save();
                             $tc->photo = $sv;
                             $tc->save();
                            return json_encode(["state"=>1,'url'=>$sv]);

@@ -20,36 +20,60 @@
 
         public function update_name($id,$value){
             $shop = UserModel::get(['ID'=>$id]);
-            $shop->name = $value;
-            $shop->save();
+            if($shop){
+                $shop->name = $value;
+                $shop->save();
+                return json(['status'=>1]);
+            }
+            return json(['status'=>0]);
         }
 
         public function update_position($id,$value){
             $shop = UserModel::get(['ID'=>$id]);
-            $shop->position = $value;
-            $shop->save();
+            if($shop){
+                $shop->position = $value;
+                $shop->save();
+                return json(['status'=>1]);
+            }
+            return json(['status'=>0]);
         }
 
 
         public function update_opentime($id,$value){
             $shop = UserModel::get(['ID'=>$id]);
-            $shop->open_time = $value;
-            $shop->save();
+            if($shop){
+                $shop->open_time = $value;
+                $shop->save();
+                return json(['status'=>1]);
+            }
+            return json(['status'=>0]);
         }
         public function update_closetime($id,$value){
             $shop = UserModel::get(['ID'=>$id]);
-            $shop->close_time = $value;
-            $shop->save();
+            if($shop){
+                $shop->close_time = $value;
+                $shop->save();
+                return json(['status'=>1]);
+            }
+            return json(['status'=>0]);
         }
         public function update_phone($id,$value){
             $shop = UserModel::get(['ID'=>$id]);
-            $shop->phone = $value;
-            $shop->save();
+            if($shop){
+                $shop->phone = $value;
+                $shop->save();
+                return json(['status'=>1]);
+            }
+            return json(['status'=>0]);
         }
 
         public function update_ip($id,$value){
             $shop = UserModel::get(['ID'=>$id]);
-            $shop->ip_address = $value;
-            $shop->save();
+            if($shop){
+                $shop->ip_address = $value;
+                $shop->save();
+                return json(['status'=>1]);
+            }
+            return json(['status'=>0]);
         }
     }

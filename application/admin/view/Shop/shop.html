@@ -44,27 +44,27 @@
                     {volist name="$shop" id="it"}
                     <tr class="text-c">
                         <td>{$it.name}
-                            <a title="修改店名" onclick="show_swal('name','{$it.ID}')" class="ml-5" style="text-decoration:none">
+                            <a title="修改店名" onclick="show_swal('店铺名','{$it.ID}')" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
                         </td>
                         <td>{$it.position}
-                            <a title="修改地址" onclick="show_swal('position','{$it.ID}')" class="ml-5" style="text-decoration:none">
+                            <a title="修改地址" onclick="show_swal('店铺地址','{$it.ID}')" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
                         </td>
                         <td>{$it.open_time}
-                            <a title="修改开业时间" onclick="show_swal('open','{$it.ID}')" class="ml-5" style="text-decoration:none">
+                            <a title="修改开业时间" onclick="show_swal('开门时间','{$it.ID}')" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
                         </td>
                         <td>{$it.close_time}
-                            <a title="修改关门时间" onclick="show_swal('close','{$it.ID}')" class="ml-5" style="text-decoration:none">
+                            <a title="修改关门时间" onclick="show_swal('关门时间','{$it.ID}')" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
                         </td>
                         <td>{$it.phone}
-                            <a title="修改手机号" onclick="show_swal('phone','{$it.ID}')" class="ml-5" style="text-decoration:none">
+                            <a title="修改手机号" onclick="show_swal('联系电话','{$it.ID}')" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
                         </td>
@@ -123,15 +123,15 @@
             }).then((result) => {
                 var str = "";
                 var dict = {
-                    "name": "update_name",
-                    "position": "update_position",
-                    "open": "update_opentime",
-                    "close": "update_closetime",
-                    "phone":"update_phone",
+                    "店铺名": "update_name",
+                    "店铺地址": "update_position",
+                    "开门时间": "update_opentime",
+                    "关门时间": "update_closetime",
+                    "联系电话":"update_phone",
                     "ip":"update_ip",
                 }
                 str = dict[fun];
-                if (result.value != '') {
+                if (result.value) {
                     swal({
                         title: '正在执行',
                         allowOutsideClick: false,
@@ -154,7 +154,7 @@
                             location.reload();
                         } else {
                             swal({
-                                title: "该服务不存在",
+                                title: "修改失败",
                                 type: "error"
                             });
                         }

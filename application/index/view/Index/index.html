@@ -70,6 +70,7 @@
                     $.post("../public/index.php/api/Admin/login", {
                         username: username.val(),
                         password: password.val()
+                        
                     }).done(function (result) {
                         if (result.status === 1) {
                             swal("成功", "登录成功!", "success").then((ok) => {

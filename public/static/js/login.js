@@ -18,13 +18,13 @@ $(document).ready(function() {
         } else pass_username();
         
         if (password.val() != '' && username.val() != '') {
-                $.post("../public/index.php/api/admin/login", {
+                $.post("../public/index.php/api/Admin/login", {
                     username: username.val(),
                     password: password.val()
                 }).done(function(result) {
                     if (result.status === 1) {
                         swal("成功", "登录成功!", "success").then((ok) => {
-                            window.location.href = "../public/index.php/admin/index"
+                            window.location.href = "__ROOT__/index.php/admin/Index/index"
                         })
                     } else if (result.status === 0) {
                         swal("权限不足", "您不是管理员!", "error");

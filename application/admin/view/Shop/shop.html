@@ -43,12 +43,36 @@
                 <tbody>
                     {volist name="$shop" id="it"}
                     <tr class="text-c">
-                        <td>{$it.name}</td>
-                        <td>{$it.position}</td>
-                        <td>{$it.open_time}</td>
-                        <td>{$it.close_time}</td>
-                        <td>{$it.phone}</td>
-                        <td>{$it.ip_address}</td>
+                        <td>{$it.name}
+                            <a title="修改店名" onclick="show_swal('name','{$it.ID}')" class="ml-5" style="text-decoration:none">
+                                <i class="Hui-iconfont">&#xe6df;</i>
+                            </a>
+                        </td>
+                        <td>{$it.position}
+                            <a title="修改地址" onclick="show_swal('position','{$it.ID}')" class="ml-5" style="text-decoration:none">
+                                <i class="Hui-iconfont">&#xe6df;</i>
+                            </a>
+                        </td>
+                        <td>{$it.open_time}
+                            <a title="修改开业时间" onclick="show_swal('open','{$it.ID}')" class="ml-5" style="text-decoration:none">
+                                <i class="Hui-iconfont">&#xe6df;</i>
+                            </a>
+                        </td>
+                        <td>{$it.close_time}
+                            <a title="修改关门时间" onclick="show_swal('close','{$it.ID}')" class="ml-5" style="text-decoration:none">
+                                <i class="Hui-iconfont">&#xe6df;</i>
+                            </a>
+                        </td>
+                        <td>{$it.phone}
+                            <a title="修改手机号" onclick="show_swal('phone','{$it.ID}')" class="ml-5" style="text-decoration:none">
+                                <i class="Hui-iconfont">&#xe6df;</i>
+                            </a>
+                        </td>
+                        <td>{$it.ip_address}
+                            <a title="修改ip" onclick="show_swal('ip','{$it.ID}')" class="ml-5" style="text-decoration:none">
+                                <i class="Hui-iconfont">&#xe6df;</i>
+                            </a>
+                        </td>
                         <td>
                             <a title="轮播图设置" onclick="edit_pic('轮播图设置','__ROOT__/index.php/admin/Shop/pic?id={$it.ID}',900,600)" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>
@@ -99,10 +123,12 @@
             }).then((result) => {
                 var str = "";
                 var dict = {
-                    "价格": "update_price",
-                    "折扣": "update_discount",
-                    "时长": "update_duration",
-                    "提成": "update_commission"
+                    "name": "update_name",
+                    "position": "update_position",
+                    "open": "update_opentime",
+                    "close": "update_closetime",
+                    "phone":"update_phone",
+                    "ip":"update_ip",
                 }
                 str = dict[fun];
                 if (result.value != '') {
@@ -116,8 +142,7 @@
                         }
                     })
                     var val = result.value;
-                    if (fun == "价格" || fun == "提成") val *= 100;
-                    $.post("__ROOT__/index.php/api/Servicetype/" + str, {
+                    $.post("__ROOT__/index.php/api/Shop/" + str, {
                         id: id,
                         value: val
                     }).done((bk) => {

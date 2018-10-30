@@ -18,10 +18,12 @@
             <div class="m-login-warp">
                 <form class="layui-form">
                     <div class="layui-form-item">
-                        <input type="text" name="username" required lay-verify="required" placeholder="用户名" autocomplete="off" class="layui-input" id="username">
+                        <input type="text" name="username" required lay-verify="required" placeholder="用户名"
+                            autocomplete="off" class="layui-input" id="username">
                     </div>
                     <div class="layui-form-item">
-                        <input type="password" name="password" required lay-verify="required" placeholder="密码" autocomplete="off" class="layui-input" id="password">
+                        <input type="password" name="password" required lay-verify="required" placeholder="密码"
+                            autocomplete="off" class="layui-input" id="password">
                     </div>
                     <div class="layui-form-item">
                     </div>
@@ -44,7 +46,67 @@
     <script src="__STATIC__/vendor/sweetalert/sweetalert.js"></script>
     <script src="__STATIC__/vendor/jquery-cookie/jquery.cookie.js"></script>
     <script src="__STATIC__/vendor/jigsaw/jigsaw.js"></script>
-    <script src="__STATIC__/js/login.js"></script>
+    <script>
+        $(document).ready(function () {
+            var password = $("#password");
+            var username = $("#username");
+            var login = $("#login-button");
+            //var captcha = false
+            //jigsaw.init(document.getElementById('captcha'), function() {
+            //    captcha = true
+            //},3000)
+            $('.refreshIcon').addClass('text-right')
+            login.on("click", function () {
+                if (password.val() == '') {
+                    swal("错误", "密码不能为空", "error");
+                    error_password();
+                } else pass_password();
+                if (username.val() == '') {
+                    swal("错误", "用户名不能为空", "error");
+                    error_username();
+                } else pass_username();
+
+                if (password.val() != '' && username.val() != '') {
+                    $.post("../public/index.php/api/Admin/login", {
+                        username: username.val(),
+                        password: password.val()
+                    }).done(function (result) {
+                        if (result.status === 1) {
+                            swal("成功", "登录成功!", "success").then((ok) => {
+                                window.location.href =
+                                    "../public/index.php/admin/Index/index"
+                            })
+                        } else if (result.status === 0) {
+                            swal("权限不足", "您不是管理员!", "error");
+                        } else if (result.status === -1) {
+                            swal("错误", "密码不正确", "error");
+                            error_username();
+                        } else if (result.status === -2) {
+                            swal("错误", "用户名不存在", "error");
+                            error_username();
+                        }
+                    });
+                }
+
+            })
+        });
+
+        function error_username() {
+            $("#form-username").addClass("has-error");
+        }
+
+        function pass_username() {
+            $("#form-username").removeClass("hass-error");
+        }
+
+        function error_password() {
+            $("#form-password").addClass("has-error");
+        }
+
+        function pass_password() {
+            $("#form-password").removeClass("has-error");
+        }
+    </script>
 </body>
 
 </html>

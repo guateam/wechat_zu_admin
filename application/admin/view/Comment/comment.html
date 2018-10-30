@@ -67,10 +67,11 @@
                 <thead>
                     <tr class="text-c">
                         <th width="60">订单号</th>
+                        <th width="60">评论人</th>
                         <th width="60">技师工号</th>
                         <th width="100">服务名</th>
                         <th width="40">评分</th>
-                        <th width="180">留言</th>
+                        <th width="120">留言</th>
                         <th width="60">顾客端是否显示</th>
                     </tr>
                 </thead>
@@ -78,6 +79,7 @@
                     {volist name="$comment" id="it" key="k"}
                     <tr class="text-c">
                         <td>{$it.order_id}</td>
+                        <td>{$it.customer_id}</td>
                         <td>{$it.job_number}</td>
                         <td>{$it.service_id}</td>
                         <td>{$it.score}分</td>

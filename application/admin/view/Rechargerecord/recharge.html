@@ -63,7 +63,7 @@
                         <td>{$it.record_id}</td>
                         <td id="time{$k-1}">{$it.user_id}</td>
                         <td>
-                            {$it.charge/100}￥
+                            ￥{$it.charge/100}
                         </td>
                         <td id="total_state{$k-1}">{if condition="$it.payment_method==1"}微信支付{elseif condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif condition="$it.payment_method==4"}现金 {else /}未支付{/if}</td>
                         <td class="">{$it.job_number}</td>

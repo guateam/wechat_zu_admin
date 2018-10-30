@@ -27,8 +27,15 @@
                 {volist name = "$technicians" id = "it" key="k"}
                 {if condition="$it.job_number!=$self_job_number"}
                 <tr class="text-c">
-                    <td><input type="radio" value="{$it.job_number}" name="inviter"></td>
+                    <td>
+                        {if condition="$it.job_number == $inv_job_number"}
+                        <input type="radio" value="{$it.job_number}" checked name="inviter">
+                        {else /}
+                        <input type="radio" value="{$it.job_number}" name="inviter">
+                        {/if}
+                    </td>
                     <td>{$it.name}</td>
+                    <td>{$it.job_number}</td>
                 </tr>
                 {/if}
                 {/volist}

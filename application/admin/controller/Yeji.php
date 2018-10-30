@@ -9,6 +9,6 @@ class Yeji extends Controller{
         $yeji =$ctrl->get_all_yeji();
         $this->assign("yeji",$yeji);
         $this->assign("count",count($yeji));
-        return $this->fetch('Yeji/yeji');
+        return $this->fetch('Yeji/Yeji');
     }
 }

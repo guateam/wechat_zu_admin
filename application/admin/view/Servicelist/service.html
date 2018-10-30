@@ -92,9 +92,15 @@
 
                         </td>
                         <td class="td-manage">
-                            <a title="删除该项目" href="javascript:;" onclick="member_del(this,'{$it.ID}')" class="ml-5"
+                            <a title="删除该项目" href="javascript:;" onclick="member_del(this,'{$it.ID}')" class="ml-5 btn btn-danger"
                                 style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6e2;</i>
+                                删除
+                            </a>
+                            <a title="详细设定" href="javascript:;" onclick="layer_show('服务详情','__ROOT__/index.php/admin/Servicelist/detail/id/{$it.ID}')" class="ml-5 btn btn-info"
+                                style="text-decoration:none">
+                                <i class="Hui-iconfont">&#xe6df;</i>
+                               详细设定
                             </a>
                         </td>
                     </tr>
@@ -218,7 +224,7 @@
                     swal.showLoading()
                 }
             })
-            $.post("__ROOT__/index.php/api/Shop/change_state").done((res)=>{
+            $.post("__ROOT__/index.php/api/Shop/change_state").done((res) => {
                 swal.close();
                 location.reload();
             })

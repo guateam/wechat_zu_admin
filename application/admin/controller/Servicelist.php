@@ -14,4 +14,13 @@ class Servicelist extends Controller{
         $this->assign("count",$count);
         return $this->fetch('Servicelist/service');
     }
+
+    public function detail($id){
+        $sv = \app\api\model\Servicetype::get(['ID'=>$id]);
+        $this->assign("service_id",$id);
+        $this->assign("procedure",$sv->procedure);
+        $this->assign("attention",$sv->attention);
+        $this->assign("benefit",$sv->benefit);
+        return $this->fetch('Servicelist/service_detail');
+    }
 }

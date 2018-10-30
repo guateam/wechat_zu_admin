@@ -273,4 +273,19 @@
             $data->save();
             return json(['status'=>1]);
         }
+
+        /**
+         * 更新服务的详细信息
+         */
+        public function  update_info($id,$procedure,$attention,$benefit){
+            $data = \app\api\model\Servicetype::get(['ID'=>$id]);
+            if($data){
+                $data->procedure = $procedure;
+                $data->attention = $attention;
+                $data->benefit = $benefit;
+                $data->save();
+                return json(['status'=>1]);
+            }
+            return json(['status'=>0]);
+        }
     }

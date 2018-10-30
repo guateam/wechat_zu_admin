@@ -53,7 +53,6 @@
                         <th width="100">价格</th>
                         <th width="80">时长</th>
                         <th width="80">提成金额</th>
-                        <th width="100">跳转链接</th>
                         <th width="50">是否允许设定等级</th>
                         <th width="100">操作</th>
                     </tr>
@@ -75,12 +74,6 @@
                         </td>
                         <td>￥{$it.commission/100}
                             <a title="修改提成" href="javascript:;" onclick="show_swal('提成','{$it.ID}')" class="ml-5" style="text-decoration:none">
-                                <i class="Hui-iconfont">&#xe6df;</i>
-                            </a>
-                        </td>
-                        <td>
-                            {$it.dir}
-                            <a title="修改链接" href="javascript:;" onclick="show_swal('链接','{$it.ID}')" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
                         </td>

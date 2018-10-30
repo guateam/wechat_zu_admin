@@ -123,8 +123,23 @@
         }
         public static function update_dir($id,$value){
             $service= Service::get(['ID'=>$id]);
-            if($service){
+            //未填写服务名，默认设置为空
+            if($value == ""){
                 $service->dir = $value;
+                $service->save();
+                return json(['status'=>1]);
+            }
+
+            $to_service = Service::get(['name'=>$value]);
+            $new_dir = "";
+            //根据填写的服务名设置跳转链接
+            if($to_service){
+                $new_dir="xiangmuxiangqing.html?id="+$to_service->ID;
+            }else{
+                return json(['status'=>0]);
+            }
+            if($service){
+                $service->dir = $new_dir;
                 $service->save();
                 return json(['status'=>1]);
             }
@@ -271,6 +286,11 @@
                                     'discount'=>$discount,'commission'=>((int)$commission)*100,
                                     'info'=>$info,'image'=>$image]);
             $data->save();
+            $data = Service::get(['name'=>$name]);
+            if($data){
+                $data->dir = "xiangmuxiangqing.html?id=".$data->ID;
+                $data->save();
+            }
             return json(['status'=>1]);
         }
 

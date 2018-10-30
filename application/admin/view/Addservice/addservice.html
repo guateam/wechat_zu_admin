@@ -94,7 +94,7 @@
     <script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
     <script type="text/javascript" src="__STATIC__/vendor/jquery-cookie/jquery.cookie.js"></script>
     <script type="text/javascript" src="__STATIC__/vendor/AjaxFileUpload/ajaxFileUpload.js"></script>
-    <script >
+    <script>
         $(function () {
             $('.skin-minimal input').iCheck({
                 checkboxClass: 'icheckbox-blue',
@@ -144,10 +144,9 @@
                     commission = $("#commission").val();
                     info = $("#info").val();
                     image = $("#image").val();
-                    $.ajaxFileUpload({
-                        url: '__ROOT__/index.php/api/Servicetype/upload',
-                        fileElementId: 'image',
-                        type: 'post',
+                    $(form).ajaxSubmit({
+                        type: 'post', // 提交方式 get/post
+                        url: '__ROOT__/index.php/api/ServiceType/add_service', // 需要提交的 url
                         data: {
                             name: name,
                             duration: duration,
@@ -155,10 +154,31 @@
                             discount: discount,
                             commission: commission,
                             info: info,
+                            image: image,
                         },
-                        secureuri: false,
-                        success: function (result,status) {
-                            if (status == 'success') {
+                        success: function (result) {
+                            if (result.status == 1) {
+                                //上传文件
+                                $.ajaxFileUpload({
+                                    url: '__ROOT__/index.php/api/Servicetype/upload',
+                                    fileElementId: 'image',
+                                    type: 'post',
+                                    data: {
+                                        name: name,
+                                        duration: duration,
+                                        price: price,
+                                        discount: discount,
+                                        commission: commission,
+                                        info: info,
+                                    },
+                                    secureuri: false,
+                                    success: function (result, status) {
+                                        if (status == 'success') {} else {}
+                                    },
+                                    error: function (data, status, e) {
+                                        alert(e);
+                                    }
+                                });
                                 swal("成功", "已添加新的服务", "success", {
                                     allowOutsideClick: false
                                 }).then((ok) => {
@@ -172,40 +192,8 @@
                             } else {
                                 swal("失败", "添加失败", "error");
                             }
-                        },
-                        error: function (data, status, e) {
-                            alert(e);
                         }
                     });
-                    // $(form).ajaxSubmit({
-                    //     type: 'post', // 提交方式 get/post
-                    //     url: '__ROOT__/index.php/api/ServiceType/add_service', // 需要提交的 url
-                    //     data: {
-                    //         name: name,
-                    //         duration: duration,
-                    //         price: price,
-                    //         discount: discount,
-                    //         commission: commission,
-                    //         info: info,
-                    //         image: image,
-                    //     },
-                    //     success: function (result) {
-                    //         if (result.status == 1) {
-                    //             swal("成功", "已添加新的技师", "success", {
-                    //                 allowOutsideClick: false
-                    //             }).then((ok) => {
-                    //                 if (ok.value) {
-                    //                     parent.location.reload()
-                    //                     var index = parent.layer.getFrameIndex(
-                    //                         window.name);
-                    //                     parent.layer.close(index);
-                    //                 }
-                    //             })
-                    //         } else {
-                    //             swal("失败", "保存失败", "error");
-                    //         }
-                    //     }
-                    // });
                 }
             });
         });

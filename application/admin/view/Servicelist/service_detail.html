@@ -9,6 +9,16 @@
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     {include file="common/common_css"}
     <title>设置服务详情</title>
+    <style>
+        textarea{
+            width: 100%;
+            /*要拉神注释掉下一行*/
+            resize:none;
+        }
+        .mt-20{
+            margin-top: 0;
+        }
+    </style>
 </head>
 
 <body>
@@ -16,18 +26,18 @@
         <div class="mt-20">
             <form>
                 <div class="input-group">
-                    <span class="input-group-addon">服务流程</span>
-                    <textarea id="procedure" class="form-control">{$procedure}</textarea>
+                    <span class="input-group-addon">服务流程：</span>
+                    <textarea id="procedure" class="form-control" rows="3">{$procedure}</textarea>
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon">注意事项</span>
-                    <textarea id="attention" class="form-control" >{$attention}</textarea>
+                    <span class="input-group-addon">注意事项：</span>
+                    <textarea id="attention" class="form-control" rows="3">{$attention}</textarea>
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon">项目特色</span>
-                    <textarea id="benefit" class="form-control">{$benefit}</textarea>
+                    <span class="input-group-addon">项目特色：</span>
+                    <textarea id="benefit" class="form-control" rows="3">{$benefit}</textarea>
                 </div>
-                <button onclick="update('{$service_id}')" id="btn" style="width: 60px;height: 38px;float: right;margin-right: 5px;margin-top: 10px;background-color: #00b7ee">
+                <button onclick="update('{$service_id}')" id="btn" style="width: 80px;height: 45px;float: right;margin-top: 10px;font-size:1.1em;background-color: #00b7ee">
                     确定
                 </button>
             </form>

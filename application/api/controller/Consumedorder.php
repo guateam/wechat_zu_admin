@@ -12,6 +12,14 @@
             $data = UserModel::all();
             return $data;
         }
+
+        public function pay_count(){
+            $data4 = UserModel::all(['state'=>4]);
+            $data5 = UserModel::all(['state'=>5]);
+            $count = count($data4)+ count($data5);
+            return json($count);
+        }
+
         /**
          * 获取特定订单号的订单
          * 2018-8-26 创建   袁宜照
@@ -23,5 +31,20 @@
                 return $data;
             }
             else return 0;
+        }
+
+
+        public function check_new($count_ori){
+            $data4 = UserModel::all(['state'=>4]);
+            $data5 = UserModel::all(['state'=>5]);
+            $count = count($data4)+ count($data5);
+            if($count_ori<$count)
+            {
+                return $count;
+            }
+            else 
+            {
+                return false;
+            }
         }
     }

@@ -206,6 +206,8 @@
     <script type="text/javascript" src="__STATIC__/lib/jquery.contextmenu/jquery.contextmenu.r2.js"></script>
 
     <script type="text/javascript">
+        var count = 0;
+        var sound = "/vcr/sound.wav";
         $(function () {
             /*$("#min_title_list li").contextMenu('Huiadminmenu', {
                 bindings: {
@@ -220,8 +222,42 @@
                     },
                 }
             });*/
+            //检查是否有新订单
+            $.post("__ROOT__/index.php/api/Consumedorder/pay_count").done((res) => {
+                count = res;
+                setInterval(() => {
+                    console.log("开始查询是否有新订单");
+                    $.post("__ROOT__/index.php/api/Consumedorder/check_new/count_ori/" + count).done(
+                        (res) => {
+                            if (res) {
+                                count = res;
+                                //有新订单了
+                                load_sound(sound);
+                                alert("有新的订单");
+                            }
+                            console.log("无新订单");
+                        })
+                }, 10000);
+            })
         });
 
+        function load_sound(url_data) {
+            var con = new AudioContext();
+            var req = new XMLHttpRequest();
+            req.open('GET', url_data, true);
+            req.responseType = 'arraybuffer';
+            req.onload = function () {
+                con.decodeAudioData(req.response, function (buffer) {
+                    var source = con.createBufferSource();
+                    source.buffer = buffer;
+                    source.connect(con.destination);
+                    source.start(0);
+                }, function (e) {
+                    console.info('错误');
+                });
+            }
+            req.send();
+        }
         /*个人信息*/
         function myselfinfo() {
             layer.open({

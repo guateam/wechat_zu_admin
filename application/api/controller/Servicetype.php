@@ -34,7 +34,8 @@
             foreach($list as $value){
                 $item=[
                     'id'=>$value->ID,
-                    'name'=>$value->name
+                    'name'=>$value->name,
+                    'check'=>false,
                 ];
                 array_push($data,$item);
             }

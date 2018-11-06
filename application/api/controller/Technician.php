@@ -228,7 +228,7 @@
             $data = UserModel::get(["job_number"=>$job_number]);
             if($data){
                 $data->inviter=$inviter_job_number;
-                $old_data = \app\api\model\Inviteship::get(['inviter_job_number'=>$inviter_job_number,'freshman_job_number'=>$job_number]);
+                $old_data = \app\api\model\Inviteship::get(['freshman_job_number'=>$job_number]);
                 if(!$old_data){
                     $new_data = new \app\api\model\Inviteship();
                     $new_data->data([

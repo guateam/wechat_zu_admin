@@ -79,6 +79,14 @@
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>简介：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="describe"
+                        name="describe">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
                     <span class="c-red">*</span>服务类型：</label>
                 <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                     {volist name = "$servicelist" id = "it" key="k"}
@@ -159,9 +167,9 @@
             if (isDate.test(date)) return true;
             else return false;
         }
-        jQuery.validator.addMethod("testid",
+        jQuery.validator.addMethod("isIdCard",
             function (value, element) {
-                return this.optional(element) || (isIdCard(value));
+                return this.optional(element) || (testid(value));
             },
             "身份证号非法！");
         jQuery.validator.addMethod("isDate",
@@ -294,6 +302,7 @@
                     birthday = $("#birthday").val();
                     service_id = [];
                     service_type = $('input:checkbox[name="servicetype"]:checked')
+                    describe = $('#describe').val();
                     $.each(service_type, function () {
                         service_id.push($(this).val());
                     })
@@ -310,6 +319,7 @@
                             mobile: phone,
                             job_number: job_number,
                             skill: service_id,
+                            describe:describe
                         },
                         success: function (result) {
                             if (result.status == 1) {

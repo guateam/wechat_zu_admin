@@ -113,7 +113,7 @@
                         }
                     }
                 }
-                
+
             return 1;
         }
         
@@ -159,14 +159,15 @@
          * @param string $skill      技师的技能
          * 
          */
-        public function add_technician($name,$idcard,$birthday,$gender,$mobile,$job_number,$skill=''){
+        public function add_technician($name,$idcard,$birthday,$gender,$mobile,$job_number,$skill='',$describe=''){
             if($skill=='')return json(['status'=>-4]);
 
             $is_repeat = self::check_repeat($name,$mobile,$job_number,$idcard,"");
             if($is_repeat!=1)return json(["status"=>$is_repeat]);
 
             $data = new UserModel(['name'=>$name,'gender'=>$gender,'phone_number'=>$mobile,
-                                    'job_number'=>$job_number,'birthday'=>$birthday,"id_number"=>$idcard,'entry_date'=>time()]);
+                                    'job_number'=>$job_number,'birthday'=>$birthday,"id_number"=>$idcard,
+                                    'entry_date'=>time(),'description'=>$describe]);
             $data->save();
             for($i=0;$i<count($skill);$i++){
                 $skill_info = new \app\api\model\Skill(['job_number'=>$job_number,'service_id'=>$skill[$i],'extra_income'=>0]);

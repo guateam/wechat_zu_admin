@@ -159,7 +159,7 @@
          * @param string $skill      技师的技能
          * 
          */
-        public function add_technician($name,$idcard,$birthday,$gender,$mobile,$job_number,$skill='',$describe='',$level){
+        public function add_technician($name,$idcard,$birthday,$gender,$mobile,$job_number,$skill='',$describe='',$level,$invite){
             if($skill=='')return json(['status'=>-4]);
 
             $is_repeat = self::check_repeat($name,$mobile,$job_number,$idcard,"");
@@ -167,11 +167,14 @@
 
             $data = new UserModel(['name'=>$name,'gender'=>$gender,'phone_number'=>$mobile,
                                     'job_number'=>$job_number,'birthday'=>$birthday,"id_number"=>$idcard,
-                                    'entry_date'=>time(),'description'=>$describe]);
+                                    'entry_date'=>time(),'description'=>$describe,'in_job'=>1]);
             $data->save();
             for($i=0;$i<count($skill);$i++){
                 $skill_info = new \app\api\model\Skill(['job_number'=>$job_number,'level'=>$level,'service_id'=>$skill[$i],'extra_income'=>0]);
                 $skill_info->save();
+            }
+            if($invite != ''){
+                self::set_inviter($job_number,$invite);
             }
             return json(['status'=>1]);
         }

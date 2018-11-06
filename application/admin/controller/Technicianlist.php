@@ -11,6 +11,8 @@ class Technicianlist extends Controller{
         $so = new \app\api\controller\Serviceorder();
         $rt = new \app\api\controller\Rate();
         $recharge_ctrl = new \app\api\controller\Rechargerecord();
+        
+
 
         $skill = [];
         //所有技师的订单ID序列
@@ -18,7 +20,10 @@ class Technicianlist extends Controller{
         $aver_score = [];
         $charge = [];
         $technicians = $ctrl->get_all_technician();
-        foreach($technicians as $tc){
+        foreach($technicians as $idx => $tc){
+            //技能等级
+            $level = $ctrl->get_skill($tc->job_number);
+            $technicians[$idx]['level'] = $level;
             $money = $recharge_ctrl->get_by_jobnumber($tc->job_number);
             $money = $money->getdata();
             if($money['status'] ==1)array_push($charge,$money['charge']);

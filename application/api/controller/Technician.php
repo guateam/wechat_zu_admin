@@ -2,6 +2,7 @@
     namespace app\api\controller;
     use think\Controller;
     use \app\api\model\Technician as UserModel;
+    use think\Db;
     class Technician extends Controller{
         /**
          * 获取技师列表
@@ -190,7 +191,8 @@
          * @param string $skill             修改后的技能
          * 
          */
-        public function update_technician($ori_job_number,$name,$idcard,$birthday,$gender,$mobile,$job_number,$skill='',$decsribe=''){
+        public function update_technician($ori_job_number,$name,$idcard,$birthday,$gender,
+                                            $mobile,$job_number,$skill='',$describe='',$level='',$invite=''){
 
             $is_repeat = self::check_repeat($name,$mobile,$job_number,$idcard,$ori_job_number);
             if($is_repeat!=1)return json(["status"=>$is_repeat]);
@@ -209,9 +211,10 @@
                 $it->delete();
             }
             foreach($skill as $sk){
-                $new_skill = new \app\api\model\Skill(['job_number'=>$job_number,'service_id'=>$sk,'extra_income'=>0]);
+                $new_skill = new \app\api\model\Skill(['job_number'=>$job_number,'level'=>$level,'service_id'=>$sk,'extra_income'=>0]);
                 $new_skill->save();
             }
+            self::set_inviter($job_number,$invite);
             return json(["status"=>1]);
         }
         /**
@@ -235,11 +238,7 @@
                     ]);
                     $new_data->save();
                 }else{
-                    $old_data->data([
-                        'inviter_job_number'=>$inviter_job_number,
-                        'freshman_job_number'=>$job_number,
-                        'perssentage'=>0
-                    ]);
+                    $old_data->inviter_job_number = $inviter_job_number;
                     $old_data->save();
                 }
                 
@@ -317,6 +316,20 @@
                 'lost'=>$lost,
                 'final_salary'=>$price+$come_frome_other-$lost
                 ];
+        }
+
+        public function get_inviter($job_number){
+            $inviter = Db::query("select inviter_job_number from inviteship where freshman_job_number='".$job_number."'");
+            if($inviter)
+                return $inviter[0]['inviter_job_number'];
+            else return "";
+        }
+
+        public function get_skill($job_number){
+            $skill = Db::query("select B.name from skill A, skill_level B where A.job_number='$job_number' and A.level > 0 and B.ID=A.level limit 1");
+            if($skill)
+                return $skill[0]['name'];
+            else return "";
         }
         /**
          * 获取所有技师的业绩

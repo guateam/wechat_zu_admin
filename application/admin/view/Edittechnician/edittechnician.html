@@ -99,6 +99,37 @@
 				</div>
 			</div>
 			<div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>服务等级：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    <select id="level">
+						{volist name="$level" id="lv"}
+							{if condition="$lv.name == $skillname"}
+							<option value="{$lv.ID}" selected>{$lv.name}</option>
+							{else /}
+							<option value="{$lv.ID}">{$lv.name}</option>
+							{/if}
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red"></span>介绍人：</label>
+                <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                    <select id="invite">
+                        <option value="" >无介绍人</option>
+						{volist name="$techlist" id="tech"}
+							{if condition="$inviter==$tech.job_number"}
+							<option value="{$tech.job_number}" selected>{$tech.job_number}</option>
+							{else /}
+							<option value="{$tech.job_number}">{$tech.job_number}</option>
+							{/if}
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+			<div class="row cl">
 				<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
 					<input id="submit-btn" class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
 				</div>
@@ -297,12 +328,12 @@
 					idcard = $("#id_number").val();
 					birthday = $("#birthday").val();
 					phone = $("#mobile").val();
-					//job_number = $("#job_number").val();
 					ori_job_number = '{$technician.job_number}';
 					service_id = [];
 					service_type = $('input:checkbox[name="servicetype"]:checked')
 					describe = $("#description").val();
-					
+					level = $("#level").val();
+					invite = $("#invite").val();
 					$.each(service_type, function () {
 						service_id.push($(this).val());
 					})
@@ -319,6 +350,8 @@
 							job_number: '{$technician.job_number}',
 							skill: service_id,
 							describe:describe,
+							level:level,
+							invite:invite,
 						},
 						success: function (result) {
 							if (result.status == 1) {

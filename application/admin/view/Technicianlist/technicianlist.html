@@ -57,7 +57,8 @@
                         <th width="60">充卡数额</th>
                         <th width="90">介绍人工号</th>
                         <th width="50">离职情况</th>
-                        <th width="70">指定介绍人</th>
+                        <!-- <th width="70">指定介绍人</th> -->
+                        <th width="70">等级</th>
                         <th width="70">查看详情</th>
                         <th width="100">操作</th>
                     </tr>
@@ -87,10 +88,13 @@
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
                         </td>
-                        <td class="td-status">
+                        <td>
+                            {$it.level}
+                        </td>
+                        <!-- <td class="td-status">
                             <button onclick="zhidingren('指定介绍人','__ROOT__/index.php/admin/Addinviter/Addinviter/jbnb/{$it.job_number}/inv_jbnb/{$it.inviter}','10001','360','400')"
                                 class="btn btn-primary">指定介绍人</button>
-                        </td>
+                        </td> -->
                         <td>
                             <button onclick="layer_show('详情', '__ROOT__/index.php/admin/Techniciandetail/Techniciandetail/jbnb/{$it.job_number}','500','500','610');"
                                 class="btn btn-primary">查看详情</button>

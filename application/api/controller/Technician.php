@@ -89,25 +89,31 @@
                         }
                     }
                 }
-
-                $repeat = UserModel::get(['phone_number'=>$mobile]);
-                if($repeat){
-                    if($repeat->job_number !=$ori_job_number){
-                        return 0;
+                if($mobile!=""){
+                    $repeat = UserModel::get(['phone_number'=>$mobile]);
+                    if($repeat){
+                        if($repeat->job_number !=$ori_job_number){
+                            return 0;
+                        }
                     }
                 }
-                $repeat = UserModel::get(['job_number'=>$job_number]);
-                if($repeat){
-                    if($repeat->job_number !=$ori_job_number){
-                        return -1;
+                if($job_number!=""){
+                    $repeat = UserModel::get(['job_number'=>$job_number]);
+                    if($repeat){
+                        if($repeat->job_number !=$ori_job_number){
+                            return -1;
+                        }
                     }
                 }
-                $repeat = UserModel::get(['id_number'=>$idcard]);
-                if($repeat){
-                    if($repeat->job_number !=$ori_job_number){
-                        return -3;
+                if($idcard!=""){
+                    $repeat = UserModel::get(['id_number'=>$idcard]);
+                    if($repeat){
+                        if($repeat->job_number !=$ori_job_number){
+                            return -3;
+                        }
                     }
                 }
+                
             return 1;
         }
         

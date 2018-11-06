@@ -242,20 +242,20 @@
 							}
 						}
 					},
-					id_number: {
-						required: true,
-						isIdCard: true,
-						remote: {
-							type: "post",
-							url: "__ROOT__/index.php/api/Technician/check_idnumber",
-							data: {
-								num: function () {
-									return $("#id_number").val();
-								},
-								ori_number: '{$technician.job_number}'
-							}
-						},
-					},
+					// id_number: {
+					// 	required: true,
+					// 	isIdCard: true,
+					// 	remote: {
+					// 		type: "post",
+					// 		url: "__ROOT__/index.php/api/Technician/check_idnumber",
+					// 		data: {
+					// 			num: function () {
+					// 				return $("#id_number").val();
+					// 			},
+					// 			ori_number: '{$technician.job_number}'
+					// 		}
+					// 	},
+					// },
 					job_number: {
 						required: true,
 						remote: {
@@ -353,7 +353,6 @@
 							mobile: phone,
 							job_number: '{$technician.job_number}',
 							skill: service_id,
-							describe:describe,
 							level:level,
 							invite:invite,
 						},

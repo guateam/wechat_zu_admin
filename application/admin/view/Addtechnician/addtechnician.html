@@ -64,7 +64,7 @@
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-3">
-                    <span class="c-red">*</span>身份证号：</label>
+                    <span class="c-red"></span>身份证号：</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="" placeholder="" id="id_number" name="id_number">
                 </div>
@@ -236,25 +236,21 @@
                     id_number: {
                         required: true,
                         isIdCard: true,
-                        remote: {
-                            type: "post",
-                            url: "__ROOT__/index.php/api/Technician/check_idnumber",
-                            data: {
-                                num: function () {
-                                    return $("#id_number").val();
-                                }
+                        remote:{
+                            type:"post",
+                            url:"__ROOT__/index.php/api/Technician/check_idnumber",
+                            data:{
+                                num:function(){return $("#id_number").val();}
                             }
                         }
                     },
-                    job_number: {
-                        required: true,
-                        remote: {
-                            type: "post",
-                            url: "__ROOT__/index.php/api/Technician/check_job_number",
-                            data: {
-                                num: function () {
-                                    return $("#job_number").val();
-                                }
+                    job_number:{
+                        required:true,
+                        remote:{
+                            type:"post",
+                            url:"__ROOT__/index.php/api/Technician/check_job_number",
+                            data:{
+                                num:function(){return $("#job_number").val();}
                             }
                         }
                     },

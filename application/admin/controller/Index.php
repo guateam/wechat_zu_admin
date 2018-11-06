@@ -10,7 +10,7 @@ class Index extends Controller{
         //    $user=new \app\api\controller\admin();
         //    if($user->checkuser($_COOKIE['userid'])){
                // shell_exec('python /wechat_zu_admin/public/static/timer.py');
-                return $this->fetch('Index/Index');
+                return $this->fetch('Index/index');
         //    }
         //}
         //return $this->error('请先登录','index/index/index');

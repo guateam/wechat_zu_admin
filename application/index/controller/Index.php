@@ -6,6 +6,6 @@ use think\Controller;
  */
 class Index extends Controller{
     public function index(){
-        return $this->fetch('Index/Index');
+        return $this->fetch('Index/index');
     }
 }

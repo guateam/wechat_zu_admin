@@ -68,17 +68,17 @@
 			</div>
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-3">
-					<span class="c-red">*</span>技师等级：</label>
-				<div class="formControls col-xs-8 col-sm-9">
-					<input type="text" class="input-text" value="{$technician.level}" placeholder="" id="level" name="level">
-				</div>
-			</div>
-			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-3">
 					<span class="c-red">*</span>生日：</label>
 				<div class="formControls col-xs-8 col-sm-9">
 					<input type="text" onfocus="WdatePicker({})" class="input-text" value="{$technician.birthday}" placeholder="" id="birthday"
 					    name="birthday">
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">
+					<span class="c-red"></span>简介：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="{$technician.description}" placeholder="" id='description'  name="describe">
 				</div>
 			</div>
 			<div class="row cl">
@@ -164,9 +164,9 @@
 			if (isDate.test(date)) return true;
 			else return false;
 		}
-		jQuery.validator.addMethod("testid",
+		jQuery.validator.addMethod("isIdCard",
 			function (value, element) {
-				return this.optional(element) || (isIdCard(value));
+				return this.optional(element) || (testid(value));
 			},
 			"身份证号非法！");
 		jQuery.validator.addMethod("isDate",
@@ -233,9 +233,6 @@
 								ori_number: '{$technician.job_number}'
 							}
 						}
-					},
-					level:{
-						required:true,
 					},
 					birthday: {
 						required: true,
@@ -304,7 +301,8 @@
 					ori_job_number = '{$technician.job_number}';
 					service_id = [];
 					service_type = $('input:checkbox[name="servicetype"]:checked')
-					level = $('#level').val();
+					describe = $("#description").val();
+					
 					$.each(service_type, function () {
 						service_id.push($(this).val());
 					})
@@ -320,7 +318,7 @@
 							mobile: phone,
 							job_number: '{$technician.job_number}',
 							skill: service_id,
-							level:level,
+							describe:describe,
 						},
 						success: function (result) {
 							if (result.status == 1) {

@@ -159,7 +159,7 @@
          * @param string $skill      技师的技能
          * 
          */
-        public function add_technician($name,$idcard,$birthday,$gender,$mobile,$job_number,$skill='',$describe=''){
+        public function add_technician($name,$idcard,$birthday,$gender,$mobile,$job_number,$skill='',$describe='',$level){
             if($skill=='')return json(['status'=>-4]);
 
             $is_repeat = self::check_repeat($name,$mobile,$job_number,$idcard,"");
@@ -170,7 +170,7 @@
                                     'entry_date'=>time(),'description'=>$describe]);
             $data->save();
             for($i=0;$i<count($skill);$i++){
-                $skill_info = new \app\api\model\Skill(['job_number'=>$job_number,'service_id'=>$skill[$i],'extra_income'=>0]);
+                $skill_info = new \app\api\model\Skill(['job_number'=>$job_number,'level'=>$level,'service_id'=>$skill[$i],'extra_income'=>0]);
                 $skill_info->save();
             }
             return json(['status'=>1]);

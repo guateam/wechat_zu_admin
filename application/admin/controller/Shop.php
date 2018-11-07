@@ -47,7 +47,7 @@ class Shop extends Controller{
     }
 
     public function editpermission($user){
-        $menu_ctrl = new \app\api\controller\mMenu();
+        $menu_ctrl = new \app\api\controller\Mmenu();
         $menu = $menu_ctrl->getchoosenmenu($user);
          $this->assign('menu',$menu);
          $this->assign('userid',$user);
@@ -55,9 +55,16 @@ class Shop extends Controller{
     }
 
     public function newaccount(){
-        $menu_ctrl = new \app\api\controller\mMenu();
+        $menu_ctrl = new \app\api\controller\Mmenu();
         $menu = $menu_ctrl->getmenu();
         $this->assign('menu',$menu);
         return $this->fetch('Shop/newaccount');
+    }
+
+    public function editmenu(){
+        $menu_ctrl = new \app\api\controller\Mmenu();
+        $menu = $menu_ctrl->getmenu();
+        $this->assign('menu',$menu);
+        return $this->fetch('Shop/menu');
     }
 }

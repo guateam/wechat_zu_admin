@@ -6,7 +6,7 @@ use \app\api\model\admin as UserModel;
 class Index extends Controller{
 
     public function index($id){
-        $menu_ctrl = new \app\api\controller\mMenu();
+        $menu_ctrl = new \app\api\controller\Mmenu();
         $admin_ctrl = new \app\api\controller\Admin();
 
         $permission = $admin_ctrl->getpermission($id);

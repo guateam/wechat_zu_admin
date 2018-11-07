@@ -3,18 +3,49 @@
     use think\Controller;
     use \app\api\model\Menu as Menu;
     use think\Db;
-    class mMenu extends Controller{
+    class Mmenu extends Controller{
 
         public static function getmenu(){
-            $menu = Db::query("select * from `menu` where `father`=0 order by `ID` asc");
+            $menu = Db::query("select * from `menu` where `father`=0 order by `order` asc");
             for($i=0;$i<count($menu);$i++){
                 $menu_id = $menu[$i]['ID'];
-                $child_menu = Db::query("select * from `menu` where `father`='$menu_id'");
+                $child_menu = Db::query("select * from `menu` where `father`='$menu_id' order by `order` asc");
                 $menu[$i] = array_merge($menu[$i],['child'=>$child_menu]);
             }
             return $menu;
         }
-
+        public function upper($id){
+            $id = intval($id);
+            $menu_item  = Menu::get(['ID'=>$id]);
+            $order = $menu_item->order;
+            $upper_item =Menu::get(['order'=>$order-1]);
+            if($menu_item->father != $upper_item->father){
+                return false;
+            }else{
+                $ori_order = $menu_item->order;
+                $menu_item->order = $upper_item->order;
+                $upper_item->order = $ori_order;
+                $menu_item->save();
+                $upper_item->save();
+                return true;
+            }
+        }
+        public function lower($id){
+            $id = intval($id);
+            $menu_item  = Menu::get(['ID'=>$id]);
+            $order = $menu_item->order;
+            $lower_item =Menu::get(['order'=>$order+1]);
+            if( !$lower_item || $menu_item->father != $lower_item->father){
+                return false;
+            }else{
+                $ori_order = $menu_item->order;
+                $menu_item->order = $lower_item->order;
+                $lower_item->order = $ori_order;
+                $menu_item->save();
+                $lower_item->save();
+                return true;
+            }
+        }
         public function getchoosenmenu($username){
             $admin_ctrl = new Admin();
             $permission = $admin_ctrl->getpermission($username);

@@ -2,6 +2,7 @@
     namespace app\api\controller;
     use think\Controller;
     use \app\api\model\Admin as UserModel;
+    use think\Db;
     class Admin extends Controller{
         /**
          * 检查cookie是否有效，返回用户id
@@ -100,4 +101,28 @@
             return "未知";
         }
         
+        public function getpermission($name){
+            $permission = Db::query("select permission from admin where `name`='$name'");
+            $permission = explode(",",$permission[0]['permission']);
+            return $permission;
+        }
+
+        public function add($username,$password,$permission){
+            //添加父目录项
+            foreach($permission as $it){
+                $fth = Db::query("select father from menu where ID='$it'");
+                $fth = $fth[0]['father'];
+                if($fth !=0 && !array_search($fth,$permission)){
+                    array_push($permission,(string)$fth);
+                }
+            }
+            $str = implode(',',$permission);
+            Db::query("insert into admin (`name`,`password`,`is_admin`,`permission`) values ('$username','$password',1,'$str')");
+            return json(['status'=>1]);
+        }
+
+        public function delete($id){
+            Db::query("delete from admin where `ID`='$id'");
+            return json(['status'=>1]);
+        }
     }

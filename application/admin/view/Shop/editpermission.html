@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+	<script type="text/javascript" src="lib/html5shiv.js"></script>
+	<script type="text/javascript" src="lib/respond.min.js"></script>
+	<![endif]-->
+    {include file="common/common_css"}
+    <!--[if IE 6]>
+	<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+	<script>DD_belatedPNG.fix('*');</script>
+	<![endif]-->
+    <title>修改权限</title>
+</head>
+
+<body>
+    {volist name="$menu" id="it"}
+    {$it.name}<br>
+    {volist name="$it.child" id="ch"}
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    {if condition="$ch.permission == 1"}
+    <input type="checkbox" name="per" checked value="{$ch.ID}" id="{$ch.name}">
+    {else /}
+    <input type="checkbox" name="per" value="{$ch.ID}" id="{$ch.name}">
+    {/if}
+    {$ch.name}
+    {/volist}
+    <br>
+    {/volist}
+    <button onclick="change_permission()">确认</button>
+    {include file="common/common_script"}
+    <!--请在下方写此页面业务相关的脚本-->
+    <script type="text/javascript" src="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
+    <script type="text/javascript">
+
+
+        /*用户-编辑*/
+        function member_edit(title, url, id, w, h) {
+            layer_show(title, url, w, h);
+        }
+
+
+        function change_permission() {
+            swal({
+                title: '正在执行',
+                allowOutsideClick: false,
+                showCancelButton: false,
+                showConfirmButton: false,
+                onOpen: () => {
+                    swal.showLoading()
+                }
+            })
+            boxes = $('input:checkbox[name="per"]:checked');
+            choosen_permission = [];
+            for(i in boxes){
+                choosen_permission.push(boxes[i].value);
+            }
+            $.post("__ROOT__/index.php/api/Shop/changeper", {
+                        id: '{$userid}',
+                        val: choosen_permission
+            }).done((res)=>{
+                parent.location.reload()
+                var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+            })
+        }
+    </script>
+</body>
+
+</html>

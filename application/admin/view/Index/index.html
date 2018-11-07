@@ -46,20 +46,28 @@
     </header>
     <aside class="Hui-aside">
         <div class="menu_dropdown bk_2">
-            <dl id="menu-shop">
+            {volist name="$menu" id="m" key="k"}
+            {if condition="$m.permission==1"}
+            <dl id="">
                 <dt>
-                    <i class="Hui-iconfont">&#xe622;</i>店铺管理
-                    <i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i>
+                    <!-- <i class="Hui-iconfont">&#xe622;</i>-->{$m.name} 
+                    <!-- <i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i> -->
                 </dt>
                 <dd>
+                    {volist name="$m.child" id="cm"}
+                    {if condition="$cm.permission==1"}
                     <ul>
                         <li>
-                            <a data-href="__ROOT__/index.php/admin/Shop/index" data-title="店铺信息" href="javascript:;">店铺信息</a>
+                            <a data-href="{$cm.link}" data-title="{$cm.name}" href="javascript:;">{$cm.name}</a>
                         </li>
                     </ul>
+                    {/if}
+                    {/volist}
                 </dd>
             </dl>
-            <dl id="menu-product">
+            {/if}
+            {/volist}
+            <!-- <dl id="menu-product">
                 <dt>
                     <i class="Hui-iconfont">&#xe620;</i> 服务管理
                     <i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i>
@@ -68,6 +76,11 @@
                     <ul>
                         <li>
                             <a data-href="__ROOT__/index.php/admin/Consumedorder/index" data-title="订单列表" href="javascript:void(0)">订单列表</a>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <a data-href="__ROOT__/index.php/admin/Servicelist/index" data-title="服务列表" href="javascript:void(0)">服务列表</a>
                         </li>
                     </ul>
                     <ul>
@@ -111,9 +124,6 @@
                         <li>
                             <a data-href="__ROOT__/index.php/admin/Invitersetting/index" data-title="推荐人设置" href="javascript:void(0)">推荐人设置</a>
                         </li>
-                        <!-- <li>
-                            <a data-href="__ROOT__/index.php/admin/Skilllevel/index" data-title="技能等级" href="javascript:void(0)">技能等级</a>
-                        </li> -->
                         <li>
                             <a data-href="__ROOT__/index.php/admin/Skilllevel/level_edit" data-title="等级管理" href="javascript:void(0)">等级管理</a>
                         </li>
@@ -160,7 +170,7 @@
                         </li>
                     </ul>
                 </dd>
-            </dl>
+            </dl> -->
         </div>
     </aside>
     <div class="dislpayArrow hidden-xs">

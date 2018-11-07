@@ -2,6 +2,7 @@
     namespace app\api\controller;
     use think\Controller;
     use \app\api\model\Shop as UserModel;
+    use think\Db;
     class Shop extends Controller{
 
         public function get_all(){
@@ -75,5 +76,24 @@
                 return json(['status'=>1]);
             }
             return json(['status'=>0]);
+        }
+
+        public function changepassword($id,$val){
+           $result =  Db::query("update admin set `password`='$val' where `ID`='$id'");
+           return json(['status'=>1]);
+        }
+
+        public function changeper($id,$val){
+            //添加父目录项
+            foreach($val as $it){
+                $fth = Db::query("select father from menu where ID='$it'");
+                $fth = $fth[0]['father'];
+                if($fth !=0 && !array_search($fth,$val)){
+                    array_push($val,(string)$fth);
+                }
+            }
+            $str = implode(',',$val);
+            $result = Db::query("update admin set `permission`='$str' where `name`='$id' ");
+            return json(['status'=>1]);
         }
     }

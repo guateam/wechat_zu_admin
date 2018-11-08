@@ -3,9 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="40b882a7-f1be-4f9f-9a46-9930007fd1be" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/view/Servicelist/service_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/view/Servicelist/service_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/view/Shop/menu.html" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/view/Shop/Mmenu.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/lib/My97DatePicker/4.8/skin/twoer/datepicker-dev.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/static/lib/My97DatePicker/4.8/skin/twoer/datepicker-dev.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/admin/view/Shop/Mmenu.html" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/view/Shop/menu.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/admin/view/Shop/editpermission.html" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/view/Shop/editpermission.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/admin/view/Shop/newaccount.html" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/view/Shop/newaccount.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/api/controller/mMenu.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/api/controller/MMenu.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/static/lib/jquery.contextmenu/jquery.contextmenu.r2.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/static/lib/jquery.contextmenu/jquery.contextmenu.r2.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -56,53 +57,85 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="css" value="4" />
-          <entry key="html" value="92" />
+          <entry key="html" value="432" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CSS" value="4" />
-          <entry key="HTML" value="92" />
+          <entry key="HTML" value="432" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="html" value="1" />
-          <entry key="php" value="6" />
+          <entry key="html" value="5" />
+          <entry key="php" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="HTML" value="1" />
-          <entry key="PLAIN_TEXT" value="6" />
+          <entry key="HTML" value="5" />
+          <entry key="PLAIN_TEXT" value="8" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/admin/view/Servicelist/service_detail.html">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/application/admin/view/Shop/newaccount.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19">
-              <caret line="1" column="6" lean-forward="true" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
+            <state relative-caret-position="189">
+              <caret line="41" column="32" selection-start-line="41" selection-start-column="32" selection-end-line="41" selection-end-column="32" />
               <folding>
-                <element signature="n#style#0;n#button#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="e#649#655#0" expanded="true" />
+                <element signature="e#655#661#0" expanded="true" />
+                <element signature="e#661#667#0" expanded="true" />
+                <element signature="e#667#673#0" expanded="true" />
+                <element signature="n#style#0;n#button#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/application/admin/view/Shop/Mmenu.html">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/admin/view/Shop/menu.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="103">
-              <caret line="68" column="11" lean-forward="true" selection-start-line="68" selection-start-column="11" selection-end-line="68" selection-end-column="11" />
+            <state relative-caret-position="191">
+              <caret line="31" column="42" selection-start-line="31" selection-start-column="42" selection-end-line="31" selection-end-column="42" />
+              <folding>
+                <element signature="n#style#0;n#a#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/admin/view/Shop/editpermission.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="456">
+              <caret line="23" column="30" selection-start-line="23" selection-start-column="30" selection-end-line="23" selection-end-column="30" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#button#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>mMenu</find>
+    </findStrings>
+    <dirStrings>
+      <dir>D:\phpStudy\WWW\wechat_zu_admin\application\admin\controller</dir>
+      <dir>D:\phpStudy\WWW\wechat_zu_admin</dir>
+      <dir>D:\phpStudy\WWW\wechat_zu_admin\application</dir>
+    </dirStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -113,6 +146,9 @@
         <option value="$PROJECT_DIR$/public/static/timer.py" />
         <option value="$PROJECT_DIR$/application/admin/view/Servicelist/service_detail.html" />
         <option value="$PROJECT_DIR$/application/admin/view/Shop/Mmenu.html" />
+        <option value="$PROJECT_DIR$/application/admin/view/Shop/editpermission.html" />
+        <option value="$PROJECT_DIR$/application/admin/view/Shop/menu.html" />
+        <option value="$PROJECT_DIR$/application/admin/view/Shop/newaccount.html" />
       </list>
     </option>
   </component>
@@ -149,6 +185,38 @@
             <path>
               <item name="wechat_zu_admin" type="b2602c69:ProjectViewProjectNode" />
               <item name="wechat_zu_admin" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="wechat_zu_admin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="wechat_zu_admin" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="wechat_zu_admin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="wechat_zu_admin" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+              <item name="admin" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="wechat_zu_admin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="wechat_zu_admin" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+              <item name="admin" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="wechat_zu_admin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="wechat_zu_admin" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+              <item name="admin" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+              <item name="Shop" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="wechat_zu_admin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="wechat_zu_admin" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+              <item name="api" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -206,12 +274,12 @@
       <option name="presentableId" value="Default" />
       <updated>1539668813859</updated>
       <workItem from="1540971040808" duration="1912000" />
-      <workItem from="1541672198923" duration="2069000" />
+      <workItem from="1541672198923" duration="5220000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3981000" />
+    <option name="totallyTimeSpent" value="7132000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
@@ -276,18 +344,55 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/admin/view/Servicelist/service_detail.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" column="6" lean-forward="true" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
+        <state relative-caret-position="360">
+          <caret line="62" column="28" lean-forward="true" selection-start-line="62" selection-start-column="28" selection-end-line="62" selection-end-column="28" />
           <folding>
             <element signature="n#style#0;n#button#0;n#form#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/admin/view/Shop/Mmenu.html">
+    <entry file="file://$PROJECT_DIR$/application/api/controller/Mmenu.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="103">
-          <caret line="68" column="11" lean-forward="true" selection-start-line="68" selection-start-column="11" selection-end-line="68" selection-end-column="11" />
+        <state relative-caret-position="57">
+          <caret line="3" column="36" selection-start-line="3" selection-start-column="36" selection-end-line="3" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/view/Shop/editpermission.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="456">
+          <caret line="23" column="30" selection-start-line="23" selection-start-column="30" selection-end-line="23" selection-end-column="30" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#button#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/view/Shop/menu.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="31" column="42" selection-start-line="31" selection-start-column="42" selection-end-line="31" selection-end-column="42" />
+          <folding>
+            <element signature="n#style#0;n#a#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/view/Shop/newaccount.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="41" column="32" selection-start-line="41" selection-start-column="32" selection-end-line="41" selection-end-column="32" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="e#649#655#0" expanded="true" />
+            <element signature="e#655#661#0" expanded="true" />
+            <element signature="e#661#667#0" expanded="true" />
+            <element signature="e#667#673#0" expanded="true" />
+            <element signature="n#style#0;n#button#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

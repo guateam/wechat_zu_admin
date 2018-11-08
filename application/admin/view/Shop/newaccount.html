@@ -5,20 +5,41 @@
     <meta charset="utf-8">
     <meta name="renderer" content="webkit|ie-comp|ie-stand">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
 
     {include file="common/common_css"}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
 
+        .theinput {
+            list-style: none;
+            outline: none;
+            border: 1px solid #eee;
+            width: 200px;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .thebut {
+        }
+    </style>
     <title>添加账号</title>
 </head>
 
 <body>
+<div style="margin-top: 5px;margin-bottom: 5px;padding-left: 10px">
     账号
-    <input type="text" id="username">
+    <input type="text" id="username" class="theinput">
     密码
-    <input type="text" id="password">
-    <br>
+    <input type="text" id="password" class="theinput">
+</div>
+<div style="padding-left: 10px">
     {volist name="$menu" id="it"}
     {$it.name}<br>
     {volist name="$it.child" id="ch"}
@@ -28,47 +49,49 @@
     {/volist}
     <br>
     {/volist}
-    <button onclick="register()">确认</button>
+</div>
+<button onclick="register()" class="btn btn-primary radius" style="margin-left: 10px;margin-top: 6px;width: 90px">确认
+</button>
 
-    {include file="common/common_script"}
-    <!--请在下方写此页面业务相关的脚本-->
-    <script type="text/javascript" src="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js"></script>
-    <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
-    <script type="text/javascript">
-        function register() {
-            swal({
-                title: '正在执行',
-                allowOutsideClick: false,
-                showCancelButton: false,
-                showConfirmButton: false,
-                onOpen: () => {
-                    swal.showLoading()
-                }
-            })
-            boxes = $('input:checkbox[name="per"]:checked');
-            choosen_permission = [];
-            for(i in boxes){
-                choosen_permission.push(boxes[i].value);
-            }
-            username = $("#username").val();
-            password = $("#password").val();
-            if(username != '' && password != ''){
-                $.post("__ROOT__/index.php/api/Admin/add", {
-                        username: username,
-                        password: password,
-                        permission:choosen_permission
-            }).done((res)=>{
-                parent.location.reload()
-                var index = parent.layer.getFrameIndex(window.name);
-                    parent.layer.close(index);
-            })
-            }else{
-                swal("","用户名或密码不能为空",'error');
-            }
-            
+{include file="common/common_script"}
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+    function register() {
+        swal({
+            title: '正在执行',
+            allowOutsideClick: false,
+            showCancelButton: false,
+            showConfirmButton: false,
+            onOpen: () = > {
+            swal.showLoading()
+    }
+    })
+        boxes = $('input:checkbox[name="per"]:checked');
+        choosen_permission = [];
+        for (i in boxes) {
+            choosen_permission.push(boxes[i].value);
         }
-    </script>
+        username = $("#username").val();
+        password = $("#password").val();
+        if (username != '' && password != '') {
+            $.post("__ROOT__/index.php/api/Admin/add", {
+                username: username,
+                password: password,
+                permission: choosen_permission
+            }).done((res) = > {
+                parent.location.reload()
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        })
+        } else {
+            swal("", "用户名或密码不能为空", 'error');
+        }
+
+    }
+</script>
 </body>
 
 </html>

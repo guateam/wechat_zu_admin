@@ -104,7 +104,7 @@
     menu.html(content);
 
     // if there's an onShowMenu, run it now -- must run after content has been added
-		// if you try to alter the content variable before the menu.html(), IE6 has issues
+		// if you try to alter the content variable before the Mmenu.html(), IE6 has issues
 		// updating the content
     if (!!cur.onShowMenu) menu = cur.onShowMenu(e, menu);
 

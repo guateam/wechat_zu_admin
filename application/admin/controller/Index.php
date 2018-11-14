@@ -40,6 +40,7 @@ class Index extends Controller{
         // }
 
         $this->assign("menu",$menu);
+        $this->assign("userid",$id);
         return $this->fetch('Index/index');
     }
 }

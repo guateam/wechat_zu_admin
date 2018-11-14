@@ -29,50 +29,37 @@
         <form action="" method="post" class="form form-horizontal" id="form-member-add">
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-3">
-                    <span class="c-red">*</span>服务名称：</label>
+                    <span class="c-red">*</span>茶艺名称：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="name" name="name">
+                    <input type="text" class="input-text" value="{$tea.name}" placeholder="" id="name" name="name">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-3">
-                    <span class="c-red">*</span>服务基础时长：</label>
+                    <span class="c-red">*</span>茶艺价格（单位:分）：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="duration" name="duration">
+                    <input type="text" class="input-text" value="{$tea.price}" placeholder="" id="price">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-3">
-                    <span class="c-red">*</span>服务价格（单位:分）：</label>
+                    <span class="c-red">*</span>提成金额：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="price">
-                </div>
-            </div>
-            <!-- <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-3">
-                    <span class="c-red">*</span>折扣：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="discount" name="discount">
-                </div>
-            </div> -->
-            <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-3">
-                    <span class="c-red">*</span>提成比例：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="commission" name="commission">
+                    <input type="text" class="input-text" value="{$tea.commission}" placeholder="" id="commission" name="commission">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-3">
-                    <span class="c-red">*</span>服务介绍：</label>
+                    <span class="c-red">*</span>茶艺介绍：</label>
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="info" name="info">
+                    <input type="text" class="input-text" value="{$tea.info}" placeholder="" id="info" name="info">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-3">
-                    <span class="c-red">*</span>服务介绍图：</label>
+                    <span class="c-red">*</span>茶艺介绍图：</label>
                 <div class="formControls col-xs-8 col-sm-9">
+                    <img style="width:45px;height:45px" src="{$tea.image}">
                     <input type="file" class="input-text" value="" placeholder="" id="image" name="image">
                 </div>
             </div>
@@ -107,13 +94,7 @@
                     name: {
                         required: true,
                     },
-                    duration: {
-                        required: true,
-                    },
                     price: {
-                        required: true,
-                    },
-                    discount: {
                         required: true,
                     },
                     commission: {
@@ -138,62 +119,37 @@
                         }
                     }).then((result) => {});
                     name = $("#name").val();
-                    duration = $("#duration").val();
                     price = $("#price").val();
-                    //discount = $("#discount").val();
                     commission = $("#commission").val();
                     info = $("#info").val();
                     image = $("#image").val();
-                    $(form).ajaxSubmit({
-                        type: 'post', // 提交方式 get/post
-                        url: '__ROOT__/index.php/api/ServiceType/add_service', // 需要提交的 url
+
+                    $.ajaxFileUpload({
+                        url: '__ROOT__/index.php/api/Itemtype/upload',
+                        fileElementId: 'image',
+                        type: 'post',
                         data: {
+                            id:'{$tea.ID}',
                             name: name,
-                            duration: duration,
                             price: price,
-                            discount: 100,
                             commission: commission,
                             info: info,
-                            image: image,
                         },
-                        success: function (result) {
-                            if (result.status == 1) {
-                                //上传文件
-                                $.ajaxFileUpload({
-                                    url: '__ROOT__/index.php/api/Servicetype/upload',
-                                    fileElementId: 'image',
-                                    type: 'post',
-                                    data: {
-                                        name: name,
-                                        duration: duration,
-                                        price: price,
-                                        discount: discount,
-                                        commission: commission,
-                                        info: info,
-                                    },
-                                    secureuri: false,
-                                    success: function (result, status) {
-                                        if (status == 'success') {} else {}
-                                    },
-                                    error: function (data, status, e) {
-                                        alert(e);
-                                    }
-                                });
-                                swal("成功", "已添加新的服务", "success", {
-                                    allowOutsideClick: false
-                                }).then((ok) => {
-                                    if (ok.value) {
-                                        parent.location.reload()
-                                        var index = parent.layer.getFrameIndex(
-                                            window.name);
-                                        parent.layer.close(index);
-                                    }
-                                })
+                        secureuri: false,
+                        success: function (result, status) {
+                            if (status == 'success') {
+                                parent.location.reload()
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
                             } else {
-                                swal("失败", "添加失败", "error");
+                                swal("", "未知错误，新建茶艺失败", "error");
                             }
+                        },
+                        error: function (data, status, e) {
+                            alert(e);
                         }
                     });
+                    
                 }
             });
         });

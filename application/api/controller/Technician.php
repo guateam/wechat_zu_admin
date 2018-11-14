@@ -160,19 +160,21 @@
          * @param string $skill      技师的技能
          * 
          */
-        public function add_technician($name,$idcard,$birthday,$gender,$mobile,$job_number,$skill='',$describe='',$level,$invite){
-            if($skill=='')return json(['status'=>-4]);
+        public function add_technician($name,$idcard,$birthday,$gender,$mobile,$job_number,$skill='',$describe='',$level,$invite,$type){
+            if($skill=='' && $type == 1)return json(['status'=>-4]);
 
             $is_repeat = self::check_repeat($name,$mobile,$job_number,$idcard,"");
             if($is_repeat!=1)return json(["status"=>$is_repeat]);
 
             $data = new UserModel(['name'=>$name,'gender'=>$gender,'phone_number'=>$mobile,
                                     'job_number'=>$job_number,'birthday'=>$birthday,"id_number"=>$idcard,
-                                    'entry_date'=>time(),'description'=>$describe,'in_job'=>1]);
+                                    'entry_date'=>time(),'description'=>$describe,'in_job'=>1,'type'=>$type]);
             $data->save();
-            for($i=0;$i<count($skill);$i++){
-                $skill_info = new \app\api\model\Skill(['job_number'=>$job_number,'level'=>$level,'service_id'=>$skill[$i],'extra_income'=>0]);
-                $skill_info->save();
+            if($skill != ''){
+                for($i=0;$i<count($skill);$i++){
+                    $skill_info = new \app\api\model\Skill(['job_number'=>$job_number,'level'=>$level,'service_id'=>$skill[$i],'extra_income'=>0]);
+                    $skill_info->save();
+                }
             }
             if($invite != ''){
                 self::set_inviter($job_number,$invite);
@@ -192,12 +194,14 @@
          * 
          */
         public function update_technician($ori_job_number,$name,$idcard,$birthday,$gender,
-                                            $mobile,$job_number,$skill='',$describe='',$level='',$invite=''){
+                                            $mobile,$job_number,$skill='',$describe='',$level='',$invite='',$type=1){
 
             $is_repeat = self::check_repeat($name,$mobile,$job_number,$idcard,$ori_job_number);
             if($is_repeat!=1)return json(["status"=>$is_repeat]);
 
             $data = UserModel::get(["job_number"=>$ori_job_number]);
+
+            $data->type = $type;
             $data->name = $name;
             $data->gender = $gender;
             $data->phone_number=$mobile;
@@ -205,15 +209,24 @@
             $data->id_number = $idcard;
             $data->birthday=$birthday;
             $data->description = $describe;
-            $data->save();
+
+
             $skill_info = \app\api\model\Skill::all(['job_number'=>$ori_job_number]);
             foreach($skill_info as $it){
                 $it->delete();
             }
-            foreach($skill as $sk){
-                $new_skill = new \app\api\model\Skill(['job_number'=>$job_number,'level'=>$level,'service_id'=>$sk,'extra_income'=>0]);
-                $new_skill->save();
+
+            if($type == 1){
+                foreach($skill as $sk){
+                    $new_skill = new \app\api\model\Skill(['job_number'=>$job_number,'level'=>$level,'service_id'=>$sk,'extra_income'=>0]);
+                    $new_skill->save();
+                }
+                $data->level = $level;
+            }else{
+                $data->level = "";
             }
+
+            $data->save();
             self::set_inviter($job_number,$invite);
             return json(["status"=>1]);
         }

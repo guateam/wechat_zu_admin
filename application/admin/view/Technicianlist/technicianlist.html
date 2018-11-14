@@ -51,13 +51,14 @@
                             <input type="checkbox" name="" value="" class="flat" id='checkall'>
                         </th>
                         <th width="80">姓名</th>
+                        <th width="40">类别</th>
                         <th width="40">性别</th>
                         <th width="90">工号</th>
                         <th width="100">手机号</th>
                         <th width="100">技能</th>
                         <th width="30">评分</th>
                         <th width="60">充卡数额</th>
-                        <th width="90">介绍人工号</th>
+                        <th width="50">介绍人工号</th>
                         <th width="50">离职情况</th>
                         <!-- <th width="70">指定介绍人</th> -->
                         <th width="70">等级</th>
@@ -74,6 +75,15 @@
                             <input type="checkbox" value="{$it.job_number}" name="{$k}" class="flat">
                         </td>
                         <td>{$it.name}</td>
+                        <td>
+                                {if condition="$it.type == 1"}
+                                    技师
+                                {elseif condition = "$it.type == 2" }
+                                    接待
+                                {elseif condition = "$it.type == 3" }
+                                    茶艺
+                                {/if}
+                            </td>
                         <td>
                             {if condition="$it.gender=='1'"}男 {else /}女 {/if}
 

@@ -4,7 +4,7 @@ use think\Controller;
 use \app\api\model\Rate as RateModel;
 
 class Comment extends Controller{
-    public function index(){
+    public function index($edit){
         $att = \app\api\model\Rate::all();
         $svs = new \app\api\controller\Servicetype();
         $svod = new \app\api\controller\Serviceorder();
@@ -26,6 +26,7 @@ class Comment extends Controller{
         $this->assign("comment",$att);
         $this->assign("count",count($att));
         $this->assign("tech",$tech);
+        $this->assign("edit",$edit);
         return $this->fetch('Comment/comment');
     }
 }

@@ -5,7 +5,7 @@ use \app\api\model\Consumedorder as UserModel;
 
 class Consumedorder extends Controller{
 
-    public function index(){
+    public function index($edit){
         $ctrl =new \app\api\controller\Consumedorder();
         $cs = new \app\api\controller\Customer();
         $order = $ctrl->get_all();

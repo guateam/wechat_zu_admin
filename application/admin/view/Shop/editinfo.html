@@ -28,32 +28,25 @@
         .thebut {
         }
     </style>
-    <title>添加账号</title>
+    <title>编辑信息</title>
 </head>
 
 <body>
     <div style="margin-top: 5px;margin-bottom: 5px;padding-left: 10px">
-        账号
-        <input type="text" id="username" class="theinput">
-        密码
-        <input type="text" id="password" class="theinput">
+        店铺名称
+        <input type="text" id="shopname" class="theinput" value="{$shop.name}">
+        店铺地址
+        <input type="text" id="address" class="theinput" value="{$shop.position}">
+        开业时间
+        <input type="text" id="opentime" class="theinput" value="{$shop.open_time}">
+        关门时间
+        <input type="text" id="closetime" class="theinput" value="{$shop.close_time}">
+        联系电话
+        <input type="text" id="phone" class="theinput" value="{$shop.phone}">
+        ip地址
+        <input type="text" id="ip" class="theinput" value="{$shop.ip_address}">
     </div>
-    <div style="padding-left: 10px">
-        {volist name="$menu" id="it"}
-        {$it.name}<br>
-        {volist name="$it.child" id="ch"}
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="checkbox"  onclick="check(this)" name="per" value="{$ch.ID}" id="{$ch.name}">
-        {$ch.name}
-        <div name="{$ch.ID}" style="display: none">
-            <input type="radio" name="{$ch.ID}" checked value="0" >只读
-            <input type="radio" name="{$ch.ID}" value="1" >可修改
-        </div>
-        {/volist}
-        <br>
-        {/volist}
-    </div>
-    <button onclick="register()" class="btn btn-primary radius" style="margin-left: 10px;margin-top: 6px;width: 90px">确认
+    <button onclick="update()" class="btn btn-primary radius" style="margin-left: 10px;margin-top: 6px;width: 90px">确认
     </button>
 
     {include file="common/common_script"}
@@ -62,7 +55,7 @@
     <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
     <script type="text/javascript">
-        function register() {
+        function update() {
             swal({
                 title: '正在执行',
                 allowOutsideClick: false,
@@ -72,39 +65,31 @@
                     swal.showLoading()
                 }
             })
-            boxes = $('input:checkbox[name="per"]:checked');
-            choosen_permission = [];
-            for (i=0;i<boxes.length;i++) {
-                radio = $('input:radio[name="'+boxes[i].value+'"]:checked');
-                per = [boxes[i].value,radio.val()];
-                choosen_permission.push(per);
-            }
-            username = $("#username").val();
-            password = $("#password").val();
-            if (username != '' && password != '') {
-                $.post("__ROOT__/index.php/api/Admin/add", {
-                    username: username,
-                    password: password,
-                    permission: choosen_permission
+            shopname = $("#shopname").val();
+            address = $("#address").val();
+            opentime = $("#opentime").val();
+            closetime = $("#closetime").val();
+            phone = $("#phone").val();
+            ip = $("#ip").val();
+
+            if (shopname != '' && address != '' && opentime != '' && closetime !='' && phone != '' && ip != '' ) {
+                $.post("__ROOT__/index.php/api/Shop/update", {
+                    shopname: shopname,
+                    address: address,
+                    open: opentime,
+                    close:closetime,
+                    phone:phone,
+                    ip:ip,
+                    id:'{$shop.ID}'
                 }).done((res)=>{
                     parent.location.reload()
                     var index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);
                 })
             } else {
-                swal("", "用户名或密码不能为空", 'error');
+                swal("", "填写项目不能为空", 'error');
             }
 
-        }
-
-        function check(box){
-            var val = box.value;
-            var div = $('div[name="'+val+'"]');
-            if(box.checked){
-                div.show();
-            }else{
-                div.hide();
-            }
         }
     </script>
 </body>

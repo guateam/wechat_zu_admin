@@ -298,12 +298,16 @@
         /**
          * 更新服务的详细信息
          */
-        public function  update_info($id,$procedure,$attention,$benefit){
+        public function  update_info($id,$procedure,$attention,$benefit,$price,$duration,$commission,$have_level){
             $data = \app\api\model\Servicetype::get(['ID'=>$id]);
             if($data){
                 $data->procedure = $procedure;
                 $data->attention = $attention;
                 $data->benefit = $benefit;
+                $data->price = $price;
+                $data->duration = $duration;
+                $data->commission = $commission;
+                $data->have_level = $have_level;
                 $data->save();
                 return json(['status'=>1]);
             }

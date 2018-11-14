@@ -18,7 +18,20 @@
             }
             $shop->save();
         }
-
+        public function update($shopname,$address,$open,$close,$phone,$ip,$id){
+            $shop = UserModel::get(['ID'=>$id]);
+            if($shop){
+                $shop->name = $shopname;
+                $shop->position = $address;
+                $shop->open_time = $open;
+                $shop->close_time = $close;
+                $shop->phone = $phone;
+                $shop->ip_address = $ip;
+                $shop->save();
+                return json(['status'=>1]);
+            }
+            return json(['status'=>0]);
+        }
         public function update_name($id,$value){
             $shop = UserModel::get(['ID'=>$id]);
             if($shop){
@@ -85,12 +98,14 @@
 
         public function changeper($id,$val){
             //添加父目录项
-            foreach($val as $it){
-                $fth = Db::query("select father from menu where ID='$it'");
+            foreach($val as $idx => $it){
+                $menu_id = $it[0];
+                $fth = Db::query("select father from menu where ID='$menu_id'");
                 $fth = $fth[0]['father'];
                 if($fth !=0 && !array_search($fth,$val)){
                     array_push($val,(string)$fth);
                 }
+                $val[$idx] = implode(':',$it);
             }
             $str = implode(',',$val);
             $result = Db::query("update admin set `permission`='$str' where `name`='$id' ");

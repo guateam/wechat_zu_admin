@@ -23,24 +23,25 @@
     <div class="page-container">
         <div class="cl pd-5 bg-1 bk-gray mt-20">
             <span class="l">
-                <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
-                    <i class="Hui-iconfont">&#xe6e2;</i>
-                    批量删除
-                </a>
-                <a href="javascript:;" onclick="member_add('添加服务','__ROOT__/index.php/admin/Addservice/addservice','','510')"
-                    class="btn btn-primary radius">
-                    <i class="Hui-iconfont">&#xe600;</i>
-                    添加项目
-                </a>
+                {if condition="$edit == 1"}
+                    <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
+                        <i class="Hui-iconfont">&#xe6e2;</i>
+                        批量删除
+                    </a>
+                    <a href="javascript:;" onclick="member_add('添加服务','__ROOT__/index.php/admin/Addservice/addservice','','510')"
+                        class="btn btn-primary radius">
+                        <i class="Hui-iconfont">&#xe600;</i>
+                        添加项目
+                    </a>
 
-                {if condition="$shop.appoint_allow==1"}
-                <a href="javascript:;" onclick="change_state()" class="btn btn-danger radius">禁止预约</a>
-                <span>预约状态:开放</span>
-                {else /}
-                <a href="javascript:;" onclick="change_state()" class="btn btn-success radius">开放预约</a>
-                <span>预约状态:禁止</span>
+                    {if condition="$shop.appoint_allow==1"}
+                    <a href="javascript:;" onclick="change_state()" class="btn btn-danger radius">禁止预约</a>
+                    <span>预约状态:开放</span>
+                    {else /}
+                    <a href="javascript:;" onclick="change_state()" class="btn btn-success radius">开放预约</a>
+                    <span>预约状态:禁止</span>
+                    {/if}
                 {/if}
-
             </span>
             <span class="r">共有数据：<strong>{$count}</strong>条</span>
         </div>
@@ -63,28 +64,19 @@
                         <td><input type="checkbox" value="1" name=""></td>
                         <td>{$it.name}</td>
                         <td>￥{$it.price/100}
-                            <a title="修改价格" href="javascript:;" onclick="show_swal('价格','{$it.ID}')" class="ml-5" style="text-decoration:none">
-                                <i class="Hui-iconfont">&#xe6df;</i>
-                            </a>
+                           
                         </td>
                         <td>{$it.duration}分钟
-                            <a title="修改时长" href="javascript:;" onclick="show_swal('时长','{$it.ID}')" class="ml-5" style="text-decoration:none">
-                                <i class="Hui-iconfont">&#xe6df;</i>
-                            </a>
+                           
                         </td>
                         <td>￥{$it.commission/100}
-                            <a title="修改提成" href="javascript:;" onclick="show_swal('提成','{$it.ID}')" class="ml-5" style="text-decoration:none">
-                                <i class="Hui-iconfont">&#xe6df;</i>
-                            </a>
+                           
                         </td>
                         <td>
                             {if condition="$it.have_level==0"}不可{else /}可{/if}
-                            <a title="修改" href="javascript:;" onclick="change('{$it.ID}')" class="ml-5" style="text-decoration:none">
-                                <i class="Hui-iconfont">&#xe6df;</i>
-                            </a>
-
                         </td>
                         <td class="td-manage">
+                            {if condition="$edit == 1"}
                             <a title="删除该项目" href="javascript:;" onclick="member_del(this,'{$it.ID}')" class="ml-5 btn btn-danger"
                                 style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6e2;</i>
@@ -95,6 +87,7 @@
                                 <i class="Hui-iconfont">&#xe6df;</i>
                                详细设定
                             </a>
+                            {/if}
                         </td>
                     </tr>
                     {/volist}

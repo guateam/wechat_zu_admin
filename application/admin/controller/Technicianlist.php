@@ -5,7 +5,7 @@ use \app\api\model\Technician as UserModel;
 
 class Technicianlist extends Controller{
 
-    public function Technicianlist(){
+    public function Technicianlist($edit){
         $ctrl =new \app\api\controller\Technician();
         $sk = new \app\api\controller\Skill();
         $so = new \app\api\controller\Serviceorder();
@@ -74,6 +74,7 @@ class Technicianlist extends Controller{
         $this->assign("count",$count);
         $this->assign("score",$aver_score);
         $this->assign("charge",$charge);
+        $this->assign("edit",$edit);
         return $this->fetch('Technicianlist/technicianlist');
     }
 }

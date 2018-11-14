@@ -3,7 +3,7 @@ namespace app\admin\controller;
 use think\Controller;
 
 class Clock extends Controller{
-    public function index(){
+    public function index($edit){
         $technician = \app\api\model\Technician::all();
         $date = date("Y-m-d");
         $date2 = date("Y-m-d");

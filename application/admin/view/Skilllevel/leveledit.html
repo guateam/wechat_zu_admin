@@ -22,10 +22,12 @@
 <body>
     <div class="page-container">
         <div class="cl pd-5 bg-1 bk-gray mt-20">
+            {if condition="$edit == 1"}
             <a href="javascript:;" onclick="member_add()" class="btn btn-primary radius">
                 <i class="Hui-iconfont">&#xe600;</i>
                 添加等级
             </a>
+            {/if}
             <span class="r">
                 共有数据：<strong>{$count}</strong>条
             </span>
@@ -43,9 +45,11 @@
                     <tr class="text-c">
                         <td>{$it.ID}</td>
                         <td>{$it.name}
+                            {if condition="$edit == 1"}
                             <a title="修改名称" onclick="change_name('{$it.ID}')">
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
+                            {/if}
                         </td>
                     </tr>
                     {/volist}

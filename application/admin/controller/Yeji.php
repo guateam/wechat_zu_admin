@@ -4,7 +4,7 @@ use think\Controller;
 
 class Yeji extends Controller{
 
-    public function index(){
+    public function index($edit){
         $ctrl = new \app\api\controller\Technician();
         $yeji =$ctrl->get_all_yeji();
         $this->assign("yeji",$yeji);

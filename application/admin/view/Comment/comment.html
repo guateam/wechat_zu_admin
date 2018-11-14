@@ -32,8 +32,6 @@
     <div class="page-container">
         <div class="cl pd-5 bg-1 bk-gray mt-20">
             <span class="l">
-                <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
-                    <i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
             </span>
             <span class="r">共有数据：
                 <strong>{$count}</strong> 条</span>
@@ -85,9 +83,11 @@
                         <td>{$it.score}分</td>
                         <td>{$it.comment}</td>
                         <td>{if condition="$it.bad==1"}是{else /}<span style="color:red">否</span>{/if}
+                            {if condition="$edit==1"}
                             <a title="改变恶评状态" href="javascript:;" onclick="change_bad('{$it.ID}')" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
+                            {/if}
                         </td>
                     </tr>
                     {/volist}

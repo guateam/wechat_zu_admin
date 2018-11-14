@@ -39,9 +39,11 @@
                         <td>{$it.inviter_job_number}</td>
                         <td>{$it.freshman_job_number}</td>
                         <td>{$it.persentage}%
+                            {if condition="$edit == 1"}
                             <a title="修改分成比例" href="javascript:;" onclick="show_swal('{$it.freshman_job_number}')" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
+                            {/if}
                         </td>
                     </tr>
                     {/volist}

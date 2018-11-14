@@ -32,8 +32,6 @@
     <div class="page-container">
         <div class="cl pd-5 bg-1 bk-gray mt-20">
             <span class="l">
-                <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
-                    <i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
             </span>
             <span class="r">共有数据：
                 <strong>{$count}</strong> 条</span>
@@ -61,9 +59,11 @@
                         <td>￥{$chargelist[$k-1]}</td>
                         <td>{$it.registration_date}</td>
                         <td class="td-manage">
+                            {if condition="$edit==1"}
                             <a title="删除" href="javascript:;" onclick="member_del(this,'{$it.ID}')" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6e2;</i>
                             </a>
+                            {/if}
                         </td>
                     </tr>
                     {/volist}

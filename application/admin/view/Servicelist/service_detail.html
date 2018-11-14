@@ -26,6 +26,28 @@
         <div class="mt-20">
             <form>
                 <div class="input-group">
+                    <span class="input-group-addon">价格：元</span>
+                    <input type="number" id="price" class="form-control" value="{$service.price/100}" ></input>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">时长：分钟</span>
+                    <input type="number" id="duration" class="form-control" value="{$service.duration}" ></input>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">提成金额：元</span>
+                    <input type="number" id="commission" class="form-control" value="{$service.commission/100}" ></input>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">是否允许设置等级：</span>
+                    {if condition="$service.have_level == 1 "}
+                    <input type="radio" name="level" class="form-control"  checked value="1" >是</input>
+                    <input type="radio" name="level" class="form-control" value="0" >否</input>
+                    {else /}
+                    <input type="radio" name="level" class="form-control"  value="1" >是</input>
+                    <input type="radio" name="level" class="form-control" checked value="0" >否</input>
+                    {/if}
+                </div>
+                <div class="input-group">
                     <span class="input-group-addon">服务流程：</span>
                     <textarea id="procedure" class="form-control" rows="3">{$procedure}</textarea>
                 </div>
@@ -37,7 +59,7 @@
                     <span class="input-group-addon">项目特色：</span>
                     <textarea id="benefit" class="form-control" rows="3">{$benefit}</textarea>
                 </div>
-                <button onclick="update('{$service_id}')" id="btn" style="width: 80px;height: 45px;float: right;margin-top: 10px;font-size:1.1em;background-color: #00b7ee">
+                <button onclick="update()" type="button" id="btn" style="width: 80px;height: 45px;float: right;margin-top: 10px;font-size:1.1em;background-color: #00b7ee">
                     确定
                 </button>
             </form>
@@ -50,18 +72,27 @@
     <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
     <script>
-        function update(id){
+        function update() {
             var procedure = $("#procedure").val();
             var attention = $("#attention").val();
             var benefit = $("#benefit").val();
+            var price = $("#price").val();
+            var duration = $("#duration").val();
+            var commission = $("#commission").val();
+            var have_level = $("input:radio[name='level']:checked").val();
 
-            $.post("__ROOT__/index.php/api/Servicetype/update_info",{
-                id:id,
-                procedure:procedure,
-                attention:attention,
-                benefit:benefit,
-            }).done((res)=>{
-                if(res.status==1){
+            $.post("__ROOT__/index.php/api/Servicetype/update_info", {
+                id:'{$service_id}',
+                procedure: procedure,
+                attention: attention,
+                benefit: benefit,
+                price:price*100,
+                duration:duration,
+                commission:commission*100,
+                have_level:have_level,
+            }).done((res) => {
+                alert(res.status)
+                if (res.status == 1) {
                     parent.location.reload()
                     var index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);

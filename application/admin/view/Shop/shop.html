@@ -37,46 +37,35 @@
                         <th width="100">关门时间</th>
                         <th width="80">联系电话</th>
                         <th width="80">ip地址</th>
-                        <th width="80">轮播图设置</th>
+                        <th width="80">操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     {volist name="$shop" id="it"}
                     <tr class="text-c">
                         <td>{$it.name}
-                            <a title="修改店名" onclick="show_swal('店铺名','{$it.ID}')" class="ml-5" style="text-decoration:none">
-                                <i class="Hui-iconfont">&#xe6df;</i>
-                            </a>
                         </td>
                         <td>{$it.position}
-                            <a title="修改地址" onclick="show_swal('店铺地址','{$it.ID}')" class="ml-5" style="text-decoration:none">
-                                <i class="Hui-iconfont">&#xe6df;</i>
-                            </a>
                         </td>
                         <td>{$it.open_time}
-                            <a title="修改开业时间" onclick="show_swal('开门时间','{$it.ID}')" class="ml-5" style="text-decoration:none">
-                                <i class="Hui-iconfont">&#xe6df;</i>
-                            </a>
                         </td>
                         <td>{$it.close_time}
-                            <a title="修改关门时间" onclick="show_swal('关门时间','{$it.ID}')" class="ml-5" style="text-decoration:none">
-                                <i class="Hui-iconfont">&#xe6df;</i>
-                            </a>
                         </td>
                         <td>{$it.phone}
-                            <a title="修改手机号" onclick="show_swal('联系电话','{$it.ID}')" class="ml-5" style="text-decoration:none">
-                                <i class="Hui-iconfont">&#xe6df;</i>
-                            </a>
                         </td>
                         <td>{$it.ip_address}
-                            <a title="修改ip" onclick="show_swal('ip','{$it.ID}')" class="ml-5" style="text-decoration:none">
-                                <i class="Hui-iconfont">&#xe6df;</i>
-                            </a>
                         </td>
                         <td>
+                            {if condition="$edit == 1"}
                             <a title="轮播图设置" onclick="edit_pic('轮播图设置','__ROOT__/index.php/admin/Shop/pic?id={$it.ID}',900,600)" class="ml-5" style="text-decoration:none">
+                                轮播图设置
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
+                            <a title="信息设置" onclick="edit_pic('信息设置','__ROOT__/index.php/admin/Shop/editinfo?id={$it.ID}',900,600)" class="ml-5" style="text-decoration:none">
+                                信息设置
+                                <i class="Hui-iconfont">&#xe6df;</i>
+                            </a>
+                            {/if}
                         </td>
                     </tr>
                     {/volist}

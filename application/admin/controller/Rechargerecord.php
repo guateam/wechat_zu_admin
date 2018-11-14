@@ -4,7 +4,7 @@ use think\Controller;
 
 class Rechargerecord extends Controller{
 
-    public function index(){
+    public function index($edit){
         $ctrl = new \app\api\controller\Rechargerecord();
         $record =$ctrl->get_all();
         $this->assign("record",$record);

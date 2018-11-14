@@ -4,12 +4,13 @@ use think\Controller;
 use think\Db;
 class Shop extends Controller{
 
-    public function index(){
+    public function index($edit){
         $ctrl = new \app\api\controller\Shop();
         $shop = $ctrl->get_all();
         $count = count($shop);
         $this->assign("shop",$shop);
         $this->assign("count",$count);
+        $this->assign("edit",$edit);
         return $this->fetch('Shop/shop');
     }
     public function pic($id){
@@ -24,7 +25,7 @@ class Shop extends Controller{
         return $this->fetch('Shop/shop_picture');
     }
 
-    public function account(){
+    public function account($edit){
         $account = Db::query("select * from admin");
         for($i=0;$i<count($account);$i++){
             $permissions = $account[$i]['permission'];
@@ -43,6 +44,7 @@ class Shop extends Controller{
         }
         $this->assign('account',$account);
         $this->assign('count',count($account));
+        $this->assign("edit",$edit);
         return $this->fetch('Shop/account');
     }
 
@@ -61,10 +63,17 @@ class Shop extends Controller{
         return $this->fetch('Shop/newaccount');
     }
 
-    public function editmenu(){
+    public function editmenu($edit){
         $menu_ctrl = new \app\api\controller\Mmenu();
         $menu = $menu_ctrl->getmenu();
         $this->assign('menu',$menu);
+        $this->assign("edit",$edit);
         return $this->fetch('Shop/menu');
+    }
+
+    public function editinfo($id){
+        $shop = Db::query("select * from shop where `ID` = '$id'");
+        $this->assign('shop',$shop[0]);
+        return $this->fetch('Shop/editinfo');
     }
 }

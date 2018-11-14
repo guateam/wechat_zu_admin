@@ -32,11 +32,13 @@
     <div class="page-container">
         <div class="cl pd-5 bg-1 bk-gray mt-20">
             <span class="l">
+                {if condition="$edit == 1"}
                 <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
                     <i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
                 <a href="javascript:;" onclick="member_add('添加房间','__ROOT__/index.php/admin/addprivateroom','','510')"
                     class="btn btn-primary radius">
                     <i class="Hui-iconfont">&#xe600;</i> 添加房间</a>
+                {/if}
             </span>
             <span class="r">共有数据：
                 <strong id='number'>{:count($data)}</strong> 条</span>
@@ -77,6 +79,7 @@
                         <td></td>
                         <td>{$item.servicename}</td>
                         <td class="td-manage">
+                            {if condition="$edit == 1"}
                             <a title="停用" href="javascript:;" style="text-decoration:none" onClick="room_stop(this,'10001')" hidden>
                                 <i class="Hui-iconfont">&#xe631;</i>
                             </a>
@@ -86,6 +89,7 @@
                             <a title="删除" href="javascript:;" onclick="member_del(this,'{$item.ID}')" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6e2;</i>
                             </a>
+                            {/if}
                         </td>
                     </tr>
                     {/volist}

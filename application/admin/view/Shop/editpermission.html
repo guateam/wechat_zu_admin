@@ -24,26 +24,27 @@
         {volist name="$menu" id="it"}
         {$it.name}<br>
         {volist name="$it.child" id="ch"}
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        {$ch.name}
-        {if condition="$ch.permission == 1"}
-        <input type="checkbox"  onclick="check(this)" name="per" checked value="{$ch.ID}" id="{$ch.name}">
-        <div name="{$ch.ID}">
-            {if condition="$ch.edit == 0"}
-            <input type="radio" name="{$ch.ID}" checked value="0" >只读
-            <input type="radio" name="{$ch.ID}" value="1" >可修改
-            {else /}
-            <input type="radio" name="{$ch.ID}" value="0" >只读
-            <input type="radio" name="{$ch.ID}" checked value="1" >可修改
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            {$ch.name}
+            {if condition="$ch.permission == 1"}
+                <input type="checkbox"  name="per" checked value="{$ch.ID}" id="{$ch.name}">
+                {if condition="$ch.edit == 0"}
+                    <input type="radio" name="{$ch.ID}" checked value="0" >只读
+                    <input type="radio" name="{$ch.ID}" value="1" >可修改
+                {else /}
+                    <input type="radio" name="{$ch.ID}" value="0" >只读
+                    <input type="radio" name="{$ch.ID}" checked value="1" >可修改
+                {/if}
+                {else /}
+                    <input type="checkbox"   name="per" value="{$ch.ID}" id="{$ch.name}">   
+                {if condition="$ch.edit == 0"}
+                    <input type="radio" name="{$ch.ID}" checked value="0" >只读
+                    <input type="radio" name="{$ch.ID}" value="1" >可修改
+                {else /}
+                    <input type="radio" name="{$ch.ID}" value="0" >只读
+                    <input type="radio" name="{$ch.ID}" checked value="1" >可修改
+                {/if}
             {/if}
-        </div>
-        {else /}
-        <input type="checkbox"  onclick="check(this)" name="per" value="{$ch.ID}" id="{$ch.name}">
-        <div name="{$ch.ID}" style="display: none">
-            <input type="radio" name="{$ch.ID}" checked value="0" >只读
-            <input type="radio" name="{$ch.ID}" value="1" >可修改
-        </div>
-        {/if}
         {/volist}
         <br>
         {/volist}

@@ -38,7 +38,9 @@
                     <tr class="text-c">
                         <th width="100">账号</th>
                         <th width="100">密码</th>
+                        {if condition="$edit == 1"}
                         <th width="80">权限</th>
+                        {/if}
                     </tr>
                 </thead>
                 <tbody>
@@ -55,8 +57,8 @@
                             </a>
                             {/if}
                         </td>
+                        {if condition="$edit == 1"}
                         <td>
-                            {if condition="$edit == 1"}
                             <a title="" onclick="edit_per('修改权限','__ROOT__/index.php/admin/Shop/editpermission/user/{$it.name}',600,900)"
                                 class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>设置权限
@@ -64,8 +66,9 @@
                             <a title="" onclick="delete_account('{$it.ID}')" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6e2;</i>删除账户
                             </a>
-                            {/if}
+
                         </td>
+                        {/if}  
                     </tr>
                     {/volist}
                 </tbody>

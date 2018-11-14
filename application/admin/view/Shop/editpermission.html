@@ -25,9 +25,9 @@
         {$it.name}<br>
         {volist name="$it.child" id="ch"}
             &nbsp;&nbsp;&nbsp;&nbsp;
-            {$ch.name}
             {if condition="$ch.permission == 1"}
                 <input type="checkbox"  name="per" checked value="{$ch.ID}" id="{$ch.name}">
+                <b style="font-size: 18px">{$ch.name}</b>
                 {if condition="$ch.edit == 0"}
                     <input type="radio" name="{$ch.ID}" checked value="0" >只读
                     <input type="radio" name="{$ch.ID}" value="1" >可修改
@@ -35,8 +35,9 @@
                     <input type="radio" name="{$ch.ID}" value="0" >只读
                     <input type="radio" name="{$ch.ID}" checked value="1" >可修改
                 {/if}
-                {else /}
-                    <input type="checkbox"   name="per" value="{$ch.ID}" id="{$ch.name}">   
+            {else /}
+                <input type="checkbox"   name="per" value="{$ch.ID}" id="{$ch.name}">   
+                <b style="font-size: 18px">{$ch.name}</b>
                 {if condition="$ch.edit == 0"}
                     <input type="radio" name="{$ch.ID}" checked value="0" >只读
                     <input type="radio" name="{$ch.ID}" value="1" >可修改
@@ -47,6 +48,7 @@
             {/if}
         {/volist}
         <br>
+        <hr>
         {/volist}
     </div>
     <button onclick="change_permission()" class="btn btn-primary radius" style="margin-left: 10px;margin-top: 6px;width: 90px">确认</button>

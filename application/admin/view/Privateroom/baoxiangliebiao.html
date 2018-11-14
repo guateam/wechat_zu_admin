@@ -58,7 +58,9 @@
                         <th width="150">技师</th>
                         <th width="">正在进行项目</th>
                         <th width="">可用项目</th>
+                        {if condition="$edit == 1"}
                         <th width="100">操作</th>
+                        {/if}
                     </tr>
                 </thead>
                 <tbody>
@@ -78,8 +80,8 @@
                         <td></td>
                         <td></td>
                         <td>{$item.servicename}</td>
+                        {if condition="$edit == 1"}
                         <td class="td-manage">
-                            {if condition="$edit == 1"}
                             <a title="停用" href="javascript:;" style="text-decoration:none" onClick="room_stop(this,'10001')" hidden>
                                 <i class="Hui-iconfont">&#xe631;</i>
                             </a>
@@ -89,8 +91,8 @@
                             <a title="删除" href="javascript:;" onclick="member_del(this,'{$item.ID}')" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6e2;</i>
                             </a>
-                            {/if}
                         </td>
+                        {/if}
                     </tr>
                     {/volist}
                 </tbody>

@@ -62,7 +62,9 @@
                         <!-- <th width="70">指定介绍人</th> -->
                         <th width="70">等级</th>
                         <th width="70">查看详情</th>
+                        {if condition="$edit == 1"}
                         <th width="100">操作</th>
+                        {/if}
                     </tr>
                 </thead>
                 <tbody>
@@ -103,8 +105,8 @@
                             <button onclick="layer_show('详情', '__ROOT__/index.php/admin/Techniciandetail/Techniciandetail/jbnb/{$it.job_number}','500','500','610');"
                                 class="btn btn-primary">查看详情</button>
                         </td>
+                        {if condition="$edit == 1"}
                         <td class="td-manage">
-                            {if condition="$edit == 1"}
                             <a title="编辑" href="javascript:;" onclick="member_edit('编辑','__ROOT__/index.php/admin/Edittechnician/Edittechnician/name/{$it.name}/gender/{$it.gender}/phonenum/{$it.phone_number}/jobnum/{$it.job_number}','4','','610')"
                                 class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>
@@ -112,8 +114,9 @@
                             <a title="删除" href="javascript:;" onclick='member_del(this,"{$it.job_number}")' class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6e2;</i>
                             </a>
-                            {/if}
+                            
                         </td>
+                        {/if}
                     </tr>
                     {/volist}
                 </tbody>

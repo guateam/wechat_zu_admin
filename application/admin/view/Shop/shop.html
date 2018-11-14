@@ -37,7 +37,9 @@
                         <th width="100">关门时间</th>
                         <th width="80">联系电话</th>
                         <th width="80">ip地址</th>
-                        <th width="80">操作</th>
+                        {if condition="$edit == 1"}
+                        <th width="80" >操作</th>
+                        {/if}
                     </tr>
                 </thead>
                 <tbody>
@@ -55,8 +57,8 @@
                         </td>
                         <td>{$it.ip_address}
                         </td>
+                        {if condition="$edit == 1"}
                         <td>
-                            {if condition="$edit == 1"}
                             <a title="轮播图设置" onclick="edit_pic('轮播图设置','__ROOT__/index.php/admin/Shop/pic?id={$it.ID}',900,600)" class="ml-5" style="text-decoration:none">
                                 轮播图设置
                                 <i class="Hui-iconfont">&#xe6df;</i>
@@ -65,8 +67,8 @@
                                 信息设置
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
-                            {/if}
                         </td>
+                        {/if}
                     </tr>
                     {/volist}
                 </tbody>
@@ -90,7 +92,7 @@
                     //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
                     {
                         "orderable": false,
-                        "aTargets": [0, 1, 4,5,6]
+                        "aTargets": [0, 1, 4,5]
                     } // 制定列不参与排序
                 ]
             });

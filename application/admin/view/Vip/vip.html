@@ -50,7 +50,9 @@
                         <th width="120">升级需要消费金额</th>
                         <th width="150">享受折扣比例</th>
                         <th width="130">享受额外服务时长</th>
+                        {if condition="$edit == 1"}
                         <th width="100">操作</th>
+                        {/if}
                     </tr>
                 </thead>
                 <tbody>
@@ -61,8 +63,9 @@
                         <td>￥{$it.necessary_charge_to_level_up/100}</td>
                         <td>{$it.discount_ratio}%</td>
                         <td>{$it.extra_duration}分钟</td>
+                        {if condition="$edit == 1"}
                         <td class="td-manage">
-                            {if condition="$edit == 1"}
+
                             <a title="编辑" href="javascript:;" onclick="member_edit('编辑','__ROOT__/index.php/admin/Editvip/index/vip/{$it.level}',500,700,400)"
                                 class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>
@@ -70,8 +73,9 @@
                             <a title="删除" href="javascript:;" onclick="member_del(this,'{$it.level}')" class="ml-5" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6e2;</i>
                             </a>
-                            {/if}
+                           
                         </td>
+                         {/if}
                     </tr>
                     {/volist}
                 </tbody>
@@ -94,7 +98,7 @@
                 //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
                 {
                     "orderable": false,
-                    "aTargets": [5]
+                    "aTargets": []
                 } // 制定列不参与排序
             ]
         });

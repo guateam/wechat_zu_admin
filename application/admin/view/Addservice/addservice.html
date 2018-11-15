@@ -43,21 +43,21 @@
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-3">
-                    <span class="c-red">*</span>服务价格（单位:分）：</label>
+                    <span class="c-red">*</span>服务价格(单位 分):</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="" placeholder="" id="price">
                 </div>
             </div>
-            <!-- <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-3">
-                    <span class="c-red">*</span>折扣：</label>
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="discount" name="discount">
-                </div>
-            </div> -->
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-3">
-                    <span class="c-red">*</span>提成比例：</label>
+                    <span class="c-red">*</span>推荐分成(单位 分):</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="invite_income" name="invite_income">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>提成金额(单位 分):</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="" placeholder="" id="commission" name="commission">
                 </div>
@@ -113,7 +113,7 @@
                     price: {
                         required: true,
                     },
-                    discount: {
+                    invite_income: {
                         required: true,
                     },
                     commission: {
@@ -140,45 +140,27 @@
                     name = $("#name").val();
                     duration = $("#duration").val();
                     price = $("#price").val();
-                    //discount = $("#discount").val();
+                    invite_income = $("#invite_income").val();
                     commission = $("#commission").val();
                     info = $("#info").val();
                     image = $("#image").val();
-                    $(form).ajaxSubmit({
-                        type: 'post', // 提交方式 get/post
-                        url: '__ROOT__/index.php/api/ServiceType/add_service', // 需要提交的 url
+
+
+                    $.ajaxFileUpload({
+                        url: '__ROOT__/index.php/api/Servicetype/upload',
+                        fileElementId: 'image',
+                        type: 'post',
                         data: {
                             name: name,
                             duration: duration,
                             price: price,
-                            discount: 100,
+                            invite_income:invite_income,
                             commission: commission,
                             info: info,
-                            image: image,
                         },
-                        success: function (result) {
-                            if (result.status == 1) {
-                                //上传文件
-                                $.ajaxFileUpload({
-                                    url: '__ROOT__/index.php/api/Servicetype/upload',
-                                    fileElementId: 'image',
-                                    type: 'post',
-                                    data: {
-                                        name: name,
-                                        duration: duration,
-                                        price: price,
-                                        discount: discount,
-                                        commission: commission,
-                                        info: info,
-                                    },
-                                    secureuri: false,
-                                    success: function (result, status) {
-                                        if (status == 'success') {} else {}
-                                    },
-                                    error: function (data, status, e) {
-                                        alert(e);
-                                    }
-                                });
+                        secureuri: false,
+                        success: function (result, status) {
+                            if (status == 'success') {
                                 swal("成功", "已添加新的服务", "success", {
                                     allowOutsideClick: false
                                 }).then((ok) => {
@@ -189,11 +171,35 @@
                                         parent.layer.close(index);
                                     }
                                 })
-                            } else {
-                                swal("失败", "添加失败", "error");
-                            }
+                            } else {}
+                        },
+                        error: function (data, status, e) {
+                            alert(e);
                         }
                     });
+
+                    // $(form).ajaxSubmit({
+                    //     type: 'post', // 提交方式 get/post
+                    //     url: '__ROOT__/index.php/api/ServiceType/add_service', // 需要提交的 url
+                    //     data: {
+                    //         name: name,
+                    //         duration: duration,
+                    //         price: price,
+                    //         discount: 100,
+                    //         commission: commission,
+                    //         info: info,
+                    //         image: image,
+                    //     },
+                    //     success: function (result) {
+                    //         if (result.status == 1) {
+                    //             //上传文件
+
+
+                    //         } else {
+                    //             swal("失败", "添加失败", "error");
+                    //         }
+                    //     }
+                    // });
                 }
             });
         });

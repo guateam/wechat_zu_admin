@@ -26,16 +26,23 @@
         <div class="mt-20">
             <form>
                 <div class="input-group">
-                    <span class="input-group-addon">价格：元</span>
-                    <input type="number" id="price" class="form-control" value="{$service.price/100}" ></input>
+                    <span class="input-group-addon">价格(单位 分):</span>
+                    <input type="number" id="price" class="form-control" value="{$service.price}" ></input>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">时长：分钟</span>
                     <input type="number" id="duration" class="form-control" value="{$service.duration}" ></input>
                 </div>
+                <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-3">
+                        <span class="c-red">*</span>推荐分成(单位 分):</label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="{$service.invite_income}" placeholder="" id="invite_income" name="invite_income">
+                    </div>
+                </div>
                 <div class="input-group">
-                    <span class="input-group-addon">提成金额：元</span>
-                    <input type="number" id="commission" class="form-control" value="{$service.commission/100}" ></input>
+                    <span class="input-group-addon">提成金额(单位 分):</span>
+                    <input type="number" id="commission" class="form-control" value="{$service.commission}" ></input>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon">是否允许设置等级：</span>
@@ -80,18 +87,19 @@
             var duration = $("#duration").val();
             var commission = $("#commission").val();
             var have_level = $("input:radio[name='level']:checked").val();
+            var invite_income = $("#invite_income").val();
 
             $.post("__ROOT__/index.php/api/Servicetype/update_info", {
                 id:'{$service_id}',
                 procedure: procedure,
                 attention: attention,
                 benefit: benefit,
-                price:price*100,
+                price:price,
                 duration:duration,
-                commission:commission*100,
+                commission:commission,
                 have_level:have_level,
+                invite_income:invite_income,
             }).done((res) => {
-                alert(res.status)
                 if (res.status == 1) {
                     parent.location.reload()
                     var index = parent.layer.getFrameIndex(window.name);

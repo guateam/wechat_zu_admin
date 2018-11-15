@@ -282,16 +282,38 @@
             }
             return json(['status'=>0]);
         }
+        public static function get_lost($job_number){
+            //该技师自己做的所有订单
+            $so = \app\api\model\Serviceorder::all(['job_number'=>$job_number]);
+            //邀请该技师的人
+            $self_p =  \app\api\model\Inviteship::get(['freshman_job_number'=>$job_number]);
+            //付给邀请自己的人的钱
+            $lost = 0;
+
+            if($so){
+                foreach($so as $svod){
+                    $item=\app\api\model\Servicetype::get(['ID'=>$svod->item_id]);
+                    //计算支付给邀请人的钱
+                    if($self_p){
+                        $lost+= $item->invite_income/100;
+                    }
+                }
+            }
+
+            return $lost;
+        }
+
         /**
          * 获取技师的业绩
          */
         public static function get_yeji($job_number){
+            //该技师自己做的所有订单
             $so = \app\api\model\Serviceorder::all(['job_number'=>$job_number]);
             //该技师邀请的人
             $invited = \app\api\model\Inviteship::all(['inviter_job_number'=>$job_number]);
             //邀请该技师的人
             $self_p =  \app\api\model\Inviteship::get(['freshman_job_number'=>$job_number]);
-            //收入
+            //营业收入
             $price = 0;
             //点钟数量
             $dian = 0;
@@ -308,15 +330,18 @@
                     else if($svod->clock_type == 2)$dian++;
                     $item=\app\api\model\Servicetype::get(['ID'=>$svod->item_id]);
                     $per = 0;
-                    if($self_p)$per = $self_p->persentage/100;
-                    $lost+= ($item->commission/100)*$per;
+                    //如果该技师被邀请,计算支付给邀请人的钱
+                    if($self_p){
+                        $lost+= $item->invite_income/100;
+                    }
+
                     $price+=$item->commission/100;
                 }
             }
             if($invited){
                 foreach($invited as $inv){
-                    $data = self::get_yeji($inv->freshman_job_number);
-                    $come_frome_other += $data['lost'];
+                    $data = self::get_lost($inv->freshman_job_number);
+                    $come_frome_other += $data;
                 }
             }
             return [

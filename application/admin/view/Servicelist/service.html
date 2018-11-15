@@ -54,6 +54,7 @@
                         <th width="100">价格</th>
                         <th width="80">时长</th>
                         <th width="80">提成金额</th>
+                        <th width="80">推荐分成</th>
                         <th width="50">是否允许设定等级</th>
                         {if condition="$edit == 1"}
                         <th width="100">操作</th>
@@ -74,6 +75,7 @@
                         <td>￥{$it.commission/100}
                            
                         </td>
+                        <td>￥{$it.invite_income/100}</td>
                         <td>
                             {if condition="$it.have_level==0"}不可{else /}可{/if}
                         </td>

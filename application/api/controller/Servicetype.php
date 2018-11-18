@@ -181,7 +181,7 @@
         /**
          * 为服务上传缩略图
          */
-        public function upload($name,$duration,$price,$commission,$info,$invite_income){
+        public function upload($name,$duration,$price,$commission,$commission2,$info,$invite_income){
             $dir = $_SERVER['DOCUMENT_ROOT']."/photo/";
             $save_dir = "/photo/";
             $bg = false;
@@ -230,7 +230,7 @@
 
                         // 如果 upload 目录不存在该文件则将文件上传到 upload 目录下
                         move_uploaded_file($_FILES["image"]["tmp_name"],$tm );
-                        $svtp = self::add_service($name,$duration,$price,$commission,$info,$invite_income,$sv);
+                        $svtp = self::add_service($name,$duration,$price,$commission,$commission2,$info,$invite_income,$sv);
 
                         return json_encode(["state"=>1,'url'=>$sv]);
                     }
@@ -281,10 +281,11 @@
          * @param string $image                 服务介绍图
          * 
          */
-        public static function add_service($name,$duration,$price,$commission,$info,$invite_income,$image){
+        public static function add_service($name,$duration,$price,$commission,$commission2,$info,$invite_income,$image){
 
             $data = new Service(['name'=>$name,'duration'=>$duration,'price'=>$price,
-                                    'invite_income'=>$invite_income,'commission'=>((int)$commission)*100,
+                                    'invite_income'=>$invite_income,'commission'=>((int)$commission),
+                                    'commission2'=>((int)$commission2),
                                     'info'=>$info,'image'=>$image]);
             $data->save();
             $data = Service::get(['name'=>$name]);
@@ -298,7 +299,7 @@
         /**
          * 更新服务的详细信息
          */
-        public function  update_info($id,$procedure,$attention,$benefit,$price,$duration,$commission,$have_level,$invite_income){
+        public function  update_info($id,$procedure,$attention,$benefit,$price,$duration,$commission,$commission2,$have_level,$invite_income){
             $data = \app\api\model\Servicetype::get(['ID'=>$id]);
             if($data){
                 $data->procedure = $procedure;
@@ -307,6 +308,7 @@
                 $data->price = $price;
                 $data->duration = $duration;
                 $data->commission = $commission;
+                $data->commission2 = $commission2;
                 $data->have_level = $have_level;
                 $data->invite_income = $invite_income;
                 $data->save();

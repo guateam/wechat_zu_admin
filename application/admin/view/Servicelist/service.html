@@ -53,8 +53,9 @@
                         <th width="100">项目名称</th>
                         <th width="100">价格</th>
                         <th width="80">时长</th>
-                        <th width="80">提成金额</th>
-                        <th width="80">推荐分成</th>
+                        <th width="80">技师提成金额</th>
+                        <th width="80">接待提成金额</th>
+                        <th width="80">佣金</th>
                         <th width="50">是否允许设定等级</th>
                         {if condition="$edit == 1"}
                         <th width="100">操作</th>
@@ -73,6 +74,9 @@
                            
                         </td>
                         <td>￥{$it.commission/100}
+                           
+                        </td>
+                        <td>￥{$it.commission2/100}
                            
                         </td>
                         <td>￥{$it.invite_income/100}</td>

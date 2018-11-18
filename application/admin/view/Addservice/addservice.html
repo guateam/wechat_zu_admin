@@ -50,17 +50,24 @@
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-3">
-                    <span class="c-red">*</span>推荐分成(单位 分):</label>
+                    <span class="c-red">*</span>佣金(单位 分):</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="" placeholder="" id="invite_income" name="invite_income">
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-3">
-                    <span class="c-red">*</span>提成金额(单位 分):</label>
+                    <span class="c-red">*</span>技师提成金额(单位 分):</label>
                 <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="" placeholder="" id="commission" name="commission">
                 </div>
+            </div>
+            <div class="row cl">
+                    <label class="form-label col-xs-4 col-sm-3">
+                        <span class="c-red">*</span>接待提成金额(单位 分):</label>
+                    <div class="formControls col-xs-8 col-sm-9">
+                        <input type="text" class="input-text" value="" placeholder="" id="commission2" name="commission2">
+                    </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-4 col-sm-3">
@@ -142,6 +149,7 @@
                     price = $("#price").val();
                     invite_income = $("#invite_income").val();
                     commission = $("#commission").val();
+                    commission2 = $("#commission2").val();
                     info = $("#info").val();
                     image = $("#image").val();
 
@@ -156,6 +164,7 @@
                             price: price,
                             invite_income:invite_income,
                             commission: commission,
+                            commission2:commission2,
                             info: info,
                         },
                         secureuri: false,

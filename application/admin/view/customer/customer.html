@@ -40,33 +40,38 @@
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
-                        <th width="100">用户名</th>
-                        <th width="40">性别</th>
-                        <th width="120">手机</th>
-                        <th width="150">VIP等级</th>
-                        <th width="150">充值总额</th>
-                        <th width="130">注册时间</th>
+                        <th>用户名</th>
+                        <th>性别</th>
+                        <th>手机</th>
+                        <th>VIP等级</th>
+                        <th>充值总额</th>
+                        <th>账户余额</th>
+                        <th>注册时间</th>
                         {if condition="$edit == 1"}
-                        <th width="100">操作</th>
+                        <th>操作</th>
                         {/if}
                     </tr>
                 </thead>
                 <tbody>
                     {volist name="$customer" id="it" key="k"}
                     <tr class="text-c">
-                        <td>{$it.ID}</td>
+                        <td>{$it.user_id}</td>
                         <td>{if condition="$it.gender==1"}男{elseif condition="$it.gender==2"}女{else /}未知{/if}</td>
                         <td>{$it.phone_number}</td>
                         <td>{$it.level}</td>
-                        <td>￥{$chargelist[$k-1]}</td>
+                        <td>￥{$it.charge}</td>
+                        <td>￥{$it.cash}</td>
                         <td>{$it.registration_date}</td>
                         {if condition="$edit == 1"}
                         <td class="td-manage">
-
-                            <a title="删除" href="javascript:;" onclick="member_del(this,'{$it.ID}')" class="ml-5" style="text-decoration:none">
+                            <a title="线下支付" href="javascript:;" onclick="pay('{$it.openid}')" class="ml-5 btn btn-success"
+                                style="text-decoration:none">
+                                支付线下订单
+                            </a>
+                            <a title="删除" href="javascript:;" onclick="member_del(this,'{$it.user_id}')" class="ml-5 btn btn-danger"
+                                style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6e2;</i>
                             </a>
-                            
                         </td>
                         {/if}
                     </tr>
@@ -152,13 +157,93 @@
         }
          ***/
 
-       
+
         /*用户-添加*/
         function member_add(title, url, w, h) {
             layer_show(title, url, w, h);
         }
 
+        function pay(openid) {
+            swal({
+                title: '请输入订单号',
+                input: 'text',
+                allowOutsideClick: false,
+                showCancelButton: true,
+                confirmButtonColor: '#93c47d',
+                cancelButtonColor: '#ca5943',
+                confirmButtonText: "确认",
+                cancelButtonText: "取消",
+            }).then((res) => {
+                if (res.value) {
+                    swal({
+                        title: '正在处理',
+                        text: '',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCloseButton: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    });
+                    $.post("__ROOT__/index.php/api/Consumedorder/get_payamount", {
+                        order_id: res.value,
+                    }).done((result) => {
+                        if (result.status == 1) {
+                            swal({
+                                title: '将支付' + result.payamount + '元,请确认支付',
+                                allowOutsideClick: false,
+                                showCancelButton: true,
+                                confirmButtonColor: '#93c47d',
+                                cancelButtonColor: '#ca5943',
+                                confirmButtonText: "确认",
+                                cancelButtonText: "取消",
+                            }).then((res2) => {
+                                if (res2.value) {
+                                    swal({
+                                        title: '正在处理',
+                                        text: '',
+                                        allowOutsideClick: false,
+                                        showConfirmButton: false,
+                                        showCloseButton: false,
+                                        onOpen: () => {
+                                            swal.showLoading()
+                                        }
+                                    });
+                                    $.post("__ROOT__/index.php/api/Consumedorder/pay_order", {
+                                        order_id: res.value,
+                                        open_id: openid,
+                                    }).done((res3) => {
+                                        if (result.status == 0) {
+                                            swal({
+                                                title: "不存在该订单号"
+                                            });
+                                        } else if (result.status == -1) {
+                                            swal({
+                                                title: "会员卡内余额不足"
+                                            });
+                                        }else if (result.status == 1) {
+                                            swal({
+                                                title: "支付成功",
+                                                type:"success"
+                                            }).then((res4)=>{
+                                                if(res4.value){
+                                                    location.reload();
+                                                }
+                                            });
+                                        }
+                                    })
+                                }
+                            })
 
+                        } else if (result.status == 0) {
+                            swal({
+                                title: "不存在该订单号"
+                            });
+                        }
+                    })
+                }
+            })
+        }
         /***
         /*密码-修改
         function change_password(title, url, id, w, h) {
@@ -169,40 +254,40 @@
         /*用户-删除*/
         function member_del(obj, id) {
             swal({
-                    title: '确认删除该客户吗？',
-                    text: '',
-                    type: 'question',
-                    allowOutsideClick: false,
-                    showCancelButton: true,
-                    confirmButtonColor: '#93c47d',
-                    cancelButtonColor: '#ca5943',
-                    confirmButtonText: "确认",
-                    cancelButtonText: "取消",
-                    width:70,
-                }).then((result) => {
-                    if (result.value) {
-                        swal({
-                            title: '正在处理',
-                            text: '',
-                            allowOutsideClick: false,
-                            showConfirmButton: false,
-                            showCloseButton: false,
-                            onOpen: () => {
-                                swal.showLoading()
-                            }
-                        }).then((result) => {});
-                        $.post("__ROOT__/index.php/api/Customer/delete_customer", {
-                            id: [id]
-                        }).done(function(result) {
-                            if (result.status == 1) {
-                                $(obj).parents("tr").remove();
-                                swal("完成", "已删除项目", "success").then((ok) => {
-                                    if (ok.value) location.reload();
-                                })
-                            }
-                        })
-                    }
-                })
+                title: '确认删除该客户吗？',
+                text: '',
+                type: 'question',
+                allowOutsideClick: false,
+                showCancelButton: true,
+                confirmButtonColor: '#93c47d',
+                cancelButtonColor: '#ca5943',
+                confirmButtonText: "确认",
+                cancelButtonText: "取消",
+                width: 70,
+            }).then((result) => {
+                if (result.value) {
+                    swal({
+                        title: '正在处理',
+                        text: '',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCloseButton: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    }).then((result) => {});
+                    $.post("__ROOT__/index.php/api/Customer/delete_customer", {
+                        id: [id]
+                    }).done(function (result) {
+                        if (result.status == 1) {
+                            $(obj).parents("tr").remove();
+                            swal("完成", "已删除项目", "success").then((ok) => {
+                                if (ok.value) location.reload();
+                            })
+                        }
+                    })
+                }
+            })
         }
     </script>
 </body>

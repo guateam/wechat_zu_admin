@@ -24,6 +24,14 @@
             }
             return false;
         }
+        
+        public function get_name($id){
+            $item = Db::query("select * from item_type where `ID`='$id'");
+            if($item){
+                return $item[0]['name'];
+            }
+            return false;
+        }
 
         public function delete($ids){
             foreach( $ids as $id){

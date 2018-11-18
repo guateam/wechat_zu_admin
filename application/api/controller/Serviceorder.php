@@ -50,12 +50,12 @@
                             $price/=100;
                             $order->price=$price;
                         //酒水饮料
-                        }else if($order->service_type==2){
+                        }else if($order->service_type==3){
                             $ctrl = new  \app\api\controller\Itemtype();
                             $price = $ctrl->getitemprice($order->item_id);
                             $order->price=$price;
                         //外卖，这种情况下order->price不应该为null
-                        }else if($order->service_type==3){
+                        }else{
 
                         }
                     }

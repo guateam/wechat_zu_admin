@@ -70,7 +70,9 @@
                         <th width="100">服务名</th>
                         <th width="40">评分</th>
                         <th width="120">留言</th>
+                        {if condition="$edit==1"}
                         <th width="60">操作</th>
+                        {/if}
                     </tr>
                 </thead>
                 <tbody>
@@ -82,8 +84,8 @@
                         <td>{$it.service_id}</td>
                         <td>{$it.score}分</td>
                         <td>{$it.comment}</td>
+                        {if condition="$edit==1"}
                         <td>
-                            {if condition="$edit==1"}
                             <a title="点击切换审核状态" href="javascript:;" onclick="change_bad('{$it.ID}')" class="ml-5 btn btn-primary"
                                 style="text-decoration:none">
                                 {if condition="$it.bad==1"}
@@ -99,8 +101,8 @@
                                 删除
                                 <i class="Hui-iconfont">&#xe6e2;</i>
                             </a>
-                            {/if}
                         </td>
+                        {/if}
                     </tr>
                     {/volist}
                 </tbody>

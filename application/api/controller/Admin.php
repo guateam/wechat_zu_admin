@@ -57,6 +57,7 @@
          */
         public function login(){
             $name = $_POST['username'];
+            $name = urldecode($name);
             $data=UserModel::get(["name"=>$name]);//从数据库调取此用户信息
             if($data){
 

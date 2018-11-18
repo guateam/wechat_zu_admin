@@ -26,26 +26,23 @@
         <div class="mt-20">
             <form>
                 <div class="input-group">
-                    <span class="input-group-addon">价格(单位 分):</span>
+                    <div style="width:150px ; display:inline-block">价格(单位 分):</div>
                     <input type="number" id="price" class="form-control" value="{$service.price}" ></input>
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon">时长：分钟</span>
+                    <div style="width:150px ; display:inline-block">时长(单位 分钟)</div>
                     <input type="number" id="duration" class="form-control" value="{$service.duration}" ></input>
                 </div>
-                <div class="row cl">
-                    <label class="form-label col-xs-4 col-sm-3">
-                        <span class="c-red">*</span>推荐分成(单位 分):</label>
-                    <div class="formControls col-xs-8 col-sm-9">
-                        <input type="text" class="input-text" value="{$service.invite_income}" placeholder="" id="invite_income" name="invite_income">
-                    </div>
+                <div class="input-group">
+                    <div style="width:150px ; display:inline-block">推荐分成(单位 分):</div>
+                    <input type="number" value="{$service.invite_income}" placeholder="" id="invite_income" name="invite_income">
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon">提成金额(单位 分):</span>
+                    <div style="width:150px ; display:inline-block">提成金额(单位 分):</div>
                     <input type="number" id="commission" class="form-control" value="{$service.commission}" ></input>
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon">是否允许设置等级：</span>
+                    <div style="width:150px ; display:inline-block">是否允许设置等级：</div>
                     {if condition="$service.have_level == 1 "}
                     <input type="radio" name="level" class="form-control"  checked value="1" >是</input>
                     <input type="radio" name="level" class="form-control" value="0" >否</input>
@@ -55,15 +52,15 @@
                     {/if}
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon">服务流程：</span>
+                    <div style="width:120px ; display:inline-block">服务流程：</div>
                     <textarea id="procedure" class="form-control" rows="3">{$procedure}</textarea>
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon">注意事项：</span>
+                    <div style="width:120px ; display:inline-block">注意事项：</div>
                     <textarea id="attention" class="form-control" rows="3">{$attention}</textarea>
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon">项目特色：</span>
+                    <div style="width:120px ; display:inline-block">项目特色：</div>
                     <textarea id="benefit" class="form-control" rows="3">{$benefit}</textarea>
                 </div>
                 <button onclick="update()" type="button" id="btn" style="width: 80px;height: 45px;float: right;margin-top: 10px;font-size:1.1em;background-color: #00b7ee">

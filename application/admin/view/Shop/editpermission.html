@@ -26,24 +26,32 @@
         {volist name="$it.child" id="ch"}
             &nbsp;&nbsp;&nbsp;&nbsp;
             {if condition="$ch.permission == 1"}
-                <input type="checkbox"  name="per" checked value="{$ch.ID}" id="{$ch.name}">
+                <input type="checkbox" onclick="check(this)" name="per" checked value="{$ch.ID}" id="{$ch.name}">
                 <b style="font-size: 18px">{$ch.name}</b>
                 {if condition="$ch.edit == 0"}
-                    <input type="radio" name="{$ch.ID}" checked value="0" >只读
-                    <input type="radio" name="{$ch.ID}" value="1" >可修改
+                <div id="{$ch.ID}" style="display: inline-block">
+                        <input type="radio" name="{$ch.ID}" checked value="0" >只读
+                        <input type="radio" name="{$ch.ID}" value="1" >可修改
+                </div>
                 {else /}
+                <div id="{$ch.ID}" style="display: inline-block">
                     <input type="radio" name="{$ch.ID}" value="0" >只读
                     <input type="radio" name="{$ch.ID}" checked value="1" >可修改
+                </div>
                 {/if}
             {else /}
-                <input type="checkbox"   name="per" value="{$ch.ID}" id="{$ch.name}">   
+                <input type="checkbox" onclick="check(this)"  name="per" value="{$ch.ID}" id="{$ch.name}">   
                 <b style="font-size: 18px">{$ch.name}</b>
                 {if condition="$ch.edit == 0"}
+                <div id="{$ch.ID}" style="display: inline-block;visibility: hidden">
                     <input type="radio" name="{$ch.ID}" checked value="0" >只读
                     <input type="radio" name="{$ch.ID}" value="1" >可修改
+                </div>
                 {else /}
+                <div id="{$ch.ID}" style="display: inline-block; visibility: hidden" >
                     <input type="radio" name="{$ch.ID}" value="0" >只读
                     <input type="radio" name="{$ch.ID}" checked value="1" >可修改
+                </div>
                 {/if}
             {/if}
         {/volist}
@@ -58,6 +66,19 @@
     <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
     <script type="text/javascript">
+        //获取所有选择框
+        var all_checkbox = $("input:checkbox[name='per']");
+        //遍历
+        for(i=0;i<all_checkbox.length;i++){
+            //获取该选择框控制的单选钮div
+            div = $("div#"+all_checkbox[i].value);
+            //根据选择框的选择情况改变div的显示状态
+            if(all_checkbox[i].checked){
+                div.css('visibility','visible');
+            }else{
+                div.css('visibility','hidden');
+            }
+        }
         /*用户-编辑*/
         function member_edit(title, url, id, w, h) {
             layer_show(title, url, w, h);
@@ -93,11 +114,11 @@
 
         function check(box){
             var val = box.value;
-            var div = $('div[name="'+val+'"]');
+            var div = $('div#'+val);
             if(box.checked){
-                div.show();
+                div.css('visibility','visible');
             }else{
-                div.hide();
+                div.css('visibility','hidden');
             }
         }
     </script>

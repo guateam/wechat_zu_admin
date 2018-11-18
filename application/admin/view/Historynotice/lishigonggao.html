@@ -50,7 +50,9 @@
 					<th scope="col" colspan="6">公告管理</th>
 				</tr>
 				<tr class="text-c">
+					{if condition="$edit == 1"}
 					<th width="25">选择</th>
+					{/if}
 					<th width="160">日期</th>
 					<th width="150">标题</th>
 					<th width="">内容</th>
@@ -62,9 +64,11 @@
 			<tbody>
 				{volist name="$notice" id="it" key="k"}
 				<tr class="text-c">
+					{if condition="$edit == 1"}
 					<td>
 						<input type="checkbox" value="{$it.ID}" name="{$k}">
 					</td>
+					{/if}
 					<td>{$it.date}</td>
 					<td>{$it.title}</td>
 					<td>{$it.text}</td>

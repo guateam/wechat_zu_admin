@@ -49,6 +49,7 @@ class Shop extends Controller{
     }
 
     public function editpermission($user){
+        $user = urldecode($user);
         $menu_ctrl = new \app\api\controller\Mmenu();
         $menu = $menu_ctrl->getchoosenmenu($user);
          $this->assign('menu',$menu);

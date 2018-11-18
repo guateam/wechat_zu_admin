@@ -88,6 +88,8 @@
             $permission = $admin_ctrl->getpermission($username);
             $menu = self::getmenu();
 
+            if(!$permission)return [];
+
             if($permission[0][0] == 0){
                 for($i=0;$i<count($menu);$i++){
                     $menu[$i] = array_merge($menu[$i],['permission'=>1]);

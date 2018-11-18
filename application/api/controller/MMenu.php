@@ -17,34 +17,71 @@
         public function upper($id){
             $id = intval($id);
             $menu_item  = Menu::get(['ID'=>$id]);
+            //目前操作的目录顺序和父目录
             $order = $menu_item->order;
-            $upper_item =Menu::get(['order'=>$order-1]);
-            if($menu_item->father != $upper_item->father){
-                return false;
-            }else{
-                $ori_order = $menu_item->order;
-                $menu_item->order = $upper_item->order;
-                $upper_item->order = $ori_order;
-                $menu_item->save();
-                $upper_item->save();
-                return true;
+            $father = $menu_item->father;
+            //相同父目录的目录项
+            $same_father_menu = Db::query("select * from menu where `father`='$father' order by `order` asc");
+
+            foreach($same_father_menu as $idx => $fm){
+                //若要操作的目录位于同目录项的第一个，则不能上移
+                if($fm['order'] == $order && $idx == 0){
+                    return false;
+                }else{
+                    //若找到自己，则和上一个交换位置
+                    if($fm['order'] == $order){
+                        //上一个位置和ID
+                        $last_order = $same_father_menu[$idx-1]['order'];
+                        $last_id = $same_father_menu[$idx-1]['ID'];
+                        Db::query("update menu set `order`='$last_order' where `ID`='$id' ");
+                        Db::query("update menu set `order`='$order' where `ID`='$last_id' ");
+                        return true;
+                    }
+                    
+                }
+
             }
+
+            // if($menu_item->father != $upper_item->father){
+            //     return false;
+            // }else{
+            //     $ori_order = $menu_item->order;
+            //     $menu_item->order = $upper_item->order;
+            //     $upper_item->order = $ori_order;
+            //     $menu_item->save();
+            //     $upper_item->save();
+            //     return true;
+            // }
         }
         public function lower($id){
             $id = intval($id);
             $menu_item  = Menu::get(['ID'=>$id]);
             $order = $menu_item->order;
-            $lower_item =Menu::get(['order'=>$order+1]);
-            if( !$lower_item || $menu_item->father != $lower_item->father){
-                return false;
-            }else{
-                $ori_order = $menu_item->order;
-                $menu_item->order = $lower_item->order;
-                $lower_item->order = $ori_order;
-                $menu_item->save();
-                $lower_item->save();
-                return true;
+            //目前操作的目录顺序和父目录
+            $order = $menu_item->order;
+            $father = $menu_item->father;
+            //相同父目录的目录项
+            $same_father_menu = Db::query("select * from menu where `father`='$father' order by `order` asc");
+
+            foreach($same_father_menu as $idx => $fm){
+                //若要操作的目录位于同目录项的最后一个，则不能下移
+                if($fm['order'] == $order && $idx == count($same_father_menu)-1){
+                    return false;
+                }else{
+                    //若找到自己，则和上一个交换位置
+                    if($fm['order'] == $order){
+                        //上一个位置和ID
+                        $last_order = $same_father_menu[$idx+1]['order'];
+                        $last_id = $same_father_menu[$idx+1]['ID'];
+                        Db::query("update menu set `order`='$last_order' where `ID`='$id' ");
+                        Db::query("update menu set `order`='$order' where `ID`='$last_id' ");
+                        return true;
+                    }
+                    
+                }
+
             }
+
         }
         public function getchoosenmenu($username){
             $admin_ctrl = new Admin();

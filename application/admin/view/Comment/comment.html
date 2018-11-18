@@ -49,18 +49,18 @@
                 </div>
             </div>
             <div class="">
-                    <label class="form-label col-xs-1 col-sm-1" style="padding-left: 15px;padding-right: 0">评分查询：</label>
-                    <div class="formControls col-xs-1 col-sm-1">
-                        <select name="articletype" class="select" id="score_search">
-                            <option value="全部">全部</option>
-                            <option value="1分">1分</option>
-                            <option value="2分">2分</option>
-                            <option value="3分">3分</option>
-                            <option value="4分">4分</option>
-                            <option value="5分">5分</option>
-                        </select>
-                    </div>
+                <label class="form-label col-xs-1 col-sm-1" style="padding-left: 15px;padding-right: 0">评分查询：</label>
+                <div class="formControls col-xs-1 col-sm-1">
+                    <select name="articletype" class="select" id="score_search">
+                        <option value="全部">全部</option>
+                        <option value="1分">1分</option>
+                        <option value="2分">2分</option>
+                        <option value="3分">3分</option>
+                        <option value="4分">4分</option>
+                        <option value="5分">5分</option>
+                    </select>
                 </div>
+            </div>
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
@@ -70,7 +70,7 @@
                         <th width="100">服务名</th>
                         <th width="40">评分</th>
                         <th width="120">留言</th>
-                        <th width="60">顾客端是否显示</th>
+                        <th width="60">操作</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -82,10 +82,22 @@
                         <td>{$it.service_id}</td>
                         <td>{$it.score}分</td>
                         <td>{$it.comment}</td>
-                        <td>{if condition="$it.bad==1"}是{else /}<span style="color:red">否</span>{/if}
+                        <td>
                             {if condition="$edit==1"}
-                            <a title="改变恶评状态" href="javascript:;" onclick="change_bad('{$it.ID}')" class="ml-5" style="text-decoration:none">
+                            <a title="点击切换审核状态" href="javascript:;" onclick="change_bad('{$it.ID}')" class="ml-5 btn btn-primary"
+                                style="text-decoration:none">
+                                {if condition="$it.bad==1"}
+                                已通过
+                                {else /}
+                                <span style="color:red">待审核</span>
+                                {/if}
                                 <i class="Hui-iconfont">&#xe6df;</i>
+                            </a>
+
+                            <a title="删除该评论" href="javascript:;" onclick="delete_comment('{$it.ID}')" class="ml-5 btn btn-danger"
+                                style="text-decoration:none">
+                                删除
+                                <i class="Hui-iconfont">&#xe6e2;</i>
                             </a>
                             {/if}
                         </td>
@@ -121,9 +133,9 @@
         });
         $("#down_search").on("change", () => {
             target = $("#down_search").val();
-            if (target != "全部") table.columns(1).search(target).draw();
+            if (target != "全部") table.columns(2).search(target).draw();
             else {
-                table.columns(1).search("").draw();
+                table.columns(2).search("").draw();
             }
 
         })
@@ -190,6 +202,45 @@
         /*用户-编辑*/
         function member_edit(title, url, id, w, h) {
             layer_show(title, url, w, h);
+        }
+
+        function delete_comment(id) {
+            swal({
+                title: '确认删除这条评论吗？',
+                text: '',
+                type: 'question',
+                allowOutsideClick: false,
+                showCancelButton: true,
+                confirmButtonColor: '#93c47d',
+                cancelButtonColor: '#ca5943',
+                confirmButtonText: "确认",
+                cancelButtonText: "取消"
+            }).then((result) => {
+                if (result.value) {
+                    swal({
+                        title: "正在更改",
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCloseButton: false,
+                        onOpen: () => {
+                            swal.showLoading();
+                        }
+                    });
+                }
+                $.post("__ROOT__/index.php/api/Rate/delete", {
+                    id: id
+                }).done((res) => {
+                    if (result.status == 0) {
+                        swal({
+                            title: "失败",
+                            text: "删除失败",
+                            type: "error"
+                        });
+                    } else {
+                        location.reload();
+                    }
+                })
+            })
         }
 
         function change_bad(id) {

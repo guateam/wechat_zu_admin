@@ -321,7 +321,7 @@
             $pai = 0;
             //来自邀请的人的收入
             $come_frome_other = 0;
-            //付给邀请自己的人的钱
+            //邀请自己的人将得到的钱，不从自己这里出，由店内承担支出
             $lost = 0;
 
             if($so){
@@ -352,7 +352,7 @@
                 'earn'=>$price,
                 'come_from_other'=>$come_frome_other,
                 'lost'=>$lost,
-                'final_salary'=>$price+$come_frome_other-$lost
+                'final_salary'=>$price+$come_frome_other
                 ];
         }
 

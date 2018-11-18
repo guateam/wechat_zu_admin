@@ -2,6 +2,7 @@
     namespace app\api\controller;
     use think\Controller;
     use \app\api\model\Rate as UserModel;
+    use think\Db;
     class Rate extends Controller{
         /**
          * 获取所有评价
@@ -38,7 +39,11 @@
             else return null;
         }
 
-
+        public function delete($id){
+            Db::query("delete from rate where `ID`='$id'");
+            return json(['status'=>0]);
+        }
+        
         public function change_bad($id){
             $data = UserModel::get(["ID"=>$id]);
             if($data){

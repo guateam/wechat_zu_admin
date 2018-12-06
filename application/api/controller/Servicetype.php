@@ -299,7 +299,7 @@
         /**
          * 更新服务的详细信息
          */
-        public function  update_info($id,$procedure,$attention,$benefit,$price,$duration,$commission,$commission2,$have_level,$invite_income){
+        public function  update_info($id,$procedure,$attention,$benefit,$price,$duration,$commission,$commission2,$have_level,$index_show,$invite_income){
             $data = \app\api\model\Servicetype::get(['ID'=>$id]);
             if($data){
                 $data->procedure = $procedure;
@@ -310,6 +310,7 @@
                 $data->commission = $commission;
                 $data->commission2 = $commission2;
                 $data->have_level = $have_level;
+                $data->index_show = $index_show;
                 $data->invite_income = $invite_income;
                 $data->save();
                 return json(['status'=>1]);

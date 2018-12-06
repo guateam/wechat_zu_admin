@@ -56,6 +56,16 @@
                     {/if}
                 </div>
                 <div class="input-group">
+                    <div style="width:150px ; display:inline-block">是否在小程序显示：</div>
+                    {if condition="$service.index_show == 1 "}
+                    <input type="radio" name="index_show" class="form-control"  checked value="1" >是</input>
+                    <input type="radio" name="index_show" class="form-control" value="0" >否</input>
+                    {else /}
+                    <input type="radio" name="index_show" class="form-control"  value="1" >是</input>
+                    <input type="radio" name="index_show" class="form-control" checked value="0" >否</input>
+                    {/if}
+                </div>
+                <div class="input-group">
                     <div style="width:120px ; display:inline-block">服务流程：</div>
                     <textarea id="procedure" class="form-control" rows="3">{$procedure}</textarea>
                 </div>
@@ -89,6 +99,7 @@
             var commission = $("#commission").val();
             var commission2 = $("#commission2").val();
             var have_level = $("input:radio[name='level']:checked").val();
+            var index_show = $("input:radio[name='index_show']:checked").val();
             var invite_income = $("#invite_income").val();
 
             $.post("__ROOT__/index.php/api/Servicetype/update_info", {
@@ -101,6 +112,7 @@
                 commission:commission,
                 commission2:commission2,
                 have_level:have_level,
+                index_show:index_show,
                 invite_income:invite_income,
             }).done((res) => {
                 if (res.status == 1) {

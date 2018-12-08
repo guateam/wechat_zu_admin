@@ -51,12 +51,13 @@
                     <tr class="text-c">
                         <th width="25"><input type="checkbox" name="" value=""></th>
                         <th width="100">项目名称</th>
-                        <th width="100">价格</th>
-                        <th width="80">时长</th>
-                        <th width="80">技师提成金额</th>
-                        <th width="80">接待提成金额</th>
-                        <th width="80">佣金</th>
+                        <th width="80">价格</th>
+                        <th width="70">时长</th>
+                        <th width="70">技师提成金额</th>
+                        <th width="70">接待提成金额</th>
+                        <th width="70">佣金</th>
                         <th width="50">是否允许设定等级</th>
+                        <th width="50">小程序主页是否显示</th>
                         {if condition="$edit == 1"}
                         <th width="100">操作</th>
                         {/if}
@@ -82,6 +83,9 @@
                         <td>￥{$it.invite_income/100}</td>
                         <td>
                             {if condition="$it.have_level==0"}不可{else /}可{/if}
+                        </td>
+                        <td>
+                            {if condition="$it.index_show==0"}不显示{else /}显示{/if}
                         </td>
                         {if condition="$edit == 1"}
                         <td class="td-manage">

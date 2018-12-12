@@ -16,65 +16,57 @@
 	<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
 	<script>DD_belatedPNG.fix('*');</script>
 	<![endif]-->
-    <title>茶艺列表</title>
+    <title>活动列表</title>
 </head>
 
 <body>
     <div class="page-container">
         <div class="cl pd-5 bg-1 bk-gray mt-20">
-            <span class="l">
-                {if condition="$edit == 1"}
-                <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
-                    <i class="Hui-iconfont">&#xe6e2;</i>
-                    批量删除
-                </a>
-                <a href="javascript:;" onclick="member_add('添加服务','__ROOT__/index.php/admin/Itemlist/add','','510')"
+            <span>
+                <a href="javascript:;" onclick="member_add('添加活动','__ROOT__/index.php/admin/Shop/promotion_add','','510')"
                     class="btn btn-primary radius">
                     <i class="Hui-iconfont">&#xe600;</i>
-                    添加项目
+                    添加活动
                 </a>
-                {/if}
             </span>
-            <span class="r">共有数据：<strong>{$count}</strong>条</span>
+            <span class="r">
+                共有数据：<strong>{$count}</strong>
+                条
+            </span>
         </div>
         <div class="mt-20">
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
-                        <th width="25"><input type="checkbox" name="" value=""></th>
-                        <th width="100">茶艺名称</th>
-                        <th width="100">价格</th>
-                        <th width="80">提成金额</th>
-                        {if condition="$edit == 1"}
+                        <th width="80">活动说明</th>
+                        <th width="50">需求消费额</th>
+                        <th width="50">返回额</th>
+                        <th width="100">开始时间</th>
+                        <th width="100">结束时间</th>
                         <th width="100">操作</th>
-                        {/if}
                     </tr>
                 </thead>
                 <tbody>
-                    {volist name="$tealist" id="it" key="k"}
+                    {volist name="$promotion" id="it"}
                     <tr class="text-c">
-                        <td><input type="checkbox" value="{$it.ID}" name="{$k}"></td>
-                        <td>{$it.name}</td>
-                        <td>￥{$it.price/100}
-
-                        </td>
-                        <td>￥{$it.commission/100}
-
-                        </td>
-                        {if condition="$edit == 1"}
-                        <td class="td-manage">
+                        <td>{$it.content}</td>
+                        <td>￥{$it.need/100}</td>
+                        <td>￥{$it.back/100}</td>
+                        <td>{$it._start}</td>
+                        <td>{$it._end}</td>
+                        <td>
                             <a title="删除该项目" href="javascript:;" onclick="member_del(this,'{$it.ID}')" class="ml-5 btn btn-danger"
                                 style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6e2;</i>
                                 删除
                             </a>
-                            <a title="详细设定" href="javascript:;" onclick="member_edit('编辑茶艺','__ROOT__/index.php/admin/Itemlist/edit/id/{$it.ID}')"
+                            <a title="详细设定" href="javascript:;" onclick="member_edit('编辑活动','__ROOT__/index.php/admin/Shop/promotion_edit/id/{$it.ID}')"
                                 class="ml-5 btn btn-info" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>
                                 详细设定
                             </a>
+
                         </td>
-                        {/if}
                     </tr>
                     {/volist}
                 </tbody>
@@ -98,7 +90,7 @@
                     //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
                     {
                         "orderable": false,
-                        "aTargets": [0, 1, 2]
+                        "aTargets": [0, 1, 4]
                     } // 制定列不参与排序
                 ]
             });
@@ -108,54 +100,12 @@
         function member_add(title, url, w, h) {
             layer_show(title, url, w, h);
         }
-
-
+        
         /*用户-编辑*/
         function member_edit(title, url, id, w, h) {
             layer_show(title, url, w, h);
         }
 
-        function datadel() {
-            var numbers = [];
-            for (var i = 0; i < '{$count}'; i++) {
-                if ($("input:checkbox[name=" + (i + 1) + "]").is(":checked")) {
-                    numbers.push($("input:checkbox[name=" + (i + 1) + "]").val());
-                }
-            }
-            swal({
-                title: '确认删除选中的项吗？',
-                text: '',
-                type: 'question',
-                allowOutsideClick: false,
-                showCancelButton: true,
-                confirmButtonColor: '#93c47d',
-                cancelButtonColor: '#ca5943',
-                confirmButtonText: "确认",
-                cancelButtonText: "取消"
-            }).then((result) => {
-                if (result.value) {
-                    swal({
-                        title: '正在处理',
-                        text: '',
-                        allowOutsideClick: false,
-                        showConfirmButton: false,
-                        showCloseButton: false,
-                        onOpen: () => {
-                            swal.showLoading()
-                        }
-                    }).then((result) => {});
-                    $.post("__ROOT__/index.php/api/Itemtype/delete", {
-                        ids: numbers
-                    }).done(function (result) {
-                        if (result.status == 1) {
-                            swal("完成", "已删除项目", "success").then((ok) => {
-                                location.reload();
-                            })
-                        }
-                    })
-                }
-            })
-        }
         /*用户-删除*/
         function member_del(obj, id) {
             swal({
@@ -180,8 +130,8 @@
                             swal.showLoading()
                         }
                     }).then((result) => {});
-                    $.post("__ROOT__/index.php/api/Servicetype/delete_service", {
-                        id: [id]
+                    $.post("__ROOT__/index.php/api/Promotion/delete", {
+                        id: id
                     }).done(function (result) {
                         if (result.status == 1) {
                             $(obj).parents("tr").remove();

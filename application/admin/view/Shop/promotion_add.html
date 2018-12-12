@@ -1,0 +1,240 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="Bookmark" href="/favicon.ico">
+    <link rel="Shortcut Icon" href="/favicon.ico" />
+    <!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+    {include file="common/common_css"}
+    <!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+
+    <title>编辑活动</title>
+</head>
+
+<body>
+    <article class="page-container">
+        <form action="" method="post" class="form form-horizontal" id="form-member-add">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>活动说明：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text"  placeholder="" id="content" name="content">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>需求消费额(单位：分)</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" placeholder="" id="need" name="need">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>返还金额(单位：分)</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text"  placeholder="" id="back" name="back">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>开始时间：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" onfocus="WdatePicker({})" class="input-text" 
+                        placeholder="" id="start" name="start">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>结束时间：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" onfocus="WdatePicker({})" class="input-text"
+                        placeholder="" id="end" name="end">
+                </div>
+            </div>
+
+            <div class="row cl">
+                <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                    <input id="submit-btn" class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+                </div>
+            </div>
+        </form>
+    </article>
+
+    {include file="common/common_script"}
+
+    <!--请在下方写此页面业务相关的脚本-->
+    <script type="text/javascript" src="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+    <script type="text/javascript">
+        function testid(id) {
+            // 1 "验证通过!", 0 //校验不通过 // id为身份证号码
+            var format =
+                /^(([1][1-5])|([2][1-3])|([3][1-7])|([4][1-6])|([5][0-4])|([6][1-5])|([7][1])|([8][1-2]))\d{4}(([1][9]\d{2})|([2]\d{3}))(([0][1-9])|([1][0-2]))(([0][1-9])|([1-2][0-9])|([3][0-1]))\d{3}[0-9xX]$/;
+            //号码规则校验
+            if (!format.test(id)) {
+                return false;
+            }
+            //区位码校验
+            //出生年月日校验  前正则限制起始年份为1900;
+            var year = id.substr(6, 4), //身份证年
+                month = id.substr(10, 2), //身份证月
+                date = id.substr(12, 2), //身份证日
+                time = Date.parse(month + '-' + date + '-' + year), //身份证日期时间戳date
+                now_time = Date.parse(new Date()), //当前时间戳
+                dates = (new Date(year, month, 0)).getDate(); //身份证当月天数
+            if (time > now_time || date > dates) {
+                return false
+            }
+            //校验码判断
+            var c = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2); //系数
+            var b = new Array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'); //校验码对照表
+            var id_array = id.split("");
+            var sum = 0;
+            for (var k = 0; k < 17; k++) {
+                sum += parseInt(id_array[k]) * parseInt(c[k]);
+            }
+            if (id_array[17].toUpperCase() != b[sum % 11].toUpperCase()) {
+                return false
+            }
+            return true;
+        }
+
+        function dateToString(date) {
+            if (date instanceof Date) {
+                var year = date.getFullYear();
+                var month = date.getMonth() + 1;
+                month = month < 10 ? '0' + month : month;
+                var day = date.getDate();
+                day = day < 10 ? '0' + day : day;
+                return year + month + day;
+            }
+            return '';
+        }
+
+        function isDate(date) {
+            var isDate = /^\d{4}(\-|\/|\.)\d{1,2}\1\d{1,2}$/;
+            if (isDate.test(date)) return true;
+            else return false;
+        }
+
+        jQuery.validator.addMethod("isDate",
+            function (value, element) {
+                return this.optional(element) || (isDate(value));
+            },
+            "日期格式错误！");
+
+        (function ($) {
+            $.getUrlParam = function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]);
+                return null;
+            }
+        })(jQuery);
+
+
+        $(function () {
+            $('.skin-minimal input').iCheck({
+                checkboxClass: 'icheckbox-blue',
+                radioClass: 'iradio-blue',
+                increaseArea: '20%'
+            });
+
+            $("#form-member-add").validate({
+                rules: {
+                    content: {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 100,
+                    },
+                    need: {
+                        required: true,
+                    },
+                    back: {
+                        required: true,
+                    },
+                    start: {
+                        required: true,
+                        isDate: true,
+                    },
+                    end: {
+                        required: true,
+                        isDate: true,
+                    },
+                },
+                onkeyup: false,
+                focusCleanup: true,
+                success: "valid",
+                submitHandler: function (form) {
+                    swal({
+                        title: '正在处理',
+                        text: '',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCloseButton: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    }).then((result) => {});
+
+                    var level = "";
+                    var service_type = "";
+                    var service_id = [];
+
+
+                    content = $("#content").val();
+                    need = $("#need").val();
+                    back = $("#back").val();
+                    start = $("#start").val();
+                    end = $("#end").val();
+
+                    $(form).ajaxSubmit({
+                        type: 'post', // 提交方式 get/post
+                        url: '__ROOT__/index.php/api/Promotion/add', // 需要提交的 url
+                        data: {
+                            content: content,
+                            need: need,
+                            back: back,
+                            start: start,
+                            end: end,
+                        },
+                        success: function (result) {
+                            if (result.status == 1) {
+                                swal("成功", "已添加新活动", "success", {
+                                    allowOutsideClick: false
+                                }).then((ok) => {
+                                    if (ok.value) {
+                                        parent.location.reload()
+                                        var index = parent.layer.getFrameIndex(
+                                            window.name);
+                                        parent.layer.close(index);
+                                    }
+                                })
+                            } else {
+                                swal("失败", "", "error");
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <!--/请在上方写此页面业务相关的脚本-->
+</body>
+
+</html>

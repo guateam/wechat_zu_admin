@@ -24,6 +24,27 @@ class Shop extends Controller{
         $this->assign("shop_id",$id);
         return $this->fetch('Shop/shop_picture');
     }
+    public function promotion(){
+        $ctrl = new \app\api\controller\Promotion();
+        $promotion = $ctrl->get_all();
+        $this->assign("promotion",$promotion);
+        $this->assign("count",count($promotion));
+        return $this->fetch('Shop/promotion');
+    }
+    public function promotion_edit($id){
+        $ctrl = new \app\api\controller\Promotion();
+        $promotion = $ctrl->get($id);
+        if($promotion){
+            $promotion = $promotion[0];
+        }else{
+            $promotion = new \app\api\model\Promotion();
+        }
+        $this->assign("promotion",$promotion);
+        return $this->fetch('Shop/promotion_edit');
+    }
+    public function promotion_add(){
+        return $this->fetch('Shop/promotion_add');
+    }
 
     public function account($edit){
         $account = Db::query("select * from admin");

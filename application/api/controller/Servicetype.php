@@ -299,9 +299,10 @@
         /**
          * 更新服务的详细信息
          */
-        public function  update_info($id,$procedure,$attention,$benefit,$price,$duration,$commission,$commission2,$have_level,$index_show,$invite_income){
+        public function  update_info($id,$name,$procedure,$attention,$benefit,$price,$duration,$commission,$commission2,$have_level,$index_show,$invite_income){
             $data = \app\api\model\Servicetype::get(['ID'=>$id]);
             if($data){
+                $data->name = $name;
                 $data->procedure = $procedure;
                 $data->attention = $attention;
                 $data->benefit = $benefit;

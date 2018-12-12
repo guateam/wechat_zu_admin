@@ -294,7 +294,7 @@
                 foreach($so as $svod){
                     $item=\app\api\model\Servicetype::get(['ID'=>$svod->item_id]);
                     //计算支付给邀请人的钱
-                    if($self_p){
+                    if($item && $self_p){
                         $lost+= $item->invite_income/100;
                     }
                 }
@@ -329,13 +329,16 @@
                     if($svod->clock_type == 1)$pai++;
                     else if($svod->clock_type == 2)$dian++;
                     $item=\app\api\model\Servicetype::get(['ID'=>$svod->item_id]);
-                    $per = 0;
-                    //如果该技师被邀请,计算支付给邀请人的钱
-                    if($self_p){
-                        $lost+= $item->invite_income/100;
+                    if($item){
+                        $per = 0;
+                        //如果该技师被邀请,计算支付给邀请人的钱
+                        if($self_p){
+                            $lost+= $item->invite_income/100;
+                        }
+    
+                        $price+=$item->commission/100;
                     }
-
-                    $price+=$item->commission/100;
+                    
                 }
             }
             if($invited){

@@ -55,7 +55,7 @@
                 <tbody>
                     {volist name="$customer" id="it" key="k"}
                     <tr class="text-c">
-                        <td>{$it.user_id}</td>
+                        <td>{$it.name}</td>
                         <td>{if condition="$it.gender==1"}男{elseif condition="$it.gender==2"}女{else /}未知{/if}</td>
                         <td>{$it.phone_number}</td>
                         <td>{$it.level}</td>
@@ -64,7 +64,7 @@
                         <td>{$it.registration_date}</td>
                         {if condition="$edit == 1"}
                         <td class="td-manage">
-                            <a title="线下支付" href="javascript:;" onclick="pay('{$it.openid}')" class="ml-5 btn btn-success"
+                            <a title="线下支付" href="javascript:;" onclick="pay('{$it.user_id}')" class="ml-5 btn btn-success"
                                 style="text-decoration:none">
                                 支付线下订单
                             </a>

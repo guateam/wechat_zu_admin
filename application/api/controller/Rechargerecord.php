@@ -13,13 +13,28 @@
             return $all;
         }
         public function get_all_by_user(){
-            $records = Db::query("select sum(A.charge)/100 as charge,A.user_id,B.phone_number,B.gender,B.level,B.openid,B.registration_date from recharge_record A,customer B where A.user_id=B.openid
-            group by B.openid");
+            $all_cus = Db::query("select * from customer group by openid");
+            $records = [];
+            foreach($all_cus as $cus){
+                $cus_openid = $cus['openid'];
+                $record = Db::query("select sum(A.charge)/100 as charge from recharge_record A,customer B where A.user_id='$cus_openid' and B.openid=A.user_id");
+                if($record){
+                    if(is_null($record[0]['charge']) )$record[0]['charge'] = 0;
+                    $record = array_merge($record[0],['phone_number'=>$cus['phone_number'],'name'=>$cus['name'],'user_id'=>$cus['openid'],'gender'=>$cus['gender'],'level'=>$cus['level'],'registration_date'=>$cus['registration_date']]);
+                    array_push($records,$record);
+                }
+            }
+            // $records = Db::query("select sum(A.charge)/100 as charge,A.user_id,B.phone_number,B.gender,B.level,B.openid,B.registration_date from recharge_record A,customer B where A.user_id=B.openid
+            // group by B.openid");
             $cus = new \app\api\controller\Customer();
             for($i=0;$i<count($records);$i++){
-                $records[$i]['registration_date'] = date("Y-m-d H:i:s", $records[$i]['registration_date']);
+                if($records[$i]['registration_date'] != "")
+                    $records[$i]['registration_date'] = date("Y-m-d H:i:s", $records[$i]['registration_date']);
+                else{
+                    $records[$i]['registration_date'] = "无";
+                }
                 $records[$i]['charge'] = (int) $records[$i]['charge'];
-                $money = $cus->get_cash($records[$i]['openid']);
+                $money = $cus->get_cash($records[$i]['user_id']);
                 $records[$i] = array_merge($records[$i],['cash'=>$money]);
             }
             return $records;

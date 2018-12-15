@@ -43,23 +43,27 @@
             </button>
         </div>
         <div class="cl pd-5 bg-1 bk-gray mt-20">
+            <span>当前时间：{$begin} 到 {$end}</span>
             <span class="r">共有数据：
-                <strong>{$count}</strong> 条</span>
+                <strong>{$count}</strong> 条
+            </span>
         </div>
         <div class="mt-20">
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
                         <th width="80">姓名</th>
-                        <th width="90">工号</th>
-                        <th width="100">入职日期</th>
+                        <th width="70">工号</th>
+                        <th width="90">入职日期</th>
                         <th width="30">点钟数</th>
                         <th width="60">点钟奖金(元)</th>
-                        <th width="100">上钟提成(元)</th>
-                        <th width="50">推荐提成(元)</th>
+                        <th width="80">上钟提成(元)</th>
+                        <th width="60">推荐提成(元)</th>
+                        <th width="60">打赏金额(元)</th>
                         <th width="50">充卡额(元)</th>
-                        <th width="50">充卡提成(元)</th>
+                        <th width="60">充卡提成(元)</th>
                         <th width="70">应发工资(元)</th>
+                        <th width="70">操作</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -81,6 +85,9 @@
                             {$it.invite_income}
                         </td>
                         <td>
+                            {$it.tip_income}
+                        </td>
+                        <td>
                             {$it.recharge_amount}
                         </td>
                         <td>
@@ -88,6 +95,13 @@
                         </td>
                         <td>
                             {$it.total_salary}
+                        </td>
+                        <td>
+                            <a title="查看详情" href="javascript:;" class="ml-5 btn btn-primary" style="text-decoration:none"
+                                onclick="detail('{$it.job_number}')">
+                                查看详情
+                                <i class="Hui-iconfont">&#xe6df;</i>
+                            </a>
                         </td>
                     </tr>
                     {/volist}
@@ -104,6 +118,9 @@
     <script type="text/javascript" src="__STATIC__/vendor/sweetalert/sweetalert2.all.js"></script>
     <script src="__STATIC__/vendor/iCheck/icheck.min.js"></script>
     <script type="text/javascript">
+        begin = "";
+        end = "";
+
         $(function () {
             $('.table-sort').dataTable({
                 "aaSorting": [
@@ -114,7 +131,7 @@
                     //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
                     {
                         "orderable": false,
-                        "aTargets": [0, 1, 2]
+                        "aTargets": [0, 1, 2, 11]
                     } // 制定列不参与排序
                 ]
             });
@@ -129,7 +146,11 @@
         function zhidingren(title, url, id, w, h) {
             layer_show(title, url, w, h);
         }
-
+        // 查看某个技师的工资详情
+        function detail(job_number) {
+            layer_show("工资详情", "__ROOT__/index.php/admin/Technicianlist/salary_detail/job_number/" + job_number +
+                "/begin/" + begin + "/end/" + end, 600, 800);
+        }
         /**
          * 修复翻页box的代码
          */
@@ -141,11 +162,24 @@
         });
 
         $("#search").on("click", () => {
-            var begin = $("#datemin").val();
-            var end = $("#datemax").val();
-            if (begin == "" || end == "") {
+            if ($("#datemin").val() == "" || $("#datemax").val() == "") {
+                swal({
+                    title: "请填写完整的时间段"
+                })
                 return;
             }
+
+            begin = $("#datemin").val();
+            end = $("#datemax").val();
+            swal({
+                title: "搜索中...",
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                showCloseButton: false,
+                onOpen: () => {
+                    swal.showLoading()
+                },
+            })
             window.location.href = "/wechat_zu_admin/public/index.php/admin/Technicianlist/salary/first_day/" +
                 begin + "/last_day/" + end
         })

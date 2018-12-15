@@ -523,16 +523,27 @@ class Technician extends Controller
                 $recharge_ticheng = 0;
             }
             //获取充值提成,从数据库查出来的单位是分，转换成元
-            $dashang = Db::query("select sum(charge)/100 as salary from recharge_record where generated_time >= $begin and generated_time <= $end and job_number = '$job_number'");
-            if ($dashang) {
-                $dashang = (int) $dashang[0]['salary'];
-                if (is_null($dashang)) {
-                    $dashang = 0;
+            $recharge= Db::query("select sum(charge)/100 as salary from recharge_record where generated_time >= $begin and generated_time <= $end and job_number = '$job_number'");
+            if ($recharge) {
+                $recharge = (int) $recharge[0]['salary'];
+                if (is_null($recharge)) {
+                    $recharge = 0;
                 }
             } else {
+                $recharge = 0;
+            }
+
+            //获取打赏金额
+            $dashang = Db::query("select sum(salary)/100 as salary from tip where technician_id = '$job_number' and date >=$begin and date <= $end");
+            if($dashang){
+                $dashang = (int)$dashang[0]['salary'];
+                if(is_null($dashang)){
+                    $dashang = 0;
+                }
+            }else{
                 $dashang = 0;
             }
-            $salary = array_merge($salary, ['name' => $tech['name'], 'job_number' => $tech['job_number'], 'entry_date' => date("Y-m-d", $tech['entry_date']), 'clock_income' => $yeji['earn'], 'dian' => $yeji['dian'], 'dian_income' => 0, 'invite_income' => $yeji['come_from_other'], 'recharge_amount'=>$dashang,'recharge_income' => (int)($dashang*$recharge_ticheng)]);
+            $salary = array_merge($salary, ['name' => $tech['name'], 'job_number' => $tech['job_number'], 'entry_date' => date("Y-m-d", $tech['entry_date']), 'clock_income' => $yeji['earn'], 'dian' => $yeji['dian'], 'dian_income' => 0, 'invite_income' => $yeji['come_from_other'], 'recharge_amount'=>$recharge,'tip_income'=>$dashang,'recharge_income' => (int)($recharge*$recharge_ticheng)]);
             array_push($salarys, $salary);
         }
         //根据点钟数量计算排行并赋予点钟奖励
@@ -568,7 +579,7 @@ class Technician extends Controller
         }
         //计算总工资
         for ($i = 0; $i < count($salarys); $i++) {
-            $salarys[$i] = array_merge($salarys[$i], ['total_salary' => $salarys[$i]['clock_income'] + $salarys[$i]['dian_income'] + $salarys[$i]['recharge_income'] + $salarys[$i]['invite_income']]);
+            $salarys[$i] = array_merge($salarys[$i], ['total_salary' => $salarys[$i]['clock_income'] + $salarys[$i]['dian_income'] + $salarys[$i]['recharge_income'] + $salarys[$i]['invite_income'] + $salarys[$i]['tip_income']]);
         }
         return $salarys;
     }

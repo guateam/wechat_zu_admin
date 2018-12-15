@@ -80,13 +80,19 @@ class Technicianlist extends Controller{
     public function salary($first_day = "",$last_day = ""){
         $ctrl =new \app\api\controller\Technician();
         //本月第一天
-        if($first_day === "")$first_day = strtotime(date("Y-m-01"));
+        if($first_day === "")$first_day = date("Y-m-01");
         //本月最后一天
-        if($last_day === "" )$last_day = strtotime(date("Y-m-t"));
+        if($last_day === "" )$last_day = date("Y-m-d",strtotime(date("Y-m-t"))+24*60*60);
         
         $salarys = $ctrl->get_all_salary($first_day,$last_day);
         $this->assign("salarys",$salarys);
         $this->assign("count",count($salarys));
+        $this->assign("begin",$first_day);
+        $this->assign("end",$last_day);
         return $this->fetch('Technicianlist/salary');
+    }
+
+    public function salary_detail($job_number,$begin,$end){
+        return $this->fetch('Technicianlist/salary_detail');
     }
 }

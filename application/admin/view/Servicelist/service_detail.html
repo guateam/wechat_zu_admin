@@ -70,6 +70,22 @@
                     {/if}
                 </div>
                 <div class="input-group">
+                    <div style="width:150px ; display:inline-block">是否属于某一类服务：</div>
+                    {if condition="$service.belong_to == 0"}
+                    <input type="radio" name="belong_to" class="form-control" value="0" checked >不属于</input>
+                    <input type="radio" name="belong_to" class="form-control" value="1" >足浴</input>
+                    <input type="radio" name="belong_to" class="form-control" value="2" >SPA</input>
+                    {elseif condition="$service.belong_to == 1"}
+                    <input type="radio" name="belong_to" class="form-control" value="0" >不属于</input>
+                    <input type="radio" name="belong_to" class="form-control" value="1" checked>足浴</input>
+                    <input type="radio" name="belong_to" class="form-control" value="2" >SPA</input>
+                    {elseif condition="$service.belong_to == 2"}
+                    <input type="radio" name="belong_to" class="form-control" value="0" >不属于</input>
+                    <input type="radio" name="belong_to" class="form-control" value="1" >足浴</input>
+                    <input type="radio" name="belong_to" class="form-control" value="2" checked>SPA</input>
+                    {/if}
+                </div>
+                <div class="input-group">
                     <div style="width:120px ; display:inline-block">服务流程：</div>
                     <textarea id="procedure" class="form-control" rows="3">{$procedure}</textarea>
                 </div>
@@ -106,7 +122,7 @@
             var have_level = $("input:radio[name='level']:checked").val();
             var index_show = $("input:radio[name='index_show']:checked").val();
             var invite_income = $("#invite_income").val();
-
+            var belong_to = $("input:radio[name='belong_to']:checked").val();
             $.post("__ROOT__/index.php/api/Servicetype/update_info", {
                 id:'{$service_id}',
                 name:name,
@@ -119,7 +135,8 @@
                 commission2:commission2,
                 have_level:have_level,
                 index_show:index_show,
-                invite_income:invite_income,                
+                invite_income:invite_income,      
+                belong_to:belong_to          
             }).done((res) => {
                 if (res.status == 1) {
                     parent.location.reload()

@@ -27,15 +27,19 @@
             <form>
                 <div class="input-group">
                     <div style="width:150px ; display:inline-block">服务名称:</div>
-                    <input id="name" class="form-control" value="{$service.name}" ></input>
+                    <input id="name" class="form-control" value="{$service.name}"></input>
                 </div>
                 <div class="input-group">
-                    <div style="width:150px ; display:inline-block">价格(单位 分):</div>
-                    <input type="number" id="price" class="form-control" value="{$service.price}" ></input>
+                    <div style="width:150px ; display:inline-block">门市价(单位 分):</div>
+                    <input type="number" id="cheat_price" class="form-control" value="{$service.cheat_price}"></input>
+                </div>
+                <div class="input-group">
+                    <div style="width:150px ; display:inline-block">活动价(单位 分):</div>
+                    <input type="number" id="price" class="form-control" value="{$service.price}"></input>
                 </div>
                 <div class="input-group">
                     <div style="width:150px ; display:inline-block">时长(单位 分钟)</div>
-                    <input type="number" id="duration" class="form-control" value="{$service.duration}" ></input>
+                    <input type="number" id="duration" class="form-control" value="{$service.duration}"></input>
                 </div>
                 <div class="input-group">
                     <div style="width:150px ; display:inline-block">佣金(单位 分):</div>
@@ -43,45 +47,45 @@
                 </div>
                 <div class="input-group">
                     <div style="width:150px ; display:inline-block">技师提成金额(单位 分):</div>
-                    <input type="number" id="commission" class="form-control" value="{$service.commission}" ></input>
+                    <input type="number" id="commission" class="form-control" value="{$service.commission}"></input>
                 </div>
                 <div class="input-group">
-                        <div style="width:150px ; display:inline-block">接待提成金额(单位 分):</div>
-                        <input type="number" id="commission2" class="form-control" value="{$service.commission2}" ></input>
+                    <div style="width:150px ; display:inline-block">接待提成金额(单位 分):</div>
+                    <input type="number" id="commission2" class="form-control" value="{$service.commission2}"></input>
                 </div>
                 <div class="input-group">
                     <div style="width:150px ; display:inline-block">是否允许设置等级：</div>
                     {if condition="$service.have_level == 1 "}
-                    <input type="radio" name="level" class="form-control"  checked value="1" >是</input>
-                    <input type="radio" name="level" class="form-control" value="0" >否</input>
+                    <input type="radio" name="level" class="form-control" checked value="1">是</input>
+                    <input type="radio" name="level" class="form-control" value="0">否</input>
                     {else /}
-                    <input type="radio" name="level" class="form-control"  value="1" >是</input>
-                    <input type="radio" name="level" class="form-control" checked value="0" >否</input>
+                    <input type="radio" name="level" class="form-control" value="1">是</input>
+                    <input type="radio" name="level" class="form-control" checked value="0">否</input>
                     {/if}
                 </div>
                 <div class="input-group">
                     <div style="width:150px ; display:inline-block">是否在小程序显示：</div>
                     {if condition="$service.index_show == 1 "}
-                    <input type="radio" name="index_show" class="form-control"  checked value="1" >是</input>
-                    <input type="radio" name="index_show" class="form-control" value="0" >否</input>
+                    <input type="radio" name="index_show" class="form-control" checked value="1">是</input>
+                    <input type="radio" name="index_show" class="form-control" value="0">否</input>
                     {else /}
-                    <input type="radio" name="index_show" class="form-control"  value="1" >是</input>
-                    <input type="radio" name="index_show" class="form-control" checked value="0" >否</input>
+                    <input type="radio" name="index_show" class="form-control" value="1">是</input>
+                    <input type="radio" name="index_show" class="form-control" checked value="0">否</input>
                     {/if}
                 </div>
                 <div class="input-group">
                     <div style="width:150px ; display:inline-block">是否属于某一类服务：</div>
                     {if condition="$service.belong_to == 0"}
-                    <input type="radio" name="belong_to" class="form-control" value="0" checked >不属于</input>
-                    <input type="radio" name="belong_to" class="form-control" value="1" >足浴</input>
-                    <input type="radio" name="belong_to" class="form-control" value="2" >SPA</input>
+                    <input type="radio" name="belong_to" class="form-control" value="0" checked>不属于</input>
+                    <input type="radio" name="belong_to" class="form-control" value="1">足浴</input>
+                    <input type="radio" name="belong_to" class="form-control" value="2">SPA</input>
                     {elseif condition="$service.belong_to == 1"}
-                    <input type="radio" name="belong_to" class="form-control" value="0" >不属于</input>
+                    <input type="radio" name="belong_to" class="form-control" value="0">不属于</input>
                     <input type="radio" name="belong_to" class="form-control" value="1" checked>足浴</input>
-                    <input type="radio" name="belong_to" class="form-control" value="2" >SPA</input>
+                    <input type="radio" name="belong_to" class="form-control" value="2">SPA</input>
                     {elseif condition="$service.belong_to == 2"}
-                    <input type="radio" name="belong_to" class="form-control" value="0" >不属于</input>
-                    <input type="radio" name="belong_to" class="form-control" value="1" >足浴</input>
+                    <input type="radio" name="belong_to" class="form-control" value="0">不属于</input>
+                    <input type="radio" name="belong_to" class="form-control" value="1">足浴</input>
                     <input type="radio" name="belong_to" class="form-control" value="2" checked>SPA</input>
                     {/if}
                 </div>
@@ -116,6 +120,7 @@
             var attention = $("#attention").val();
             var benefit = $("#benefit").val();
             var price = $("#price").val();
+            var ch_price = $("#cheat_price").val();
             var duration = $("#duration").val();
             var commission = $("#commission").val();
             var commission2 = $("#commission2").val();
@@ -124,19 +129,20 @@
             var invite_income = $("#invite_income").val();
             var belong_to = $("input:radio[name='belong_to']:checked").val();
             $.post("__ROOT__/index.php/api/Servicetype/update_info", {
-                id:'{$service_id}',
-                name:name,
+                id: '{$service_id}',
+                name: name,
                 procedure: procedure,
                 attention: attention,
                 benefit: benefit,
-                price:price,
-                duration:duration,
-                commission:commission,
-                commission2:commission2,
-                have_level:have_level,
-                index_show:index_show,
-                invite_income:invite_income,      
-                belong_to:belong_to          
+                price: price,
+                cheat_price: ch_price,
+                duration: duration,
+                commission: commission,
+                commission2: commission2,
+                have_level: have_level,
+                index_show: index_show,
+                invite_income: invite_income,
+                belong_to: belong_to
             }).done((res) => {
                 if (res.status == 1) {
                     parent.location.reload()

@@ -50,12 +50,13 @@
                 <thead>
                     <tr class="text-c">
                         <th width="25"><input type="checkbox" name="" value=""></th>
-                        <th width="100">项目名称</th>
-                        <th width="80">价格</th>
+                        <th width="80">项目名称</th>
+                        <th width="60">门市价</th>
+                        <th width="60">活动价</th>
                         <th width="70">时长</th>
                         <th width="70">技师提成金额</th>
                         <th width="70">接待提成金额</th>
-                        <th width="70">佣金</th>
+                        <th width="50">佣金</th>
                         <th width="50">是否允许设定等级</th>
                         <th width="50">小程序主页是否显示</th>
                         {if condition="$edit == 1"}
@@ -68,6 +69,9 @@
                     <tr class="text-c">
                         <td><input type="checkbox" value="1" name=""></td>
                         <td>{$it.name}</td>
+                        <td>￥{$it.cheat_price/100}
+                           
+                        </td>
                         <td>￥{$it.price/100}
                            
                         </td>

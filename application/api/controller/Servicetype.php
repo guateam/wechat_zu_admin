@@ -283,7 +283,7 @@
          */
         public static function add_service($name,$duration,$price,$commission,$commission2,$info,$invite_income,$image){
 
-            $data = new Service(['name'=>$name,'duration'=>$duration,'price'=>$price,'cheat_price'=>$price,
+            $data = new Service(['name'=>$name,'duration'=>$duration,'price'=>$price,'market_price'=>$price,
                                     'invite_income'=>$invite_income,'commission'=>((int)$commission),
                                     'commission2'=>((int)$commission2),
                                     'info'=>$info,'image'=>$image]);
@@ -299,7 +299,7 @@
         /**
          * 更新服务的详细信息
          */
-        public function  update_info($id,$name,$procedure,$attention,$benefit,$price,$cheat_price,
+        public function  update_info($id,$name,$procedure,$attention,$benefit,$price,$market_price,
         $duration,$commission,$commission2,$have_level,$index_show,$invite_income,$belong_to){
             $data = \app\api\model\Servicetype::get(['ID'=>$id]);
             if($data){
@@ -308,7 +308,7 @@
                 $data->attention = $attention;
                 $data->benefit = $benefit;
                 $data->price = $price;
-                $data->cheat_price = $cheat_price;
+                $data->market_price = $market_price;
                 $data->duration = $duration;
                 $data->commission = $commission;
                 $data->commission2 = $commission2;

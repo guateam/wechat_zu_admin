@@ -101,6 +101,11 @@
                     <div style="width:120px ; display:inline-block">项目特色：</div>
                     <textarea id="benefit" class="form-control" rows="3">{$benefit}</textarea>
                 </div>
+                <div class="input-group">
+                    <div style="width:120px ; display:inline-block">服务介绍图：</div>
+                    <img src="{$img}">
+                    <input type="file" class="input-text" value="" placeholder="" id="image" name="image">
+                </div>
                 <button onclick="update()" type="button" id="btn" style="width: 80px;height: 45px;float: right;margin-top: 10px;font-size:1.1em;background-color: #00b7ee">
                     确定
                 </button>
@@ -113,6 +118,7 @@
     <script type="text/javascript" src="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js"></script>
     <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
+    <script type="text/javascript" src="__STATIC__/vendor/AjaxFileUpload/ajaxFileUpload.js"></script>
     <script>
         function update() {
             var name = $("#name").val();
@@ -128,26 +134,36 @@
             var index_show = $("input:radio[name='index_show']:checked").val();
             var invite_income = $("#invite_income").val();
             var belong_to = $("input:radio[name='belong_to']:checked").val();
-            $.post("__ROOT__/index.php/api/Servicetype/update_info", {
-                id: '{$service_id}',
-                name: name,
-                procedure: procedure,
-                attention: attention,
-                benefit: benefit,
-                price: price,
-                market_price: market_price,
-                duration: duration,
-                commission: commission,
-                commission2: commission2,
-                have_level: have_level,
-                index_show: index_show,
-                invite_income: invite_income,
-                belong_to: belong_to
-            }).done((res) => {
-                if (res.status == 1) {
-                    parent.location.reload()
-                    var index = parent.layer.getFrameIndex(window.name);
-                    parent.layer.close(index);
+            var img = $("#image").val();
+
+            $.ajaxFileUpload({
+                url: "__ROOT__/index.php/api/Servicetype/update_info",
+                type: "post",
+                dataType:"json",
+                fileElementId: 'image',
+                data: {
+                    id: '{$service_id}',
+                    name: name,
+                    procedure: procedure,
+                    attention: attention,
+                    benefit: benefit,
+                    price: price,
+                    market_price: market_price,
+                    duration: duration,
+                    commission: commission,
+                    commission2: commission2,
+                    have_level: have_level,
+                    index_show: index_show,
+                    invite_income: invite_income,
+                    belong_to: belong_to
+                },
+                secureuri: false,
+                success: function (res, status) {
+                    if (res.status == 1) {
+                        parent.location.reload()
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    }
                 }
             })
         }

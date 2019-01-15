@@ -23,6 +23,7 @@ class Servicelist extends Controller{
         $this->assign("procedure",$sv->procedure);
         $this->assign("attention",$sv->attention);
         $this->assign("benefit",$sv->benefit);
+        $this->assign("img",$sv->image);
         return $this->fetch('Servicelist/service_detail');
     }
 }

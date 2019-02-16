@@ -68,7 +68,7 @@
                         <th width="70">预约人用户名</th>
                         <th width="70">预约人手机号</th>
                         <th width="150">订单状态</th>
-                        <th width="100" >技师编号</th>
+                        <th width="100">技师编号</th>
                         <th width="60">付款顾客用户名</th>
                         <th width="60">付款顾客手机号</th>
                         <th width="150">操作</th>
@@ -83,7 +83,7 @@
                         <td>{$it.order_id}</td>
                         <td id="time{$k-1}">{$it.generated_time}</td>
                         <td>
-                            {$it.user_id}
+                            {$it.username}
                         </td>
                         <td>
                             {$phone[$k-1]}
@@ -94,14 +94,16 @@
                             {elseif condition="$it.state==3"}等待支付{elseif condition="$it.state==4"}支付完成 {elseif
                             condition="$it.state==5"}评价完成
                             {/if}</td>
-                        <td >
+                        <td>
                             {$tech[$k-1]}
                         </td>
                         <td class="">{$it.payment_user_id}</td>
                         <td class="">{$phone2[$k-1]}</td>
 
                         <td class="td-manage">
-                            <button value="{$it.order_id}" onclick="appointment(this)" id="appointment">预约情况</button>
+                            {if condition="$it.state==1"}
+                            <button value="{$it.order_id}" onclick="disappointment(this)" id="appointment">取消预约</button>
+                            {/if}
                             <button value="{$it.order_id}" onclick="serviceorder(this,'{$k-1}')" id="serviceorder">服务情况</button>
                             <button value="{$it.order_id}" onclick="rate(this)" id="rate">评价情况</button>
                         </td>
@@ -132,7 +134,7 @@
                 } // 制定列不参与排序
             ]
         });
-        table.columns(3).search("").draw();
+        table.columns(4).search("").draw();
         $.fn.dataTable.ext.search.push(
             function (settings, data, dataIndex) {
                 var min = $('#datemin').val();
@@ -163,9 +165,9 @@
         }
         $("#down_search").on("change", () => {
             target = $("#down_search").val();
-            if (target != "全部类型") table.columns(3).search(target).draw();
+            if (target != "全部类型") table.columns(4).search(target).draw();
             else {
-                table.columns(3).search("").draw();
+                table.columns(4).search("").draw();
             }
 
         })
@@ -173,52 +175,43 @@
             table.draw();
         })
 
-        function appointment(e) {
+        function disappointment(e) {
             swal({
-                title: "正在加载",
+                title: "确认取消预约吗?",
                 allowOutsideClick: false,
-                showConfirmButton: false,
-                showCloseButton: false,
-                onOpen: () => {
-                    swal.showLoading()
-                }
-            });
-            $.post("__ROOT__/index.php/api/Appointment/get_appointment", {
-                order_id: $(e).val()
-            }).done((result) => {
-                if (result) {
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#93c47d',
+                cancelButtonColor: '#ca5943',
+                confirmButtonText: "是",
+                cancelButtonText: "否"
+            }).then((result) => {
+                if (result.value) {
                     swal({
-                        title: "订单号：" + result.order_id,
-                        html: `<hr>
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <td>预约人数</td>
-                                    <td>` +
-                            result.user_num +
-                            `</td>
-                                </tr>
-                                <tr>
-                                    <td>预约服务时间</td>
-                                    <td>` +
-                            result.appointment_time +
-                            `</td>
-                                </tr>
-                                </tbody>
-                        </table>
-                        <hr><br>`,
+                        title: '正在处理',
+                        text: '',
                         allowOutsideClick: false,
-                        showConfirmButton: true,
+                        showConfirmButton: false,
                         showCloseButton: false,
-                    })
-                } else {
-                    swal({
-                        title: "失败",
-                        text: "未查询到该订单的预约情况",
-                        type: "info"
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    });
+                    $.post("__ROOT__/index.php/api/Consumedorder/disappointment", {
+                        order_id: $(e).val()
+                    }).done((result) => {
+                        if(result.state == 1){
+                            swal({
+                                title:'取消预约成功',
+                                text: '',
+                            }).then((result)=>{
+                                location.reload();
+                            })
+                        }
                     });
                 }
             });
+
         }
 
         function serviceorder(e, k) {

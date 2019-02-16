@@ -8,16 +8,16 @@ class Consumedorder extends Controller{
     public function index($edit){
         $ctrl =new \app\api\controller\Consumedorder();
         $cs = new \app\api\controller\Customer();
-        $order = $ctrl->get_all();
+        $order = $ctrl->get_all_origin();
         $tech = [];
         $user = [];
         $payer = [];
         foreach($order as $index => $od){
             //时间戳显示为日期字符串
-            $order[$index]->generated_time = date('Y-m-d H:i:s', $order[$index]->generated_time);
-            $info = $cs->get_customer($od->user_id);
-            $info2 = $cs->get_customer($od->payment_user_id);
-            $so = \app\api\model\Serviceorder::all(['order_id'=>$od->order_id]);
+            $order[$index]['generated_time'] = date('Y-m-d H:i:s', $order[$index]['generated_time']);
+            $info = $cs->get_customer($od['user_id']);
+            $info2 = $cs->get_customer($od['payment_user_id']);
+            $so = \app\api\model\Serviceorder::all(['order_id'=>$od['order_id']]);
             $str = "";
             $exist = [];
             foreach($so as  $s){
@@ -38,14 +38,16 @@ class Consumedorder extends Controller{
             array_push($tech,$str);
             if($info){
                 array_push($user,$info->phone_number);
+                $order[$index]['username'] = $info->name;
             }
             else{
                 array_push($user,"找不到该顾客");
+                $order[$index]['username'] = "找不到该顾客";
             }
             if($info2){
                 array_push($payer,$info2->phone_number);
             }else{
-                array_push($payer,"找不到该顾客");
+                array_push($payer,"暂无");
             }
         }
         $this->assign("order",$order);

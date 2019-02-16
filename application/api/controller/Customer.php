@@ -6,7 +6,7 @@
     class Customer extends Controller{
 
         public function get_customer($id){
-            $data = UserModel::get(['ID'=>$id]);
+            $data = UserModel::get(['openid'=>$id]);
             if($data){
                 return $data;
             }

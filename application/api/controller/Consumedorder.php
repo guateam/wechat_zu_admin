@@ -2,6 +2,8 @@
     namespace app\api\controller;
     use think\Controller;
     use \app\api\model\Consumedorder as UserModel;
+    use think\Db;
+
     class Consumedorder extends Controller{
         /**
          * 获取所有订单
@@ -12,7 +14,10 @@
             $data = UserModel::all();
             return $data;
         }
-
+        public function get_all_origin(){
+            $data = Db::query("select * from consumed_order");
+            return $data;
+        }
         //订单数量
         public function pay_count(){
             $data = UserModel::all();
@@ -74,5 +79,19 @@
             }else{
                 return json(['status'=>0]);
             }
+        }
+        /**
+         * 取消预约
+         */
+        public function disappointment($order_id){
+            $order = UserModel::get(['order_id'=>$order_id]);
+            if($order){
+                $order->state = 0;
+                $order->save();
+            }else{
+                return json(['state'=>0]);
+            }
+
+            return json(['state'=>1]);
         }
     }

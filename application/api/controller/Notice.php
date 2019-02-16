@@ -2,6 +2,8 @@
     namespace app\api\controller;
     use think\Controller;
     use \app\api\model\Notice as UserModel;
+    use think\Db;
+
     class Notice extends Controller{
         /**
          * 获取所有公告
@@ -47,6 +49,40 @@
                 }else{
                     return json(['status'=>0]);
                 }
+            }
+            return json(['status'=>1]);
+        }
+        /**
+         * 
+         */
+        public function add_technotice($title,$content){
+            $notice = new \app\api\model\Technotice(['title'=>$title,'content'=>$content,'date'=>time()]);
+            $notice->save();
+            return json(['status'=>1]);
+        }
+        /**
+         * 
+         */
+        public function get_technotice(){
+            $notices = Db::query("select * from tech_notice");
+            for($i=0;$i<count($notices);$i++){
+                $notices[$i]['date'] = date("Y-m-d H:i:s",$notices[$i]['date']);
+            }
+            return $notices;
+        }
+    
+        /**
+         * 
+         */
+        public function delete_technotice($id){
+            $ids = [];
+            if(gettype($id) != "array"){
+                $ids.push($id);
+            }else{
+                $ids = $id;
+            }
+            foreach($ids as $i){
+                Db::query("delete from tech_notice where ID = '$i'");
             }
             return json(['status'=>1]);
         }

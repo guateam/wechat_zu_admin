@@ -21,7 +21,7 @@
 <![endif]-->
 	<!--/meta 作为公共模版分离出去-->
 
-	<title>发布网站公告</title>
+	<title>发布技师公告</title>
 </head>
 
 <body>
@@ -132,10 +132,10 @@
 					text = $("#text").val();
 					$(form).ajaxSubmit({
 						type: 'post', // 提交方式 get/post
-						url: '__ROOT__/index.php/api/Notice/add_notice', // 需要提交的 url
+						url: '__ROOT__/index.php/api/Notice/add_technotice', // 需要提交的 url
 						data: {
 							title: title,
-							text: text,
+							content: text,
 						},
 						success: function (result) {
 							if (result.status == 1) {

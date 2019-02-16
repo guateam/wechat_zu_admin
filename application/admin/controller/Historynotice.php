@@ -14,4 +14,14 @@ class Historynotice extends Controller{
         $this->assign("edit",$edit);
         return $this->fetch("Historynotice/lishigonggao");
     }
+
+    public function techindex($edit){
+        $ctrl =new \app\api\controller\Notice();
+        $notice = $ctrl->get_technotice();
+        $count = count($notice);
+        $this->assign("notice",$notice);
+        $this->assign("count",$count);
+        $this->assign("edit",$edit);
+        return $this->fetch("Historynotice/history_tech_notice");
+    }
 }

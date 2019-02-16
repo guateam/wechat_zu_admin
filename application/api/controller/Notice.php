@@ -60,6 +60,17 @@
             $notice->save();
             return json(['status'=>1]);
         }
+
+        public function edit_technotice($id,$title,$content){
+            $notice = \app\api\model\Technotice::get(['ID'=>$id]);
+            if(!$notice){
+                return json(['status'=>0]);
+            }
+            $notice->title = $title;
+            $notice->content = $content;
+            $notice->save();
+            return json(['status'=>1]);
+        }
         /**
          * 
          */
@@ -70,7 +81,13 @@
             }
             return $notices;
         }
-    
+
+        public function get_technotice_by_id($id){
+            $notice = Db::query("select * from tech_notice where ID = '$id'");
+            if($notice)
+                return $notice[0];
+            return null;
+        }
         /**
          * 
          */

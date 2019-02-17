@@ -265,8 +265,8 @@
                             `</td>
                                             <td>` + result[i].private_room_number +
                             `</td>
-                                            <td>` + result[i].price/100 +
-                            `￥</td>
+                                            <td>￥` + result[i].price/100 +
+                            `</td>
                                         </tr>`
                     }
                     state = $("#state" + k).html().replace(/^[\t\n\s]$/, '');
@@ -282,9 +282,9 @@
                                         <td></td>
                                         <td></td> 
                                         <td></td> 
-                                        <td>` +
+                                        <td>￥` +
                         total_price/100 +
-                        `￥</td>
+                        `</td>
                                     </tr>
                                     <tr bgcolor="#d4d4d4">
                                         <td>支付状态</td>

@@ -37,8 +37,10 @@
                         <th width="100">关门时间</th>
                         <th width="80">联系电话</th>
                         <th width="80">ip地址</th>
+                        <th width="40">技师充值提成</th>
+                        <th width="40">接待充值提成</th>
                         {if condition="$edit == 1"}
-                        <th width="80" >操作</th>
+                        <th width="80">操作</th>
                         {/if}
                     </tr>
                 </thead>
@@ -57,13 +59,19 @@
                         </td>
                         <td>{$it.ip_address}
                         </td>
+                        <td>{$it.recharge_income}
+                        </td>
+                        <td>{$it.recharge_income_2}
+                        </td>
                         {if condition="$edit == 1"}
                         <td>
-                            <a title="轮播图设置" onclick="edit_pic('轮播图设置','__ROOT__/index.php/admin/Shop/pic?id={$it.ID}',900,600)" class="ml-5" style="text-decoration:none">
+                            <a title="轮播图设置" onclick="edit_pic('轮播图设置','__ROOT__/index.php/admin/Shop/pic?id={$it.ID}',900,600)"
+                                class="ml-5" style="text-decoration:none">
                                 轮播图设置
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
-                            <a title="信息设置" onclick="edit_pic('信息设置','__ROOT__/index.php/admin/Shop/editinfo?id={$it.ID}',900,600)" class="ml-5" style="text-decoration:none">
+                            <a title="信息设置" onclick="edit_pic('信息设置','__ROOT__/index.php/admin/Shop/editinfo?id={$it.ID}',900,600)"
+                                class="ml-5" style="text-decoration:none">
                                 信息设置
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
@@ -92,7 +100,7 @@
                     //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
                     {
                         "orderable": false,
-                        "aTargets": [0, 1, 4,5]
+                        "aTargets": [0, 1, 4, 5]
                     } // 制定列不参与排序
                 ]
             });
@@ -118,8 +126,8 @@
                     "店铺地址": "update_position",
                     "开门时间": "update_opentime",
                     "关门时间": "update_closetime",
-                    "联系电话":"update_phone",
-                    "ip":"update_ip",
+                    "联系电话": "update_phone",
+                    "ip": "update_ip",
                 }
                 str = dict[fun];
                 if (result.value) {

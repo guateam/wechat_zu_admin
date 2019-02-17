@@ -55,6 +55,8 @@
             <option value="6">其他</option>
             <option value="7">美团支付</option>
         </select><br>
+        <div style="width:90px ; display:inline-block"><span style="color:red">*</span>支付金额(元):</div>
+        <input type="text" id="cash" class="theinput"><br>
         <br><br><br>
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>技师:</div>
         <select name="" id="tech" class="theinput">
@@ -140,7 +142,7 @@
             $('#confirm_service').append("<p style='display:inline-block'>技师: " + tech + "\t服务:" + service[1] + "\t包厢:" +
                 room[0] + "\t上钟类型:"+(clock==1?'排钟':'点钟') + "</p><br>")
             total_price += parseInt(service[2]) / 100;
-            $('#cost').html("总计金额：" + total_price + '元');
+            $('#cash').val(total_price);
             info.push(unit)
         }
 
@@ -160,6 +162,7 @@
                 })
                 return;
             }
+            total_price = $('#cash').val();
             $.post("__ROOT__/index.php/api/Consumedorder/create_order", {
                 info: info,
                 total_price: total_price,

@@ -98,7 +98,7 @@
                         </td>
                         <td>
                             <a title="查看详情" href="javascript:;" class="ml-5 btn btn-primary" style="text-decoration:none"
-                                onclick="detail('{$it.job_number}')">
+                                onclick="detail('{$it.job_number}',800,600)">
                                 查看详情
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
@@ -147,9 +147,9 @@
             layer_show(title, url, w, h);
         }
         // 查看某个技师的工资详情
-        function detail(job_number) {
+        function detail(job_number,w,h) {
             layer_show("工资详情", "__ROOT__/index.php/admin/Technicianlist/salary_detail/job_number/" + job_number +
-                "/begin/" + begin + "/end/" + end, 600, 800);
+                "/begin/" + begin + "/end/" + end, w, h);
         }
         /**
          * 修复翻页box的代码

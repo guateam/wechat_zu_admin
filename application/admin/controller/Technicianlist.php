@@ -93,6 +93,6 @@ class Technicianlist extends Controller{
     }
 
     public function salary_detail($job_number,$begin,$end){
-        return $this->fetch('Technicianlist/salary_detail');
+        return $this->fetch('Technicianlist/salarydetail');
     }
 }

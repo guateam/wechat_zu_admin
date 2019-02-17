@@ -18,7 +18,7 @@
             }
             $shop->save();
         }
-        public function update($shopname,$address,$open,$close,$phone,$ip,$id){
+        public function update($shopname,$address,$open,$close,$phone,$ip,$id,$recharge_income,$recharge_income_2){
             $shop = UserModel::get(['ID'=>$id]);
             if($shop){
                 $shop->name = $shopname;
@@ -27,6 +27,8 @@
                 $shop->close_time = $close;
                 $shop->phone = $phone;
                 $shop->ip_address = $ip;
+                $shop->recharge_income = $recharge_income;
+                $shop->recharge_income_2 = $recharge_income_2;
                 $shop->save();
                 return json(['status'=>1]);
             }

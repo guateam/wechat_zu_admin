@@ -6,9 +6,17 @@
     class Rechargerecord extends Controller{
 
         public function get_all(){
-            $all = UserModel::all();
+            $all = Db::query("select * from recharge_record");//UserModel::all();
             for($i=0;$i<count($all);$i++){
-                $all[$i]->generated_time = date('Y-m-d H:i:s',$all[$i]->generated_time);
+                $openid = $all[$i]['user_id'];
+                $all[$i]['generated_time'] = date('Y-m-d H:i:s',$all[$i]['generated_time']);
+                $name = Db::query("select * from customer where openid = '$openid'");
+                if($name){
+                    $all[$i]['username'] =$name[0]['name'];
+                }else{
+                    $all[$i]['username'] ="用户不存在";
+                }
+
             }
             return $all;
         }

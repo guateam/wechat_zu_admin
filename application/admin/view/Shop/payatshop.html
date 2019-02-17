@@ -33,11 +33,11 @@
 
 <body>
     <div id="step1" style="margin-top: 5px;margin-bottom: 5px;margin-left:25px;padding-left: 10px">
-        <div style="width:90px ; display:inline-block">顾客姓名</div>
+        <div style="width:90px ; display:inline-block">&nbsp;&nbsp;顾客姓名:</div>
         <input type="text" id="username" class="theinput"><br>
-        <div style="width:90px ; display:inline-block">顾客手机号</div>
+        <div style="width:90px ; display:inline-block"><span style="color:red">*</span>顾客手机号:</div>
         <input type="text" id="phone" class="theinput"><br>
-        <div style="width:90px ; display:inline-block" >支付方式:</div>
+        <div style="width:90px ; display:inline-block" ><span style="color:red">*</span>支付方式:</div>
             <select class="theinput"  name="" id="pay_method">
                 <option value="1">微信支付</option>
                 <option value="2">支付宝</option>
@@ -45,7 +45,7 @@
                 <option value="5">银行卡支付</option>
         </select>
         <br><br><br>
-        <div style="width:90px ; display:inline-block">技师:</div>
+        <div style="width:90px ; display:inline-block"><span style="color:red">*</span>技师:</div>
         <select name="" id="tech" class="theinput">
             <option value="" selected>请选择技师</option>
             {volist name="$technicians" id="it" key="k"}
@@ -53,14 +53,14 @@
             {/volist}
         </select ><br>
 
-        <div style="width:90px ; display:inline-block">服务:</div>
+        <div style="width:90px ; display:inline-block"><span style="color:red">*</span>服务:</div>
         <select name="" id="service" class="theinput">
                 {volist name="$service" id="it" key="k"}
                 <option value="{$it.ID}">{$it.name}</option>
                 {/volist}
         </select><br>
 
-        <div style="width:90px ; display:inline-block">包厢:</div>
+        <div style="width:90px ; display:inline-block"><span style="color:red">*</span>包厢:</div>
         <select name="" id="room" class="theinput">
             {volist name="$room" id="it" key="k"}
             <option value="{$it.ID},{$it.name}">{$it.name}</option>
@@ -106,6 +106,8 @@
 
         function addservice() {
             var tech = $('#tech option:selected').val()
+            if(tech == "")return;
+
             var service = $('#service option:selected').val()
             service = service.split(',')
             var room = $('#room option:selected').val()

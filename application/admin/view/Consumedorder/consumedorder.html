@@ -55,7 +55,7 @@
                         <option value="预约">预约</option>
                         <option value="服务中">服务中</option>
                         <option value="等待支付">等待支付</option>
-                        <option value="支付完成">支付完成</option>
+                        <option value="服务完成">服务完成</option>
                         <option value="评价完成">评价完成</option>
                     </select>
                 </div>
@@ -65,12 +65,12 @@
                     <tr class="text-c">
                         <th width="130">订单号</th>
                         <th width="150">订单生成时间</th>
-                        <th width="70">预约人用户名</th>
-                        <th width="70">预约人手机号</th>
-                        <th width="150">订单状态</th>
+                        <th width="80">预约人用户名</th>
+                        <th width="80">预约人手机号</th>
+                        <th width="100">订单状态</th>
                         <th width="100">技师编号</th>
                         <th width="60">付款顾客用户名</th>
-                        <th width="60">付款顾客手机号</th>
+                        <th width="80">付款顾客手机号</th>
                         <th width="150">操作</th>
                     </tr>
                 </thead>
@@ -91,7 +91,7 @@
 
                         <td id="total_state{$k-1}">{if condition="$it.state==0"}订单取消 {elseif
                             condition="$it.state==1"}预约 {elseif condition="$it.state==2"}服务中
-                            {elseif condition="$it.state==3"}等待支付{elseif condition="$it.state==4"}支付完成 {elseif
+                            {elseif condition="$it.state==3"}等待支付{elseif condition="$it.state==4"}服务完成 {elseif
                             condition="$it.state==5"}评价完成
                             {/if}</td>
                         <td>

@@ -133,7 +133,7 @@ class Shop extends Controller{
             }
         }
         $this->assign('technicians',$spare_tech);
-
+        $this->assign('service',$service);
         $this->assign('room',$room);
         return $this->fetch('Shop/payatshop');
     }

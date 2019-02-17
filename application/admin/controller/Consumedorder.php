@@ -41,13 +41,13 @@ class Consumedorder extends Controller{
                 $order[$index]['username'] = $info->name;
             }
             else{
-                array_push($user,"找不到该顾客");
-                $order[$index]['username'] = "找不到该顾客";
+                array_push($user,$od['contact_phone']);
+                $order[$index]['username'] = $od['user_id'];
             }
             if($info2){
                 array_push($payer,$info2->phone_number);
             }else{
-                array_push($payer,"暂无");
+                array_push($payer,$od['contact_phone']);
             }
         }
         $this->assign("order",$order);

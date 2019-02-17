@@ -32,58 +32,51 @@
 </head>
 
 <body>
-    <div id="step1" style="margin-top: 5px;margin-bottom: 5px;margin-left:25px;padding-left: 10px" >
-        <div style="width:60px ; display:inline-block">顾客手机号</div>
+    <div id="step1" style="margin-top: 5px;margin-bottom: 5px;margin-left:25px;padding-left: 10px">
+        <div style="width:90px ; display:inline-block">顾客姓名</div>
+        <input type="text" id="username" class="theinput"><br>
+        <div style="width:90px ; display:inline-block">顾客手机号</div>
         <input type="text" id="phone" class="theinput"><br>
+        <div style="width:90px ; display:inline-block" >支付方式:</div>
+            <select class="theinput"  name="" id="pay_method">
+                <option value="1">微信支付</option>
+                <option value="2">支付宝</option>
+                <option value="4">现金支付</option>
+                <option value="5">银行卡支付</option>
+        </select>
+        <br><br><br>
+        <div style="width:90px ; display:inline-block">技师:</div>
+        <select name="" id="tech" class="theinput">
+            <option value="" selected>请选择技师</option>
+            {volist name="$technicians" id="it" key="k"}
+            <option value="{$it.job_number}">{$it.job_number}</option>
+            {/volist}
+        </select ><br>
 
-        <div style="width:60px ; display:inline-block">服务信息
-            <span>技师:</span>
-            <select name="" id="tech">
-                <option value ="" selected>请选择技师</option>
-                {volist name="$technicians" id="it" key="k"}
-                <option value ="{$it.job_number}">{$it.job_number}</option>
+        <div style="width:90px ; display:inline-block">服务:</div>
+        <select name="" id="service" class="theinput">
+                {volist name="$service" id="it" key="k"}
+                <option value="{$it.ID}">{$it.name}</option>
                 {/volist}
-            </select>
-            <span>服务:</span><br>
-            <select name="" id="service">
+        </select><br>
 
-            </select><br>
-            <span>包厢:</span>
-            <select name="" id="room">
-                    {volist name="$room" id="it" key="k"}
-                    <option value ="{$it.ID},{$it.name}">{$it.name}</option>
-                    {/volist}
-            </select>
-            <button id="add" onclick="addservice()" disabled>添加服务信息</button>
-        </div>
-        
-        <div>
-            <span id="confirm_service">已选服务：</span>
-        </div>
-        <button onclick="next()" class="btn btn-primary radius" style="margin-left: 10px;margin-top: 6px;width: 90px">下一步
+        <div style="width:90px ; display:inline-block">包厢:</div>
+        <select name="" id="room" class="theinput">
+            {volist name="$room" id="it" key="k"}
+            <option value="{$it.ID},{$it.name}">{$it.name}</option>
+            {/volist}
+        </select><br>
+
+        <div style="width:90px ; display:inline-block"></div>
+        <button id="add" onclick="addservice()" class="btn btn-primary" style="margin-top: 6px;width: 90px" disabled>添加服务
+        </button><br><br>
+
+        <div style="width:90px ; display:inline-block">已选服务:</div>
+        <div id="confirm_service"></div>
+
+        <div style="width:90px ; display:inline-block" ></div>
+        <button onclick="done()" class="btn btn-primary" style="margin-top: 6px;width: 90px">订单支付
         </button>
-    </div>
-    <div id="step2" style="margin-top: 5px;margin-bottom: 5px;margin-left:25px;padding-left: 10px" hidden >
-            <div style="width:60px ; display:inline-block">顾客手机号:
-                <span id="display_phone"></span>
-            </div>
-            <div>
-                <span id="confirm_service_2">已选服务：</span>
-                <span id="cost"></span>
-            </div>
-            <div>
-                <span>支付方式:</span>
-                <select name="" id="pay_method"> 
-                        <option value ="1">微信支付</option>
-                        <option value ="2">支付宝</option>
-                        <option value ="4">现金支付</option>
-                        <option value ="5">银行卡支付</option>
-                </select>
-            </div>
-            <button onclick="prev()" class="btn btn-primary radius" style="margin-left: 10px;margin-top: 6px;width: 90px">上一步
-            </button>
-            <button onclick="done()" class="btn btn-primary radius" style="margin-left: 10px;margin-top: 6px;width: 90px">创建订单
-                </button>
     </div>
     {include file="common/common_script"}
     <!--请在下方写此页面业务相关的脚本-->
@@ -91,75 +84,73 @@
     <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
     <script type="text/javascript">
-    var info = []
-    var total_price = 0
-    var phone = ""
-    $('#tech').change(()=>{
-        
-        $("#add").attr('disabled',true);
-        var choosen =  $('#tech option:selected').val()
-        if(choosen == "")return;
-        $.post('__ROOT__/index.php/api/Skill/get_skill',{
-            job_number:choosen
-        }).done((res)=>{
-            $('#service').empty()
-            for(var i=0;i<res.length;i++){
-                $('#service').append("<option value ='"+res[i]['ID']+','+res[i]['name']+','+res[i]['price']+"'>"+res[i]['name']+"</option>")
-            }
-            $("#add").attr('disabled',false);
+        var info = []
+        var total_price = 0
+        var phone = ""
+        $('#tech').change(() => {
+
+            $("#add").attr('disabled', true);
+            var choosen = $('#tech option:selected').val()
+            if (choosen == "") return;
+            $.post('__ROOT__/index.php/api/Skill/get_skill', {
+                job_number: choosen
+            }).done((res) => {
+                $('#service').empty()
+                for (var i = 0; i < res.length; i++) {
+                    $('#service').append("<option value ='" + res[i]['ID'] + ',' + res[i]['name'] + ',' +
+                        res[i]['price'] + "'>" + res[i]['name'] + "</option>")
+                }
+                $("#add").attr('disabled', false);
+            })
         })
-    })
-        function addservice(){
+
+        function addservice() {
             var tech = $('#tech option:selected').val()
             var service = $('#service option:selected').val()
             service = service.split(',')
             var room = $('#room option:selected').val()
             room = room.split(',')
+            var unit = {
+                'job_number': tech,
+                'service_id': service[0],
+                'price': service[2],
+                'room_number': room[0]
+            }
 
-            $('#confirm_service').append("<p>技师: "+tech+"\t服务:"+service[1]+"\t包厢:"+room[0])
-            $('#confirm_service_2').append("<p>技师: "+tech+"\t服务:"+service[1]+"\t包厢:"+room[0])
-            total_price+=parseInt(service[2])/100;
-            $('#cost').html("总计金额："+total_price+'元');
-            info.push({'job_number':tech,'service_id':service[0],'price':service[2],'room_number':room[0]})
+            $('#confirm_service').append("<p style='display:inline-block'>技师: " + tech + "\t服务:" + service[1] + "\t包厢:" + room[0] +"</p><br>")
+            total_price += parseInt(service[2]) / 100;
+            $('#cost').html("总计金额：" + total_price + '元');
+            info.push(unit)
         }
-        function next(){
+
+        function done() {
             phone = $('#phone').val()
-            if(phone == ""){
+            if (phone == "") {
                 swal({
-                    title:"",
-                    text:"手机号不能为空"
+                    title: "",
+                    text: "手机号不能为空"
                 })
                 return;
             }
-            if (info.length == 0){
+            if (info.length == 0) {
                 swal({
-                    title:"",
-                    text:"选择的服务不能为空"
+                    title: "",
+                    text: "选择的服务不能为空"
                 })
                 return;
             }
-            $("#display_phone").html(phone)
-            $('#step1').hide();
-            $('#step2').show();
-            
-        }
-        function prev(){
-            $('#step2').hide();
-            $('#step1').show();
-        }
-
-        function done(){
-            $.post("__ROOT__/index.php/api/Consumedorder/create_order",{
-                info:info,
-                total_price:total_price,
-                phone:phone,
-                method:$('#pay_method option:selected').val()
-            }).done((res)=>{
-                if(res.status == 1){
+            $.post("__ROOT__/index.php/api/Consumedorder/create_order", {
+                info: info,
+                total_price: total_price,
+                phone: phone,
+                method: $('#pay_method option:selected').val(),
+                username:$('#username').val()
+            }).done((res) => {
+                if (res.status == 1) {
                     swal({
-                        title:"订单创建成功",
-                        text:"订单号为"+res.data,
-                        type:"success"
+                        title: "订单创建成功",
+                        text: "订单号为" + res.data,
+                        type: "success"
                     })
                     location.reload();
                 }

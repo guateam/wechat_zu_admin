@@ -32,18 +32,27 @@
 </head>
 
 <body>
+    <nav class="breadcrumb">
+        <i class="Hui-iconfont">&#xe67f;</i> 首页
+        <span class="c-gray en">&gt;</span> 服务管理
+        <span class="c-gray en">&gt;</span> 到店支付
+        <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);"
+            title="刷新">
+            <i class="Hui-iconfont">&#xe68f;</i>
+        </a>
+    </nav>
     <div id="step1" style="margin-top: 5px;margin-bottom: 5px;margin-left:25px;padding-left: 10px">
         <div style="width:90px ; display:inline-block">&nbsp;&nbsp;顾客姓名:</div>
         <input type="text" id="username" class="theinput"><br>
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>顾客手机号:</div>
         <input type="text" id="phone" class="theinput"><br>
-        <div style="width:90px ; display:inline-block" ><span style="color:red">*</span>支付方式:</div>
-            <select class="theinput"  name="" id="pay_method">
-                <option value="1">微信支付</option>
-                <option value="2">支付宝</option>
-                <option value="4">现金支付</option>
-                <option value="5">银行卡支付</option>
-                <option value="6">其他</option>
+        <div style="width:90px ; display:inline-block"><span style="color:red">*</span>支付方式:</div>
+        <select class="theinput" name="" id="pay_method">
+            <option value="1">微信支付</option>
+            <option value="2">支付宝</option>
+            <option value="4">现金支付</option>
+            <option value="5">银行卡支付</option>
+            <option value="6">其他</option>
         </select>
         <br><br><br>
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>技师:</div>
@@ -52,13 +61,13 @@
             {volist name="$technicians" id="it" key="k"}
             <option value="{$it.job_number}">{$it.job_number}</option>
             {/volist}
-        </select ><br>
+        </select><br>
 
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>服务:</div>
         <select name="" id="service" class="theinput">
-                {volist name="$service" id="it" key="k"}
-                <option value="{$it.ID}">{$it.name}</option>
-                {/volist}
+            {volist name="$service" id="it" key="k"}
+            <option value="{$it.ID}">{$it.name}</option>
+            {/volist}
         </select><br>
 
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>包厢:</div>
@@ -75,7 +84,7 @@
         <div style="width:90px ; display:inline-block">已选服务:</div>
         <div id="confirm_service"></div>
 
-        <div style="width:90px ; display:inline-block" ></div>
+        <div style="width:90px ; display:inline-block"></div>
         <button onclick="done()" class="btn btn-primary" style="margin-top: 6px;width: 90px">订单支付
         </button>
     </div>
@@ -107,7 +116,7 @@
 
         function addservice() {
             var tech = $('#tech option:selected').val()
-            if(tech == "")return;
+            if (tech == "") return;
 
             var service = $('#service option:selected').val()
             service = service.split(',')
@@ -120,7 +129,8 @@
                 'room_number': room[0]
             }
 
-            $('#confirm_service').append("<p style='display:inline-block'>技师: " + tech + "\t服务:" + service[1] + "\t包厢:" + room[0] +"</p><br>")
+            $('#confirm_service').append("<p style='display:inline-block'>技师: " + tech + "\t服务:" + service[1] + "\t包厢:" +
+                room[0] + "</p><br>")
             total_price += parseInt(service[2]) / 100;
             $('#cost').html("总计金额：" + total_price + '元');
             info.push(unit)
@@ -147,7 +157,7 @@
                 total_price: total_price,
                 phone: phone,
                 method: $('#pay_method option:selected').val(),
-                username:$('#username').val()
+                username: $('#username').val()
             }).done((res) => {
                 if (res.status == 1) {
                     swal({

@@ -20,27 +20,36 @@
 </head>
 
 <body>
+    <nav class="breadcrumb">
+        <i class="Hui-iconfont">&#xe67f;</i> 首页
+        <span class="c-gray en">&gt;</span> 服务管理
+        <span class="c-gray en">&gt;</span> 服务列表
+        <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);"
+            title="刷新">
+            <i class="Hui-iconfont">&#xe68f;</i>
+        </a>
+    </nav>
     <div class="page-container">
         <div class="cl pd-5 bg-1 bk-gray mt-20">
             <span class="l">
                 {if condition="$edit == 1"}
-                    <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
-                        <i class="Hui-iconfont">&#xe6e2;</i>
-                        批量删除
-                    </a>
-                    <a href="javascript:;" onclick="member_add('添加服务','__ROOT__/index.php/admin/Addservice/addservice','','510')"
-                        class="btn btn-primary radius">
-                        <i class="Hui-iconfont">&#xe600;</i>
-                        添加项目
-                    </a>
+                <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
+                    <i class="Hui-iconfont">&#xe6e2;</i>
+                    批量删除
+                </a>
+                <a href="javascript:;" onclick="member_add('添加服务','__ROOT__/index.php/admin/Addservice/addservice','','510')"
+                    class="btn btn-primary radius">
+                    <i class="Hui-iconfont">&#xe600;</i>
+                    添加项目
+                </a>
 
-                    {if condition="$shop.appoint_allow==1"}
-                    <a href="javascript:;" onclick="change_state()" class="btn btn-danger radius">禁止预约</a>
-                    <span>预约状态:开放</span>
-                    {else /}
-                    <a href="javascript:;" onclick="change_state()" class="btn btn-success radius">开放预约</a>
-                    <span>预约状态:禁止</span>
-                    {/if}
+                {if condition="$shop.appoint_allow==1"}
+                <a href="javascript:;" onclick="change_state()" class="btn btn-danger radius">禁止预约</a>
+                <span>预约状态:开放</span>
+                {else /}
+                <a href="javascript:;" onclick="change_state()" class="btn btn-success radius">开放预约</a>
+                <span>预约状态:禁止</span>
+                {/if}
                 {/if}
             </span>
             <span class="r">共有数据：<strong>{$count}</strong>条</span>
@@ -70,19 +79,19 @@
                         <td><input type="checkbox" value="1" name=""></td>
                         <td>{$it.name}</td>
                         <td>￥{$it.market_price/100}
-                           
+
                         </td>
                         <td>￥{$it.price/100}
-                           
+
                         </td>
                         <td>{$it.duration}分钟
-                           
+
                         </td>
                         <td>￥{$it.commission/100}
-                           
+
                         </td>
                         <td>￥{$it.commission2/100}
-                           
+
                         </td>
                         <td>￥{$it.invite_income/100}</td>
                         <td>
@@ -99,10 +108,10 @@
                                 <i class="Hui-iconfont">&#xe6e2;</i>
                                 删除
                             </a>
-                            <a title="详细设定" href="javascript:;" onclick="layer_show('服务详情','__ROOT__/index.php/admin/Servicelist/detail/id/{$it.ID}')" class="ml-5 btn btn-info"
-                                style="text-decoration:none">
+                            <a title="详细设定" href="javascript:;" onclick="layer_show('服务详情','__ROOT__/index.php/admin/Servicelist/detail/id/{$it.ID}')"
+                                class="ml-5 btn btn-info" style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6df;</i>
-                               详细设定
+                                详细设定
                             </a>
                         </td>
                         {/if}

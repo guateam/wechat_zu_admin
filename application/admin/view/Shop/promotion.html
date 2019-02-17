@@ -20,6 +20,15 @@
 </head>
 
 <body>
+    <nav class="breadcrumb">
+        <i class="Hui-iconfont">&#xe67f;</i> 首页
+        <span class="c-gray en">&gt;</span> 店铺管理
+        <span class="c-gray en">&gt;</span> 活动设置
+        <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);"
+            title="刷新">
+            <i class="Hui-iconfont">&#xe68f;</i>
+        </a>
+    </nav>
     <div class="page-container">
         <div class="cl pd-5 bg-1 bk-gray mt-20">
             <span>
@@ -100,7 +109,7 @@
         function member_add(title, url, w, h) {
             layer_show(title, url, w, h);
         }
-        
+
         /*用户-编辑*/
         function member_edit(title, url, id, w, h) {
             layer_show(title, url, w, h);

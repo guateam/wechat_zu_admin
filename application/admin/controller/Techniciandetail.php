@@ -21,7 +21,7 @@ class Techniciandetail extends Controller{
         $skill = $skill_ctrl->get_skill($jbnb);
         $skill_name = [];
         foreach($skill as $sk){
-           array_push($skill_name,$serve_ctrl->getservicename($sk->service_id));
+           array_push($skill_name,$serve_ctrl->getservicename($sk['service_id']));
         }
         $technician->birthday=substr($technician->birthday,0,10);
 

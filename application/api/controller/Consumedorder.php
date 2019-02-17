@@ -91,7 +91,25 @@
             }else{
                 return json(['state'=>0]);
             }
-
             return json(['state'=>1]);
+        }
+
+        public function create_order($info,$total_price,$phone,$method){
+            $time = time();
+            $order_id = strval(date("Ymdhis",$time));
+            for($i=0;$i<10;$i++){
+                $order_id .= strval(rand(0,9));
+            }
+            $order = new UserModel(['order_id'=>$order_id,'user_id'=>'到店支付，未提供用户名',
+            'state'=>2,'payment_method'=>$method,'generated_time'=>$time,'appoint_time'=>$time,'contact_phone'=>$phone,
+            'pay_amount'=>$total_price,'user_num'=>1]);
+            $order->save();
+            foreach($info as $it){
+                $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
+                'item_id'=>$it['service_id'],'job_number'=>$it['job_number'],'price'=>$it['price'],
+                'private_room_number'=>$it['room_number'],'clock_type'=>1]);
+                $sv_order->save();
+            }
+            return json(['status'=>1,'data'=>$order_id]);
         }
     }

@@ -2,6 +2,8 @@
     namespace app\api\controller;
     use think\Controller;
     use \app\api\model\Skill as UserModel;
+    use think\Db;
+
     class Skill extends Controller{
         /**
          * 获取指定技师的技能列表
@@ -9,7 +11,16 @@
          * @param string $job_number 工号
          */
         public function get_skill($job_number){
-            $skill_list = UserModel::all(['job_number'=>$job_number]);
+            $skill_list = Db::query("select * from skill where job_number='$job_number'");
+            $ctrl = new \app\api\controller\Servicetype();
+            foreach($skill_list as $idx => $sk){
+                $name = $ctrl->getservicename($sk['service_id']);
+                $price = $ctrl->getserviceprice($sk['service_id']);
+                if($name){
+                    $skill_list[$idx]['name'] = $name;
+                    $skill_list[$idx]['price'] = $price;
+                }
+            }
             return $skill_list;
         }
         public function get_skill_name($job_number){

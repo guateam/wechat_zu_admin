@@ -69,18 +69,20 @@
                         <th width="80">预约人手机号</th>
                         <th width="100">订单状态</th>
                         <th width="100">技师编号</th>
+                        <th width="30">上钟类型</th>
                         <th width="60">付款顾客用户名</th>
                         <th width="80">付款顾客手机号</th>
                         <th width="50">付款方式</th>
                         <th width="50">付款金额</th>
-                        <th width="120">操作</th>
+                        <th width="100">操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     {volist name="$order" id="it" key="k"}
                     <p hidden id="state{$k-1}">{if condition="$it.payment_method==1"}微信支付{elseif
-                        condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif
-                        condition="$it.payment_method==4"}现金 {else /}未支付{/if}</p>
+                            condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif
+                            condition="$it.payment_method==4"}现金 {elseif condition="$it.payment_method==5"}银行卡支付{elseif
+                            condition="$it.payment_method==6"}其他{elseif condition="$it.payment_method==7"}美团支付{/if}</p>
                     <tr class="text-c" id="row{$k-1}">
                         <td>{$it.order_id}</td>
                         <td id="time{$k-1}">{$it.generated_time}</td>
@@ -99,12 +101,13 @@
                         <td>
                             {$tech[$k-1]}
                         </td>
+                        <td>{if condition="$it.clock_type == 1"}排钟{elseif condition="$it.clock_type == 2"}点钟{/if}</td>
                         <td class="">{$it.payment_user_id}</td>
                         <td class="">{$phone2[$k-1]}</td>
                         <td class="">{if condition="$it.payment_method==1"}微信支付{elseif
                                 condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif
-                                condition="$it.payment_method==4"}现金 {elseif condition="$it.payment_method==5"}银行卡支付{else/}
-                                其他{/if}</td>
+                                condition="$it.payment_method==4"}现金 {elseif condition="$it.payment_method==5"}银行卡支付{elseif
+                                condition="$it.payment_method==6"}其他{elseif condition="$it.payment_method==7"}美团支付{/if}</td>
                         <td class="">￥{$it.pay_amount}</td>
                         <td class="td-manage">
                             {if condition="$it.state==1"}

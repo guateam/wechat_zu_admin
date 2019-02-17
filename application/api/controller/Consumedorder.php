@@ -107,7 +107,7 @@
             foreach($info as $it){
                 $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
                 'item_id'=>$it['service_id'],'job_number'=>$it['job_number'],'price'=>$it['price'],
-                'private_room_number'=>$it['room_number'],'clock_type'=>1]);
+                'private_room_number'=>$it['room_number'],'clock_type'=>$it['clock']]);
                 $sv_order->save();
             }
             return json(['status'=>1,'data'=>$order_id]);

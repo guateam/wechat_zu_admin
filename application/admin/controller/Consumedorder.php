@@ -20,6 +20,9 @@ class Consumedorder extends Controller{
             $so = \app\api\model\Serviceorder::all(['order_id'=>$od['order_id']]);
             $str = "";
             $exist = [];
+            if($so){
+                $order[$index]['clock_type'] = $so[0]['clock_type'];
+            }
             foreach($so as  $s){
                 $repeat = false;
                 foreach($exist as $ex){

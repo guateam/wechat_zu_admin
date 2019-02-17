@@ -53,7 +53,8 @@
             <option value="4">现金支付</option>
             <option value="5">银行卡支付</option>
             <option value="6">其他</option>
-        </select>
+            <option value="7">美团支付</option>
+        </select><br>
         <br><br><br>
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>技师:</div>
         <select name="" id="tech" class="theinput">
@@ -76,7 +77,11 @@
             <option value="{$it.ID},{$it.name}">{$it.name}</option>
             {/volist}
         </select><br>
-
+        <div style="width:90px ; display:inline-block"><span style="color:red">*</span>上钟类型:</div>
+        <select class="theinput" name="" id="clock">
+            <option value="1">排钟</option>
+            <option value="2">点钟</option>
+        </select>
         <div style="width:90px ; display:inline-block"></div>
         <button id="add" onclick="addservice()" class="btn btn-primary" style="margin-top: 6px;width: 90px" disabled>添加服务
         </button><br><br>
@@ -122,15 +127,18 @@
             service = service.split(',')
             var room = $('#room option:selected').val()
             room = room.split(',')
+            var clock = $('#clock option:selected').val()
+
             var unit = {
                 'job_number': tech,
                 'service_id': service[0],
                 'price': service[2],
-                'room_number': room[0]
+                'room_number': room[0],
+                'clock':clock
             }
-
+            
             $('#confirm_service').append("<p style='display:inline-block'>技师: " + tech + "\t服务:" + service[1] + "\t包厢:" +
-                room[0] + "</p><br>")
+                room[0] + "\t上钟类型:"+(clock==1?'排钟':'点钟') + "</p><br>")
             total_price += parseInt(service[2]) / 100;
             $('#cost').html("总计金额：" + total_price + '元');
             info.push(unit)

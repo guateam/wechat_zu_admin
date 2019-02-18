@@ -57,7 +57,8 @@
         </select><br>
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>支付金额(元):</div>
         <input type="text" id="cash" class="theinput"><br>
-        <br><br><br>
+        <div style="width:90px ; display:inline-block">&nbsp;&nbsp;</span>订单备注:</div>
+        <input type="text" id="note" class="theinput"><br>
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>技师:</div>
         <select name="" id="tech" class="theinput">
             <option value="" selected>请选择技师</option>
@@ -141,8 +142,9 @@
             
             $('#confirm_service').append("<p style='display:inline-block'>技师: " + tech + "\t服务:" + service[1] + "\t包厢:" +
                 room[0] + "\t上钟类型:"+(clock==1?'排钟':'点钟') + "</p><br>")
-            total_price += parseInt(service[2]) / 100;
-            $('#cash').val(total_price);
+            //总价通过服务价格自动计算，暂时改成手动输入
+            //total_price += parseInt(service[2]) / 100;
+            //$('#cash').val(total_price);
             info.push(unit)
         }
 
@@ -162,13 +164,21 @@
                 })
                 return;
             }
+            if ( $("#cash").val() == "" ) {
+                swal({
+                    title: "",
+                    text: "金额不能为空"
+                })
+                return;
+            }
             total_price = $('#cash').val();
             $.post("__ROOT__/index.php/api/Consumedorder/create_order", {
                 info: info,
                 total_price: total_price,
                 phone: phone,
                 method: $('#pay_method option:selected').val(),
-                username: $('#username').val()
+                username: $('#username').val(),
+                note:$('#note').val()
             }).done((res) => {
                 if (res.status == 1) {
                     swal({

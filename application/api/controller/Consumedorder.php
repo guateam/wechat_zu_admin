@@ -94,7 +94,7 @@
             return json(['state'=>1]);
         }
 
-        public function create_order($info,$total_price,$phone,$method,$username){
+        public function create_order($info,$total_price,$phone,$method,$username,$note){
             $time = time();
             $order_id = strval(date("Ymdhis",$time));
             for($i=0;$i<10;$i++){
@@ -102,7 +102,7 @@
             }
             $order = new UserModel(['order_id'=>$order_id,'user_id'=>$username,
             'state'=>4,'payment_method'=>$method,'generated_time'=>$time,'appoint_time'=>$time,'contact_phone'=>$phone,
-            'pay_amount'=>$total_price,'user_num'=>1,'payment_user_id'=>$username]);
+            'pay_amount'=>$total_price,'user_num'=>1,'payment_user_id'=>$username,'note'=>$note]);
             $order->save();
             foreach($info as $it){
                 $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,

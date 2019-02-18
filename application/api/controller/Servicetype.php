@@ -295,7 +295,7 @@
          * 更新服务的详细信息
          */
         public function  update_info($id,$name,$procedure,$attention,$benefit,$price,$market_price,
-        $duration,$commission,$commission2,$have_level,$index_show,$invite_income,$belong_to){
+        $duration,$commission,$commission2,$have_level,$index_show,$invite_income,$belong_to,$pai_commission,$pai_commission2){
             $data = \app\api\model\Servicetype::get(['ID'=>$id]);
             $have_new_img = true;
             if($data){
@@ -347,6 +347,8 @@
                 $data->index_show = $index_show;
                 $data->invite_income = $invite_income;
                 $data->belong_to = $belong_to;
+                $data->pai_commission = $pai_commission;
+                $data->pai_commission2 = $pai_commission2;
                 $data->save();
                 return json(['status'=>1]);
             }

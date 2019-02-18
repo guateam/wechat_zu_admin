@@ -20,21 +20,33 @@
 </head>
 
 <body>
-        <nav class="breadcrumb">
-                <i class="Hui-iconfont">&#xe67f;</i> 首页
-                <span class="c-gray en">&gt;</span> 技师管理
-                <span class="c-gray en">&gt;</span> 业绩查询
-                <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);"
-                    title="刷新">
-                    <i class="Hui-iconfont">&#xe68f;</i>
-                </a>
-            </nav>
+    <nav class="breadcrumb">
+        <i class="Hui-iconfont">&#xe67f;</i> 首页
+        <span class="c-gray en">&gt;</span> 技师管理
+        <span class="c-gray en">&gt;</span> 业绩查询
+        <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);"
+            title="刷新">
+            <i class="Hui-iconfont">&#xe68f;</i>
+        </a>
+    </nav>
     <div class="page-container">
+        <div class="text-c"> 日期范围：
+            <input type="text" onfocus="WdatePicker({})" value="" id="datemin" class="input-text Wdate" style="width:120px;">
+            -
+            <input type="text" onfocus="WdatePicker({})" value="" id="datemax" class="input-text Wdate" style="width:120px;">
+            <button type="button" class="btn btn-success radius" id="search" name="">
+                <i class="Hui-iconfont">&#xe665;</i> 搜记录
+            </button>
+            <button type="button" onclick="location.reload()" class="btn btn-success radius" id="refresh" name="">
+                清空筛选条件
+            </button>
+        </div>
         <div class="cl pd-5 bg-1 bk-gray mt-20">
             <span class="r">
                 共有数据：<strong>{$count}</strong>
                 条
             </span>
+            <span>时间范围：{$begin} - {$end}</span>
         </div>
         <div class="mt-20">
             <table class="table table-border table-bordered table-hover table-bg table-sort">
@@ -184,6 +196,29 @@
                 }
             })
         }
+
+        $("#search").on("click", () => {
+            if ($("#datemin").val() == "" || $("#datemax").val() == "") {
+                swal({
+                    title: "请填写完整的时间段"
+                })
+                return;
+            }
+
+            begin = $("#datemin").val();
+            end = $("#datemax").val();
+            swal({
+                title: "搜索中...",
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                showCloseButton: false,
+                onOpen: () => {
+                    swal.showLoading()
+                },
+            })
+            window.location.href = "/wechat_zu_admin/public/index.php/admin/Yeji/index/edit/{$edit}/first_day/" +
+                begin + "/last_day/" + end
+        })
     </script>
 </body>
 

@@ -9,6 +9,7 @@ class Consumedorder extends Controller{
     public function index($edit){
         $ctrl =new \app\api\controller\Consumedorder();
         $cs = new \app\api\controller\Customer();
+
         $order = $ctrl->get_all_origin();
         $tech = [];
         $user = [];
@@ -65,7 +66,60 @@ class Consumedorder extends Controller{
 
     public function change($order_id){
         $order = Db::query("select * from consumed_order where order_id='$order_id'");
+        $svod = Db::query("select * from service_order where order_id = '$order_id'");
+        $room = Db::query("select ID,name from private_room");
+
+        foreach($svod as $idx => $sv){
+            $service_id = $sv['item_id'];
+            $name = Db::query("select name from service_type where ID='$service_id'");
+            if($name){
+                $svod[$idx]['name'] = $name[0]['name'];
+            }
+        }
+        $technicians = Db::query("select * from technician");
+        $service = Db::query("select ID,name,price from service_type");
+        $room = Db::query("select ID,name from private_room");
+        $spare_tech = [];
+        //去除有约的技师
+        foreach($technicians as $idx => $tc){
+            $job_number = $tc['job_number'];
+            $select_time = time();
+            //获取刷钟情况
+            $clock = Db::query("select state from clock where job_number = '$job_number' order by `time` limit 1");
+            //获取预约情况
+            $appoint_tech = Db::query("select * from service_order where job_number = '$job_number' and appoint_time > ($select_time - (select Sum(duration)*60 from service_order A,service_type B where A.item_id = B.ID and A.order_id =(select order_id from service_order where job_number = '$job_number' and appoint_time < $select_time order by appoint_time desc limit 1)  ))");
+            //是否在上钟
+            $up_clock = false;
+            //是否被预约
+            $already_appoint = false;
+            //若有刷钟记录
+            if($clock){
+                //若最近的刷钟记录为上钟，则上钟情况为true
+                if($clock[0]['state'] == 1)
+                    $up_clock = true;
+            }
+            //若有预约
+            if($appoint_tech){
+                //预约情况为true
+                $already_appoint = true;
+            }
+
+            if(!$already_appoint && !$up_clock){
+                array_push($spare_tech,$tc);
+            }
+        }
+        for($i=0;$i<count($svod);$i++){
+            $ctrl = new \app\api\controller\Skill();
+            $skills = $ctrl->get_skill($svod[$i]['job_number']);
+            $svod[$i]['skill'] = $skills;
+        }
+
+        $this->assign('technicians',$spare_tech);
         $this->assign('order',$order[0]);
+        $this->assign('service_orders',$svod);
+        $this->assign('service_num',count($svod));
+        $this->assign('room',$room);
+
         return $this->fetch('Consumedorder/editorder');
     }
 }

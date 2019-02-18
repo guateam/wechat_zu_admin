@@ -46,8 +46,14 @@
         <div style="width:90px ; display:inline-block">订单号:</div>
         <input style="margin-bottom: 10px" type="text" id="order_id" class="theinput" value="{$order['order_id']}"><br>
         <div style="width:90px ; display:inline-block">订单状态:</div>
-        <input style="margin-bottom: 10px" type="text" id="state" class="theinput" value="{$order['state']}"><br>
-        <p style="font-size:10px">（上述状态填数字  0为订单取消  1为预约  2为服务中  3为等待支付  4为服务完成  5为评价完成）</p>
+        <select class="theinput" name="" id="state">
+                <option value="0"{if condition="$order['state'] == 0"}selected{/if} >订单取消</option>
+                <option value="3"{if condition="$order['state'] == 3"}selected{/if}>等待支付</option>
+                <option value="1"{if condition="$order['state'] == 1"}selected{/if}>预约</option>
+                <option value="2"{if condition="$order['state'] == 2"}selected{/if}>服务中</option>
+                <option value="4"{if condition="$order['state'] == 4"}selected{/if}>服务完成</option>
+                <option value="5"{if condition="$order['state'] == 5"}selected{/if}>评价完成</option>
+        </select><br>
         <div style="width:90px ; display:inline-block">支付方式:</div>
         <select class="theinput" name="" id="pay_method">
                 <option value="1"{if condition="$order['payment_method'] == 1"}selected{/if} >微信支付</option>
@@ -61,13 +67,43 @@
         <input style="margin-bottom: 10px" type="text" id="cash" class="theinput" value="{$order['pay_amount']}"><br>
         <div style="width:90px ; display:inline-block">上钟时间:</div>
         <input style="margin-bottom: 10px"  type="text" id="appoint_time" class="theinput" value="{$order['appoint_time']}"><br>
-        <div style="width:90px ; display:inline-block">顾客数量:</div>
-        <input style="margin-bottom: 10px"  type="text" id="num" class="theinput" value="{$order['user_num']}"><br>
+        {if condition="$order['state'] == 1 or $order['state'] == 3"}
+        <div style="width:90px ; display:inline-block">服务情况:</div>
+        {volist name="$service_orders" id="it" key="j"}
+        <span>技师:</span>
+        <select name="" {if condition="$j==1"}id="positionZero"{/if} onchange="link(this)" >
+                <option value="{$it['job_number']}" selected>{$it['job_number']}</option>
+                {volist name="$technicians" id="tc" key="k"}
+                <option value="{$tc.job_number}">{$tc.job_number}</option>
+                {/volist}
+        </select>
+        <span>服务:</span>
+        <select name="" id="tech">
+            {volist name="$it['skill']" id="sk" key="l"}
+            <option value="{$sk['service_id']}" {if condition="$it['item_id']==$sk['service_id']"}selected{/if}>{$sk['name']}</option>
+            {/volist}
+        </select>
+        <span>上钟类型</span>
+        <select name="" id="tech">
+                <option value="1" {if condition="$it['clock_type']==1"}selected{/if}>排钟</option>
+                <option value="2" {if condition="$it['clock_type']==2"}selected{/if}>点钟</option>
+        </select>
+        <span>包厢</span>
+        <select>
+            {volist name="$room" id="rm" key='m'}
+            <option value="{$rm.ID},{$rm.name}">{$rm.name}</option>
+            {/volist}
+        </select>
+        <br>
+        <div style="width:90px ; display:inline-block"></div>
+        {/volist}
+        {/if}
+        <br>
         <div style="width:90px ; display:inline-block">备注:</div>
         <input style="margin-bottom: 10px"  type="text" id="note" class="theinput" value="{$order['note']}"><br>
 
         <div style="width:90px ; display:inline-block"></div>
-        <button onclick="done()" class="btn btn-primary" style="margin-top: 6px;width: 90px">订单修改
+        <button onclick="done()" class="btn btn-primary" id="modify" style="margin-top: 6px;width: 90px">订单修改
         </button>
     </div>
     {include file="common/common_script"}
@@ -76,9 +112,25 @@
     <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
     <script type="text/javascript">
-    
+        function link(e){
+            //e是技师下拉框，两个next后是服务下拉框
+            service = $(e).next().next();
+            $("#modify").attr('disabled', true);
+            var choosen = $(e).val();
+            $.post('__ROOT__/index.php/api/Skill/get_skill', {
+                job_number: choosen
+            }).done((res) => {
+                $(service).empty()
+                for (var i = 0; i < res.length; i++) {
+                    $(service).append("<option value ='" + res[i]['service_id'] + ',' + res[i]['name'] + ',' +
+                        res[i]['price'] + "'>" + res[i]['name'] + "</option>")
+                }
+                $("#modify").attr('disabled', false);
+            })
+        }
         function done() {
             phone = $('#phone').val()
+            info = [];
             if (phone == "") {
                 swal({
                     title: "",
@@ -100,13 +152,6 @@
                 })
                 return;
             }
-            if ($('#state').val() == "") {
-                swal({
-                    title: "",
-                    text: "订单状态不能为空"
-                })
-                return;
-            }
             if ($('#appoint_time').val() == "") {
                 swal({
                     title: "",
@@ -121,10 +166,34 @@
                 })
                 return;
             }
+            tech = $('#positionZero');
+            for(i=0;i<{$service_num};i++){
+                var service = tech.next().next();
+                var clock = service.next().next();
+                var room = clock.next().next();
+
+                var job_number = tech.val()
+                var service_data = service.val();
+                var clock_data = clock.val();
+                var room_data = room.val();
+
+                service_data = service_data.split(',')
+                room_data = room_data.split(',')
+
+                data = {
+                    'job_number': job_number,
+                    'service_id': service_data[0],
+                    'clock':clock_data,
+                    'room_number':room_data[0]
+                }
+                info.push(data);
+                tech = room.next().next().next().next();
+            }
             total_price = $('#cash').val();
             $.post("__ROOT__/index.php/api/Consumedorder/update_order", {
                 order_id: $('#order_id').val(),
-                state: $('#state').val(),
+                info:info,
+                state: $('#state option:selected').val(),
                 pay_method: $('#pay_method option:selected').val(),
                 cash: $('#cash').val(),
                 appoint_time: $('#appoint_time').val(),

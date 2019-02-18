@@ -113,8 +113,13 @@
             return json(['status'=>1,'data'=>$order_id]);
         }
 
-        public function update_order($order_id,$state,$pay_method,$cash,$appoint_time,$note){
+        public function update_order($order_id,$info,$state,$pay_method,$cash,$appoint_time,$note){
             $order = UserModel::get(['order_id'=>$order_id]);
+            $service_orders = Db::query("select * from service_order where order_id='$order_id'");
+            for($i=0;$i<count($info);$i++){
+                $info[$i]['appoint_time']=$service_orders[$i]['appoint_time'];
+            }
+            Db::query("delete from service_order where order_id='$order_id'");
             if($order){
                 $order->state = $state;
                 $order->payment_method = $pay_method;
@@ -122,6 +127,19 @@
                 $order->appoint_time = $appoint_time;
                 $order->note = $note;
                 $order->save();
+                foreach($info as $it){
+                    $service_id = $it['service_id'];
+                    $price = Db::query("select price from service_type where ID='$service_id'");
+                    if($price){
+                        $price = $price[0]['price'];
+                    }else{
+                        $price="服务不存在";
+                    }
+                    $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
+                    'item_id'=>$it['service_id'],'job_number'=>$it['job_number'],'price'=>$price,
+                    'private_room_number'=>$it['room_number'],'clock_type'=>$it['clock'],'appoint_time'=>$it['appoint_time']]);
+                    $sv_order->save();
+                }
                 return json(['status'=>1]);
             }
             return json(['status'=>0]);

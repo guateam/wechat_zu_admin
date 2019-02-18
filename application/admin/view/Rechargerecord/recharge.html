@@ -101,7 +101,7 @@
                 } // 制定列不参与排序
             ]
         });
-        table.columns(3).search("").draw();
+        table.columns(1).search("{$username}").draw();
         $.fn.dataTable.ext.search.push(
             function (settings, data, dataIndex) {
                 var min = $('#datemin').val();

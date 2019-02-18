@@ -24,7 +24,10 @@
             $all_cus = Db::query("select * from customer group by openid");
             $records = [];
             foreach($all_cus as $cus){
+                //没有openid的用户属于异常数据，不进行处理
                 $cus_openid = $cus['openid'];
+                if($cus_openid == "")continue;
+
                 $record = Db::query("select sum(A.charge)/100 as charge from recharge_record A,customer B where A.user_id='$cus_openid' and B.openid=A.user_id");
                 if($record){
                     if(is_null($record[0]['charge']) )$record[0]['charge'] = 0;
@@ -41,7 +44,7 @@
                 else{
                     $records[$i]['registration_date'] = "无";
                 }
-                $records[$i]['charge'] = (int) $records[$i]['charge'];
+                $records[$i]['charge'] = intval($records[$i]['charge']);
                 $money = $cus->get_cash($records[$i]['user_id']);
                 $records[$i] = array_merge($records[$i],['cash'=>$money]);
             }

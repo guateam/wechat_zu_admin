@@ -90,7 +90,11 @@
                     <tr class="text-c" id="row{$k-1}">
                         <td>{$it.order_id}</td>
                         <td id="time{$k-1}">{$it.generated_time}</td>
-                        <td>{$it.appoint_time}</td>
+                        <td>
+                            {if condition="$it.source==0"}
+                            {$it.appoint_time}
+                            {/if}
+                        </td>
                         <td>
                             {$it.username}
                         </td>

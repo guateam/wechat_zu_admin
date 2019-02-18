@@ -52,10 +52,10 @@
                     <select name="articletype" class="select" id="down_search">
                         <option value="全部类型">全部类型</option>
                         <option value="订单取消">订单取消</option>
-                        <option value="预约">预约</option>
+                        <option value="待消费">待消费</option>
                         <option value="服务中">服务中</option>
-                        <option value="等待支付">等待支付</option>
-                        <option value="服务完成">服务完成</option>
+                        <option value="待支付">待支付</option>
+                        <option value="待评价">待评价</option>
                         <option value="评价完成">评价完成</option>
                     </select>
                 </div>
@@ -69,10 +69,11 @@
                         <th width="80">预约人用户名</th>
                         <th width="80">预约人手机号</th>
                         <th width="100">订单状态</th>
-                        
+
                         <th width="100">技师编号</th>
                         <th width="30">上钟类型</th>
-						<th width="100">备注</th>
+                        <th width="80">上钟下钟</th>
+                        <th width="100">备注</th>
                         <!-- <th width="60">付款顾客用户名</th>
                         <th width="80">付款顾客手机号</th> -->
                         <th width="50">付款方式</th>
@@ -83,9 +84,9 @@
                 <tbody>
                     {volist name="$order" id="it" key="k"}
                     <p hidden id="state{$k-1}">{if condition="$it.payment_method==1"}微信支付{elseif
-                            condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif
-                            condition="$it.payment_method==4"}现金 {elseif condition="$it.payment_method==5"}银行卡支付{elseif
-                            condition="$it.payment_method==6"}其他{elseif condition="$it.payment_method==7"}美团支付{/if}</p>
+                        condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif
+                        condition="$it.payment_method==4"}现金 {elseif condition="$it.payment_method==5"}银行卡支付{elseif
+                        condition="$it.payment_method==6"}其他{elseif condition="$it.payment_method==7"}美团支付{/if}</p>
                     <tr class="text-c" id="row{$k-1}">
                         <td>{$it.order_id}</td>
                         <td id="time{$k-1}">{$it.generated_time}</td>
@@ -97,23 +98,27 @@
                             {$phone[$k-1]}
                         </td>
 
-                        <td id="total_state{$k-1}">{if condition="$it.state==0"}订单取消 {elseif
-                            condition="$it.state==1"}预约 {elseif condition="$it.state==2"}服务中
-                            {elseif condition="$it.state==3"}等待支付{elseif condition="$it.state==4"}服务完成 {elseif
-                            condition="$it.state==5"}评价完成
-                            {/if}</td>
-                        
+                        <td id="total_state{$k-1}">{if condition="$it.state==0"}订单取消{elseif
+                            condition="$it.state==1"}待消费{elseif condition="$it.state==2"}服务中{elseif condition="$it.state==3"}待支付{elseif condition="$it.state==4"}待评价{elseif
+                            condition="$it.state==5"}评价完成{/if}</td>
+
                         <td>
                             {$tech[$k-1]}
                         </td>
                         <td>{if condition="$it.clock_type == 1"}排钟{elseif condition="$it.clock_type == 2"}点钟{/if}</td>
-						<td>{$it.note}</td>
+                        <td>
+                            <input onclick="up_clock('{$it.order_id}',this)" name="clock{$k}" type="checkbox" value="2"
+                                {if condition="$it.state==2" }checked{/if} {if condition="$it.state==2 or $it.state==4 or $it.state==5"} disabled {/if}/>上钟 
+                            <input onclick="down_clock('{$it.order_id}',this)" name="clock{$k}" type="checkbox" value="4" {if condition="$it.state==4 or $it.state==5"
+                                }checked{/if} {if condition="$it.state==4 or $it.state==5 or $it.state==1"}  disabled {/if}/>下钟 
+                        </td> 
+                        <td>{$it.note}</td>
                         <!-- <td class="">{$it.payment_user_id}</td>
                         <td class="">{$phone2[$k-1]}</td> -->
                         <td class="">{if condition="$it.payment_method==1"}微信支付{elseif
-                                condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif
-                                condition="$it.payment_method==4"}现金 {elseif condition="$it.payment_method==5"}银行卡支付{elseif
-                                condition="$it.payment_method==6"}其他{elseif condition="$it.payment_method==7"}美团支付{/if}</td>
+                            condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif
+                            condition="$it.payment_method==4"}现金 {elseif condition="$it.payment_method==5"}银行卡支付{elseif
+                            condition="$it.payment_method==6"}其他{elseif condition="$it.payment_method==7"}美团支付{/if}</td>
                         <td class="">￥{$it.pay_amount}</td>
                         <td class="td-manage">
                             {if condition="$it.state==1"}
@@ -170,6 +175,65 @@
         $(function () {
 
         });
+        function up_clock(order_id,element){
+            change_clock(order_id,2,"确认上钟吗？",element);
+        }
+        function down_clock(order_id,element){
+            change_clock(order_id,4,"确认下钟吗？",element);
+        }
+
+        function change_clock(order_id,state,text,element) {
+            swal({
+                title: text,
+                allowOutsideClick: false,
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#93c47d',
+                cancelButtonColor: '#ca5943',
+                confirmButtonText: "是",
+                cancelButtonText: "否"
+            }).then((result) => {
+                if (result.value) {
+                    swal({
+                        title: '正在处理',
+                        text: '',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCloseButton: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    });
+                    $.post("__ROOT__/index.php/api/Consumedorder/change_clock", {
+                        order_id: order_id,
+                        state: state
+                    }).done((res) => {
+                        if (res.status == 1) {
+                            swal({
+                                title: '成功，正在刷新页面',
+                                text: '',
+                                allowOutsideClick: false,
+                                showConfirmButton: false,
+                                showCloseButton: false,
+                                onOpen: () => {
+                                    swal.showLoading()
+                                 }
+                            });
+                            location.reload();
+                        }else{
+                            swal({
+                                title:"处理失败"
+                            })
+                        }
+                    })
+                }else{
+                    $(element).prop('checked',false); 
+                }
+            });
+
+
+            
+        }
         var time_button_click = false;
         var down_click = false;
         /*用户-添加*/
@@ -183,20 +247,22 @@
         }
         $("#down_search").on("change", () => {
             target = $("#down_search").val();
-            if (target != "全部类型") table.columns(4).search(target).draw();
+            if (target != "全部类型") table.columns(5).search(target).draw();
             else {
-                table.columns(4).search("").draw();
+                table.columns(5).search("").draw();
             }
 
         })
         $("#search").on("click", () => {
             table.draw();
         })
-        function change_order(e){
+
+        function change_order(e) {
             order_id = $(e).val();
-            url="__ROOT__/index.php/admin/Consumedorder/change/order_id/"+order_id;
-            layer_show('修改订单',url,1100,600);
+            url = "__ROOT__/index.php/admin/Consumedorder/change/order_id/" + order_id;
+            layer_show('修改订单', url, 1100, 600);
         }
+
         function disappointment(e) {
             swal({
                 title: "确认取消预约吗?",
@@ -222,11 +288,11 @@
                     $.post("__ROOT__/index.php/api/Consumedorder/disappointment", {
                         order_id: $(e).val()
                     }).done((result) => {
-                        if(result.state == 1){
+                        if (result.state == 1) {
                             swal({
-                                title:'取消预约成功',
+                                title: '取消预约成功',
                                 text: '',
-                            }).then((result)=>{
+                            }).then((result) => {
                                 location.reload();
                             })
                         }
@@ -281,7 +347,7 @@
                             `</td>
                                             <td>` + result[i].private_room_number +
                             `</td>
-                                            <td>￥` + result[i].price/100 +
+                                            <td>￥` + result[i].price / 100 +
                             `</td>
                                         </tr>`
                     }
@@ -299,7 +365,7 @@
                                         <td></td> 
                                         <td></td> 
                                         <td>￥` +
-                        total_price/100 +
+                        total_price / 100 +
                         `</td>
                                     </tr>
                                     <tr bgcolor="#d4d4d4">

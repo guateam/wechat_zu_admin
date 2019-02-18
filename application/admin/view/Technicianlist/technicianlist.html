@@ -51,16 +51,17 @@
                         <th width="40">
                             <input type="checkbox" name="" value="" class="flat" id='checkall'>
                         </th>
-                        <th width="80">姓名</th>
+                        <th width="60">姓名</th>
                         <th width="40">类别</th>
                         <th width="40">性别</th>
-                        <th width="90">工号</th>
+                        <th width="70">工号</th>
                         <th width="100">手机号</th>
                         <th width="100">技能</th>
                         <th width="30">评分</th>
                         <th width="60">充卡数额</th>
                         <th width="50">介绍人工号</th>
                         <th width="50">离职情况</th>
+                        <th width="80">繁忙情况</th>
                         <!-- <th width="70">指定介绍人</th> -->
                         <th width="70">等级</th>
                         <th width="70">查看详情</th>
@@ -105,6 +106,10 @@
                                 <i class="Hui-iconfont">&#xe6df;</i>
                             </a>
                             {/if}
+                        </td>
+                        <td>
+                            <input onchange="change_busy('{$it.job_number}')" name="busy{$k}" type="radio" value="0" {if condition="$it.busy==0"}checked{/if} />空闲 
+                            <input onchange="change_busy('{$it.job_number}')" name="busy{$k}" type="radio" value="1" {if condition="$it.busy==1"}checked{/if}/>繁忙 
                         </td>
                         <td>
                             {$it.level}
@@ -160,7 +165,11 @@
                 ]
             });
         });
-
+        function change_busy(job_number){
+            $.post("__ROOT__/index.php/api/Technician/change_busy",{
+                job_number:job_number
+            })
+        }
         function change_injob(job_number) {
             swal({
                 title: '确认修改吗？',
@@ -208,48 +217,6 @@
         function zhidingren(title, url, id, w, h) {
             layer_show(title, url, w, h);
         }
-
-        /***
-         /*用户-停用
-         function member_stop(obj, id) {
-            layer.confirm('确认要停用吗？', function (index) {
-                $.ajax({
-                    type: 'POST',
-                    url: '',
-                    dataType: 'json',
-                    success: function (data) {
-                        $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="member_start(this,id)" href="javascript:;" title="启用"><i class="Hui-iconfont">&#xe6e1;</i></a>');
-                        $(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已停用</span>');
-                        $(obj).remove();
-                        layer.msg('已停用!', {icon: 5, time: 1000});
-                    },
-                    error: function (data) {
-                        console.log(data.msg);
-                    },
-                });
-            });
-        }
-
-         /*用户-启用
-         function member_start(obj, id) {
-            layer.confirm('确认要启用吗？', function (index) {
-                $.ajax({
-                    type: 'POST',
-                    url: '',
-                    dataType: 'json',
-                    success: function (data) {
-                        $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="member_stop(this,id)" href="javascript:;" title="停用"><i class="Hui-iconfont">&#xe631;</i></a>');
-                        $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已启用</span>');
-                        $(obj).remove();
-                        layer.msg('已启用!', {icon: 6, time: 1000});
-                    },
-                    error: function (data) {
-                        console.log(data.msg);
-                    },
-                });
-            });
-        }
-         ***/
 
         /*用户-编辑*/
         function member_edit(title, url, id, w, h) {

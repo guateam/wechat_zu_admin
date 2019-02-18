@@ -94,6 +94,17 @@
             return json(['state'=>1]);
         }
 
+        public function change_clock($order_id,$state){
+            $order = UserModel::get(['order_id'=>$order_id]);
+            if($order)
+            {
+                $order->state = $state;
+                $order->save();
+                return json(['status'=>1]);
+            }
+            return json(['status'=>0]);
+        }
+
         public function create_order($info,$total_price,$phone,$method,$username,$note){
             $time = time();
             $order_id = strval(date("Ymdhis",$time));

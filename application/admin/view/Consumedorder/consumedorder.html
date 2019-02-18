@@ -69,8 +69,8 @@
                         <th width="80">预约人用户名</th>
                         <th width="80">预约人手机号</th>
                         <th width="100">订单状态</th>
-
-                        <th width="100">技师编号</th>
+                        <th width="80">技师编号</th>
+                        <th width="40">订单来自</th>
                         <th width="30">上钟类型</th>
                         <th width="80">上钟下钟</th>
                         <th width="100">备注</th>
@@ -104,6 +104,9 @@
 
                         <td>
                             {$tech[$k-1]}
+                        </td>
+                        <td>
+                            {if condition="$it.source == 0"}网络预约{elseif condition="$it.source == 1"}到店消费{/if}
                         </td>
                         <td>{if condition="$it.clock_type == 1"}排钟{elseif condition="$it.clock_type == 2"}点钟{/if}</td>
                         <td>

@@ -343,6 +343,9 @@ class Technician extends Controller
      */
     public static function get_yeji($job_number, $begin, $end)
     {
+        //该技师自己的信息
+        $tech_self = Db::query("select * from technician where job_number='$job_number'");
+        $tech_self = $tech_self[0];
         //该技师在时间内自己做的所有订单
         $so = Db::query("select * from service_order where job_number = '$job_number' and appoint_time > $begin and appoint_time < $end");
         //$so = \app\api\model\Serviceorder::all(['job_number'=>$job_number]);
@@ -350,8 +353,10 @@ class Technician extends Controller
         $invited = \app\api\model\Inviteship::all(['inviter_job_number' => $job_number]);
         //邀请该技师的人
         $self_p = \app\api\model\Inviteship::get(['freshman_job_number' => $job_number]);
-        //营业收入
-        $price = 0;
+        //点钟提成
+        $dian_price = 0;
+        //排钟提成
+        $pai_price = 0;
         //点钟数量
         $dian = 0;
         //排钟数量
@@ -363,12 +368,6 @@ class Technician extends Controller
 
         if ($so) {
             foreach ($so as $svod) {
-                if ($svod['clock_type'] == 1) {
-                    $pai++;
-                } else if ($svod['clock_type'] == 2) {
-                    $dian++;
-                }
-
                 $item = \app\api\model\Servicetype::get(['ID' => $svod['item_id']]);
                 if ($item) {
                     $per = 0;
@@ -376,8 +375,22 @@ class Technician extends Controller
                     if ($self_p) {
                         $lost += $item->invite_income / 100;
                     }
+                    //如果是排钟，则计数增加，根据技师类别计算排钟提成
+                    if ($svod['clock_type'] == 1) {
+                        $pai++;
+                        if($tech_self['type'] == 1)
+                            $pai_price+=$item->pai_commission /100;
+                        else
+                            $pai_price+=$item->pai_commissio2 /100;
+                    //如果是点钟，则计数增加，根据技师类别计算点钟提成
+                    } else if ($svod['clock_type'] == 2) {
+                        $dian++;
+                        if($tech_self['type'] == 1)
+                            $dian_price += $item->commission / 100;
+                        else
+                            $dian_price+=$item->commissio2 /100;
+                    }
 
-                    $price += $item->commission / 100;
                 }
 
             }
@@ -393,10 +406,11 @@ class Technician extends Controller
             'status' => 1,
             'pai' => $pai,
             'dian' => $dian,
-            'earn' => $price,
+            'pai_earn' => $pai_price,
+            'dian_earn'=> $dian_price,
             'come_from_other' => $come_frome_other,
             'lost' => $lost,
-            'final_salary' => $price + $come_frome_other,
+            'final_salary' => $pai_price + $dian_price + $come_frome_other,
         ];
     }
 
@@ -502,6 +516,8 @@ class Technician extends Controller
         }
         //获取所有技师
         $technicians = Db::query("select * from technician");
+
+
         //数据库查找点钟前三名的技师应该获得的奖金数额
         //暂时还没关联数据库
         $dian_bonus = [400, 250, 100];
@@ -553,8 +569,8 @@ class Technician extends Controller
             }
         
             $salary = array_merge($salary, ['name' => $tech['name'], 'job_number' => $tech['job_number'], 
-            'entry_date' => date("Y-m-d", $tech['entry_date']), 'clock_income' => $yeji['earn'], 
-            'dian' => $yeji['dian'], 'dian_income' => 0, 'invite_income' => $yeji['come_from_other'], 
+            'entry_date' => date("Y-m-d", $tech['entry_date']),'pai_income'=>$yeji['pai_earn'], 'dian_income' => $yeji['dian_earn'], 
+            'dian' => $yeji['dian'],'pai'=>$yeji['pai'], 'dian_bonus' => 0, 'invite_income' => $yeji['come_from_other'], 
             'recharge_amount'=>$recharge,'tip_income'=>$dashang,'recharge_income' => (int)($recharge*$recharge_ticheng)]);
             array_push($salarys, $salary);
         }
@@ -582,16 +598,16 @@ class Technician extends Controller
         for ($i = 0; $i < count($salarys); $i++) {
             //第一名赋予奖励
             if ($salarys[$i]['job_number'] == $job_numbers[0]) {
-                $salarys[$i]['dian_income'] = $dian_bonus[0];
+                $salarys[$i]['dian_bonus'] = $dian_bonus[0];
             } else if ($salarys[$i]['job_number'] == $job_numbers[1]) {
-                $salarys[$i]['dian_income'] = $dian_bonus[1];
+                $salarys[$i]['dian_bonus'] = $dian_bonus[1];
             } else if ($salarys[$i]['job_number'] == $job_numbers[2]) {
-                $salarys[$i]['dian_income'] = $dian_bonus[2];
+                $salarys[$i]['dian_bonus'] = $dian_bonus[2];
             }
         }
         //计算总工资
         for ($i = 0; $i < count($salarys); $i++) {
-            $salarys[$i] = array_merge($salarys[$i], ['total_salary' => $salarys[$i]['clock_income'] + $salarys[$i]['dian_income'] + $salarys[$i]['recharge_income'] + $salarys[$i]['invite_income'] + $salarys[$i]['tip_income']]);
+            $salarys[$i] = array_merge($salarys[$i], ['total_salary' => $salarys[$i]['pai_income'] + $salarys[$i]['dian_income'] + $salarys[$i]['dian_bonus']+ $salarys[$i]['recharge_income'] + $salarys[$i]['invite_income'] + $salarys[$i]['tip_income']]);
         }
         return $salarys;
     }

@@ -68,9 +68,10 @@
                         <th width="80">预约人用户名</th>
                         <th width="80">预约人手机号</th>
                         <th width="100">订单状态</th>
-                        <th width="100">备注</th>
+                        
                         <th width="100">技师编号</th>
                         <th width="30">上钟类型</th>
+						<th width="100">备注</th>
                         <!-- <th width="60">付款顾客用户名</th>
                         <th width="80">付款顾客手机号</th> -->
                         <th width="50">付款方式</th>
@@ -99,11 +100,12 @@
                             {elseif condition="$it.state==3"}等待支付{elseif condition="$it.state==4"}服务完成 {elseif
                             condition="$it.state==5"}评价完成
                             {/if}</td>
-                        <td>{$it.note}</td>
+                        
                         <td>
                             {$tech[$k-1]}
                         </td>
                         <td>{if condition="$it.clock_type == 1"}排钟{elseif condition="$it.clock_type == 2"}点钟{/if}</td>
+						<td>{$it.note}</td>
                         <!-- <td class="">{$it.payment_user_id}</td>
                         <td class="">{$phone2[$k-1]}</td> -->
                         <td class="">{if condition="$it.payment_method==1"}微信支付{elseif

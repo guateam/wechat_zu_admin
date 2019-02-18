@@ -58,7 +58,7 @@
                         </td>
                         <td>
                             <input onchange="change_clock('{$it.job_number}')" name="clock{$k}" type="radio" value="1" {if condition="$it.clock==1"}checked{/if}/>上钟
-                            <input onchange="change_busy('{$it.job_number}')" name="clock{$k}" type="radio" value="0" {if condition="$it.clock==0"}checked{/if}/>下钟 
+                            <input onchange="change_clock('{$it.job_number}')" name="clock{$k}" type="radio" value="0" {if condition="$it.clock==0"}checked{/if}/>下钟 
                         </td>
                         {/if}
                     </tr>

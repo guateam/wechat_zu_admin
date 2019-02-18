@@ -56,9 +56,7 @@
             <option value="7">美团支付</option>
         </select><br>
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>支付金额(元):</div>
-        <input type="text" id="cash" class="theinput"><br>
-        <div style="width:90px ; display:inline-block">&nbsp;&nbsp;</span>订单备注:</div>
-        <input type="text" id="note" class="theinput"><br>
+        <input type="text" id="cash" class="theinput"><br><br>
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>技师:</div>
         <select name="" id="tech" class="theinput">
             <option value="" selected>请选择技师</option>
@@ -84,7 +82,9 @@
         <select class="theinput" name="" id="clock">
             <option value="1">排钟</option>
             <option value="2">点钟</option>
-        </select>
+        </select><br>
+        <div style="width:90px ; display:inline-block">&nbsp;&nbsp;</span>订单备注:</div>
+        <input type="text" id="note" class="theinput"><br>
         <div style="width:90px ; display:inline-block"></div>
         <button id="add" onclick="addservice()" class="btn btn-primary" style="margin-top: 6px;width: 90px" disabled>添加服务
         </button><br><br>
@@ -106,7 +106,6 @@
         var total_price = 0
         var phone = ""
         $('#tech').change(() => {
-
             $("#add").attr('disabled', true);
             var choosen = $('#tech option:selected').val()
             if (choosen == "") return;
@@ -115,7 +114,7 @@
             }).done((res) => {
                 $('#service').empty()
                 for (var i = 0; i < res.length; i++) {
-                    $('#service').append("<option value ='" + res[i]['ID'] + ',' + res[i]['name'] + ',' +
+                    $('#service').append("<option value ='" + res[i]['service_id'] + ',' + res[i]['name'] + ',' +
                         res[i]['price'] + "'>" + res[i]['name'] + "</option>")
                 }
                 $("#add").attr('disabled', false);

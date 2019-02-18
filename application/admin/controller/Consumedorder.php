@@ -2,6 +2,7 @@
 namespace app\admin\controller;
 use think\Controller;
 use \app\api\model\Consumedorder as UserModel;
+use think\Db;
 
 class Consumedorder extends Controller{
 
@@ -57,7 +58,14 @@ class Consumedorder extends Controller{
         $this->assign("tech",$tech);
         $this->assign("phone",$user);
         $this->assign("phone2",$payer);
+        $this->assign("edit",$edit);
         $this->assign("count",count($order));
         return $this->fetch('Consumedorder/consumedorder');
+    }
+
+    public function change($order_id){
+        $order = Db::query("select * from consumed_order where order_id='$order_id'");
+        $this->assign('order',$order[0]);
+        return $this->fetch('Consumedorder/editorder');
     }
 }

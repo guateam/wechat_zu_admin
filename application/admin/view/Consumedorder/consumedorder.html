@@ -68,10 +68,11 @@
                         <th width="80">预约人用户名</th>
                         <th width="80">预约人手机号</th>
                         <th width="100">订单状态</th>
+                        <th width="100">备注</th>
                         <th width="100">技师编号</th>
                         <th width="30">上钟类型</th>
-                        <th width="60">付款顾客用户名</th>
-                        <th width="80">付款顾客手机号</th>
+                        <!-- <th width="60">付款顾客用户名</th>
+                        <th width="80">付款顾客手机号</th> -->
                         <th width="50">付款方式</th>
                         <th width="50">付款金额</th>
                         <th width="100">操作</th>
@@ -98,12 +99,13 @@
                             {elseif condition="$it.state==3"}等待支付{elseif condition="$it.state==4"}服务完成 {elseif
                             condition="$it.state==5"}评价完成
                             {/if}</td>
+                        <td>{$it.note}</td>
                         <td>
                             {$tech[$k-1]}
                         </td>
                         <td>{if condition="$it.clock_type == 1"}排钟{elseif condition="$it.clock_type == 2"}点钟{/if}</td>
-                        <td class="">{$it.payment_user_id}</td>
-                        <td class="">{$phone2[$k-1]}</td>
+                        <!-- <td class="">{$it.payment_user_id}</td>
+                        <td class="">{$phone2[$k-1]}</td> -->
                         <td class="">{if condition="$it.payment_method==1"}微信支付{elseif
                                 condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif
                                 condition="$it.payment_method==4"}现金 {elseif condition="$it.payment_method==5"}银行卡支付{elseif
@@ -115,6 +117,9 @@
                             {/if}
                             <button value="{$it.order_id}" onclick="serviceorder(this,'{$k-1}')" id="serviceorder">服务情况</button>
                             <button value="{$it.order_id}" onclick="rate(this)" id="rate">评价情况</button>
+                            {if condition="$edit == 1"}
+                            <button value="{$it.order_id}" onclick="change_order(this)">修改订单</button>
+                            {/if}
                         </td>
                     </tr>
                     {/volist}
@@ -183,7 +188,11 @@
         $("#search").on("click", () => {
             table.draw();
         })
-
+        function change_order(e){
+            order_id = $(e).val();
+            url="__ROOT__/index.php/admin/Consumedorder/change/order_id/"+order_id;
+            layer_show('修改订单',url,800,600);
+        }
         function disappointment(e) {
             swal({
                 title: "确认取消预约吗?",

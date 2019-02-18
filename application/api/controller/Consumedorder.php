@@ -112,4 +112,18 @@
             }
             return json(['status'=>1,'data'=>$order_id]);
         }
+
+        public function update_order($order_id,$state,$pay_method,$cash,$appoint_time,$note){
+            $order = UserModel::get(['order_id'=>$order_id]);
+            if($order){
+                $order->state = $state;
+                $order->payment_method = $pay_method;
+                $order->pay_amount = $cash;
+                $order->appoint_time = $appoint_time;
+                $order->note = $note;
+                $order->save();
+                return json(['status'=>1]);
+            }
+            return json(['status'=>0]);
+        }
     }

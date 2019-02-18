@@ -95,4 +95,13 @@ class Technicianlist extends Controller{
     public function salary_detail($job_number,$begin,$end){
         return $this->fetch('Technicianlist/salarydetail');
     }
+
+    public function techstate($edit){
+        $ctrl =new \app\api\controller\Technician();
+        $technicians = $ctrl->get_all_technician();
+        $this->assign('technicians',$technicians);
+        $this->assign('count',count($technicians));
+        $this->assign('edit',$edit);
+        return $this->fetch('Technicianlist/techstate');
+    }
 }

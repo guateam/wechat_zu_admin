@@ -435,6 +435,30 @@ class Technician extends Controller
         }
 
     }
+
+    public function change_busy($job_number){
+        $user = UserModel::get(['job_number'=>$job_number]);
+        if($user->busy == 1)
+        {
+            $user->busy = 0;
+        }
+        else{
+            $user->busy = 1;
+        }
+        $user->save();
+    }
+
+    public function change_clock($job_number){
+        $user = UserModel::get(['job_number'=>$job_number]);
+        if($user->clock == 1)
+        {
+            $user->clock = 0;
+        }
+        else{
+            $user->clock = 1;
+        }
+        $user->save();
+    }
     /**
      * 获取所有技师的业绩
      */

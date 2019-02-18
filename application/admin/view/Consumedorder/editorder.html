@@ -66,8 +66,7 @@
         <div style="width:90px ; display:inline-block">支付金额(元):</div>
         <input style="margin-bottom: 10px" type="text" id="cash" class="theinput" value="{$order['pay_amount']}"><br>
         <div style="width:90px ; display:inline-block">上钟时间:</div>
-        <input style="margin-bottom: 10px"  type="text" id="appoint_time" class="theinput" value="{$order['appoint_time']}"><br>
-        {if condition="$order['state'] == 1 or $order['state'] == 3"}
+        <input type="text" id="appoint_time" value="{$order['appoint_time']}" class="theinput" ><br>
         <div style="width:90px ; display:inline-block">服务情况:</div>
         {volist name="$service_orders" id="it" key="j"}
         <span>技师:</span>
@@ -97,7 +96,7 @@
         <br>
         <div style="width:90px ; display:inline-block"></div>
         {/volist}
-        {/if}
+
         <br>
         <div style="width:90px ; display:inline-block">备注:</div>
         <input style="margin-bottom: 10px"  type="text" id="note" class="theinput" value="{$order['note']}"><br>

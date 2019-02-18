@@ -17,6 +17,7 @@ class Consumedorder extends Controller{
         foreach($order as $index => $od){
             //时间戳显示为日期字符串
             $order[$index]['generated_time'] = date('Y-m-d H:i:s', $order[$index]['generated_time']);
+            $order[$index]['appoint_time'] = date('Y-m-d H:i:s', intval($order[$index]['appoint_time']));
             $info = $cs->get_customer($od['user_id']);
             $info2 = $cs->get_customer($od['payment_user_id']);
             $so = \app\api\model\Serviceorder::all(['order_id'=>$od['order_id']]);
@@ -69,6 +70,7 @@ class Consumedorder extends Controller{
         $svod = Db::query("select * from service_order where order_id = '$order_id'");
         $room = Db::query("select ID,name from private_room");
 
+        $order[0]['appoint_time'] = date("Y-m-d H:i:s",$order[0]['appoint_time']);
         foreach($svod as $idx => $sv){
             $service_id = $sv['item_id'];
             $name = Db::query("select name from service_type where ID='$service_id'");

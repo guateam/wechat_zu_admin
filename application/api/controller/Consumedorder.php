@@ -115,6 +115,9 @@
 
         public function update_order($order_id,$info,$state,$pay_method,$cash,$appoint_time,$note){
             $order = UserModel::get(['order_id'=>$order_id]);
+            if(gettype($appoint_time) == "string"){
+                $appoint_time = strtotime($appoint_time);
+            }
             $service_orders = Db::query("select * from service_order where order_id='$order_id'");
             for($i=0;$i<count($info);$i++){
                 $info[$i]['appoint_time']=$service_orders[$i]['appoint_time'];

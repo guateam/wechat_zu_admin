@@ -124,7 +124,7 @@
             return json(['status'=>1,'data'=>$order_id]);
         }
 
-        public function update_order($order_id,$info,$state,$pay_method,$cash,$appoint_time,$note){
+        public function update_order($order_id,$info,$state,$pay_method,$cash,$appoint_time,$note,$source){
             $order = UserModel::get(['order_id'=>$order_id]);
             if(gettype($appoint_time) == "string"){
                 $appoint_time = strtotime($appoint_time);
@@ -140,6 +140,7 @@
                 $order->pay_amount = $cash;
                 $order->appoint_time = $appoint_time;
                 $order->note = $note;
+                $order->source = $source;
                 $order->save();
                 foreach($info as $it){
                     $service_id = $it['service_id'];

@@ -112,10 +112,21 @@
                         <td>{if condition="$it.clock_type == 1"}排钟{elseif condition="$it.clock_type == 2"}点钟{/if}</td>
                        
 					   <td>
-                            <input onclick="up_clock('{$it.order_id}',this)" name="clock{$k}" type="checkbox" value="2"
+                           <button {if condition="$it.state==1"}onclick="up_clock('{$it.order_id}',this)" value="2"
+                                    {elseif condition="$it.state==2"}onclick="down_clock('{$it.order_id}',this)" value="4"
+                                    {else}disabled{/if}>
+                               {if condition="$it.state==1"}
+                                上钟
+                                {elseif condition="$it.state==2"}
+                                下钟
+                                {else}
+                                服务结束
+                                {/if}
+                           </button>
+                            <!-- <input onclick="up_clock('{$it.order_id}',this)" name="clock{$k}" type="checkbox" value="2"
                                 {if condition="$it.state==2" }checked{/if} {if condition="$it.state==2 or $it.state==4 or $it.state==5"} disabled {/if}/>上钟 
                             <input onclick="down_clock('{$it.order_id}',this)" name="clock{$k}" type="checkbox" value="4" {if condition="$it.state==4 or $it.state==5"
-                                }checked{/if} {if condition="$it.state==4 or $it.state==5 or $it.state==1"}  disabled {/if}/>下钟 
+                                }checked{/if} {if condition="$it.state==4 or $it.state==5 or $it.state==1"}  disabled {/if}/>下钟  -->
                         </td> 
 						
 						<td id="total_state{$k-1}">{if condition="$it.state==0"}订单取消{elseif
@@ -240,8 +251,6 @@
                             })
                         }
                     })
-                }else{
-                    $(element).prop('checked',false); 
                 }
             });
 
@@ -261,9 +270,9 @@
         }
         $("#down_search").on("change", () => {
             target = $("#down_search").val();
-            if (target != "全部类型") table.columns(5).search(target).draw();
+            if (target != "全部类型") table.columns(9).search(target).draw();
             else {
-                table.columns(5).search("").draw();
+                table.columns(9).search("").draw();
             }
 
         })

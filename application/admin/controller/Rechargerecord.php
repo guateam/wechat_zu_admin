@@ -19,7 +19,7 @@ class Rechargerecord extends Controller{
         $pay_record = Db::query("select A.order_id as ID,C.openid as openid,C.`name` as `username`,A.pay_amount as money,'' as job_number,A.payment_method as payment_method,A.generated_time as generated_time,A.note as note from consumed_order A,customer C where A.user_id='$openid' and C.openid = A.user_id order by A.generated_time desc");
         
         for($i=0;$i<count($pay_record);$i++){
-            $pay_record[$i]['note'] .= ' 服务支出';
+            $pay_record[$i]['note'] .= ' 消费';
             $pay_record[$i]['generated_time'] = date("Y-m-d H:i:s",$pay_record[$i]['generated_time']);
             $pay_record[$i]['money'] = intval($pay_record[$i]['money']);
         }

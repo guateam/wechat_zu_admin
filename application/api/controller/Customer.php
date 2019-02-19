@@ -33,4 +33,14 @@
             $money = $charge - $pay;
             return $money;
         }
+
+        public function get_cash_by_phone($phone){
+            $user = Db::query("select * from customer where phone_number = '$phone'");
+            if($user){
+                $money = self::get_cash($user[0]['openid']);
+                return $money;
+            }else{
+                return false;
+            }
+        }
     }

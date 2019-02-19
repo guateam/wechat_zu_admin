@@ -106,14 +106,32 @@
         }
 
         public function create_order($info,$total_price,$phone,$method,$username,$note){
+            $cus = Db::query("select * from customer where phone_number='$phone'");
+            //若找不到该账号，则单子内的id自动填为用户名
+            $user_id = $username;
+            if($cus)
+                $user_id=$cus[0]['openid'];
+
+            //若余额支付，判断余额是否足够
+            if($method == 3){
+                $ctrl =new \app\api\controller\Customer();
+                $cash = $ctrl->get_cash_by_phone($phone);
+                if($cash === false){
+                    return json(['status'=>0,'msg'=>"该手机号未注册会员"]);
+                }
+                if($cash < $total_price){
+                    return json(['status'=>0,'msg'=>"余额不足"]);
+                }
+            }
+            
             $time = time();
             $order_id = strval(date("Ymdhis",$time));
             for($i=0;$i<10;$i++){
                 $order_id .= strval(rand(0,9));
             }
-            $order = new UserModel(['order_id'=>$order_id,'user_id'=>$username,
+            $order = new UserModel(['order_id'=>$order_id,'user_id'=>$user_id,
             'state'=>4,'payment_method'=>$method,'generated_time'=>$time,'appoint_time'=>$time,'contact_phone'=>$phone,
-            'pay_amount'=>$total_price*100,'user_num'=>1,'payment_user_id'=>$username,'note'=>$note,'source'=>1]);
+            'pay_amount'=>$total_price*100,'user_num'=>1,'payment_user_id'=>$user_id,'note'=>$note,'source'=>1]);
             $order->save();
             foreach($info as $it){
                 $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,

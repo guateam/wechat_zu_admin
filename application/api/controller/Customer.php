@@ -27,7 +27,7 @@
             $charge =0;
             if(count($records)>0)
                 $charge = intval($records[0]['charge']);
-            $pay = Db::query("select sum(pay_amount) as pay from consumed_order where user_id='$openid' and (state!=3) and payment_method=3");
+            $pay = Db::query("select sum(pay_amount)/100 as pay from consumed_order where user_id='$openid' and (state!=3) and payment_method=3");
             if(count($pay)>0)
                 $pay = intval($pay[0]['pay']);
             $money = $charge - $pay;

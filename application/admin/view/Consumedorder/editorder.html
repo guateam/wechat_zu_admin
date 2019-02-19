@@ -54,6 +54,11 @@
                 <option value="4"{if condition="$order['state'] == 4"}selected{/if}>待评价</option>
                 <option value="5"{if condition="$order['state'] == 5"}selected{/if}>评价完成</option>
         </select><br>
+        <div style="width:90px ; display:inline-block">订单来自:</div>
+        <select class="theinput" name="" id="source">
+                <option value="0"{if condition="$order['source'] == 0"}selected{/if} >网络预约</option>
+                <option value="1"{if condition="$order['source'] == 1"}selected{/if}>到店消费</option>
+        </select><br>
         <div style="width:90px ; display:inline-block">支付方式:</div>
         <select class="theinput" name="" id="pay_method">
                 <option value="1"{if condition="$order['payment_method'] == 1"}selected{/if} >微信支付</option>
@@ -196,7 +201,8 @@
                 pay_method: $('#pay_method option:selected').val(),
                 cash: $('#cash').val(),
                 appoint_time: $('#appoint_time').val(),
-                note:$('#note').val()
+                note:$('#note').val(),
+                source:$('#source').val()
             }).done((res) => {
                 if (res.status == 1) {
                     swal({

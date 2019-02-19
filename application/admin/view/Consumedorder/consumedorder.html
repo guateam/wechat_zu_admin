@@ -68,11 +68,12 @@
                         <th width="150">预约时间</th>
                         <th width="80">预约人用户名</th>
                         <th width="80">预约人手机号</th>
-                        <th width="100">订单状态</th>
+                       
                         <th width="80">技师编号</th>
                         <th width="40">订单来自</th>
                         <th width="30">上钟类型</th>
                         <th width="80">上钟下钟</th>
+						<th width="100">订单状态</th>
                         <th width="100">备注</th>
                         <!-- <th width="60">付款顾客用户名</th>
                         <th width="80">付款顾客手机号</th> -->
@@ -102,10 +103,6 @@
                             {$phone[$k-1]}
                         </td>
 
-                        <td id="total_state{$k-1}">{if condition="$it.state==0"}订单取消{elseif
-                            condition="$it.state==1"}待消费{elseif condition="$it.state==2"}服务中{elseif condition="$it.state==3"}待支付{elseif condition="$it.state==4"}待评价{elseif
-                            condition="$it.state==5"}评价完成{/if}</td>
-
                         <td>
                             {$tech[$k-1]}
                         </td>
@@ -113,16 +110,26 @@
                             {if condition="$it.source == 0"}网络预约{elseif condition="$it.source == 1"}到店消费{/if}
                         </td>
                         <td>{if condition="$it.clock_type == 1"}排钟{elseif condition="$it.clock_type == 2"}点钟{/if}</td>
-                        <td>
+                       
+					   <td>
                             <input onclick="up_clock('{$it.order_id}',this)" name="clock{$k}" type="checkbox" value="2"
                                 {if condition="$it.state==2" }checked{/if} {if condition="$it.state==2 or $it.state==4 or $it.state==5"} disabled {/if}/>上钟 
                             <input onclick="down_clock('{$it.order_id}',this)" name="clock{$k}" type="checkbox" value="4" {if condition="$it.state==4 or $it.state==5"
                                 }checked{/if} {if condition="$it.state==4 or $it.state==5 or $it.state==1"}  disabled {/if}/>下钟 
                         </td> 
+						
+						<td id="total_state{$k-1}">{if condition="$it.state==0"}订单取消{elseif
+                            condition="$it.state==1"}待消费{elseif condition="$it.state==2"}服务中{elseif condition="$it.state==3"}待支付{elseif condition="$it.state==4"}待评价{elseif
+                            condition="$it.state==5"}评价完成{/if}
+						</td>
+						
+						
                         <td>{$it.note}</td>
-                        <!-- <td class="">{$it.payment_user_id}</td>
+                        
+						<!-- <td class="">{$it.payment_user_id}</td>
                         <td class="">{$phone2[$k-1]}</td> -->
-                        <td class="">{if condition="$it.payment_method==1"}微信支付{elseif
+                        
+						<td class="">{if condition="$it.payment_method==1"}微信支付{elseif
                             condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif
                             condition="$it.payment_method==4"}现金 {elseif condition="$it.payment_method==5"}银行卡支付{elseif
                             condition="$it.payment_method==6"}其他{elseif condition="$it.payment_method==7"}美团支付{/if}</td>

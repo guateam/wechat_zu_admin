@@ -369,6 +369,13 @@ class Technician extends Controller
         if ($so) {
             foreach ($so as $svod) {
                 $item = \app\api\model\Servicetype::get(['ID' => $svod['item_id']]);
+                $order_id = $svod['order_id'];
+                $co =Db::query("select state from consumed_order where order_id='$order_id'");
+                //不存在的订单不计算
+                if(!$co)continue;
+                //订单状态未达到待评价或评价完成的不计算
+                if($co[0]['state'] != 4 && $co[0]['state'] != 5)continue;
+
                 if ($item) {
                     $per = 0;
                     //如果该技师被邀请,计算支付给邀请人的钱

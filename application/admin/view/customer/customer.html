@@ -47,6 +47,7 @@
                         <th>充值总额</th>
                         <th>账户余额</th>
                         <th>注册时间</th>
+                        <th>客户账单</th>
                         {if condition="$edit == 1"}
                         <th>操作</th>
                         {/if}
@@ -64,9 +65,11 @@
                         </td>
                         <td>￥{$it.cash}</td>
                         <td>{$it.registration_date}</td>
+                        <td>
+                            <a class="ml-5 btn btn-warning" onclick="recharge_detail('{$it.user_id}')">账单</a>
+                        </td>
                         {if condition="$edit == 1"}
                         <td class="td-manage">
-                            <a class="ml-5 btn btn-warning" onclick="recharge_detail('{$it.user_id}')">账单</a>
                             <a title="线下支付" href="javascript:;" onclick="pay('{$it.user_id}')" class="ml-5 btn btn-success"
                                 style="text-decoration:none">
                                 支付线下订单

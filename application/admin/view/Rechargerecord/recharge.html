@@ -51,8 +51,9 @@
                         <th width="130">充值单号</th>
                         <th width="150">充值用户名</th>
                         <th width="150">充值用户openid</th>
-                        <th width="140">充值额度</th>
-                        <th width="150">支付方式</th>
+                        <th width="100">充值额度</th>
+                        <th width="100">支付方式</th>
+                        <th width="100">备注</th>
                         <th width="120">技师工号</th>
                         <th width="120">支付时间</th>
                         <th width="150">操作</th>
@@ -68,6 +69,7 @@
                             ￥{$it.charge/100}
                         </td>
                         <td id="total_state{$k-1}">{if condition="$it.payment_method==1"}微信支付{elseif condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif condition="$it.payment_method==4"}现金 {else /}未支付{/if}</td>
+                        <td>{$it.note}</td>
                         <td class="">{$it.job_number}</td>
                         <td>{$it.generated_time}</td>
 
@@ -90,7 +92,7 @@
     <script type="text/javascript">
         var table = $('.table-sort').DataTable({
             "aaSorting": [
-                [6, "desc"]
+                [7, "desc"]
             ], //默认第几个排序
             "bStateSave": false, //状态保存
             "aoColumnDefs": [

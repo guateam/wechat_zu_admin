@@ -113,7 +113,7 @@
             }
             $order = new UserModel(['order_id'=>$order_id,'user_id'=>$username,
             'state'=>4,'payment_method'=>$method,'generated_time'=>$time,'appoint_time'=>$time,'contact_phone'=>$phone,
-            'pay_amount'=>$total_price,'user_num'=>1,'payment_user_id'=>$username,'note'=>$note,'source'=>1]);
+            'pay_amount'=>$total_price*100,'user_num'=>1,'payment_user_id'=>$username,'note'=>$note,'source'=>1]);
             $order->save();
             foreach($info as $it){
                 $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,

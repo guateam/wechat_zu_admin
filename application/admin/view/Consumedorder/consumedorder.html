@@ -144,7 +144,7 @@
                             condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif
                             condition="$it.payment_method==4"}现金 {elseif condition="$it.payment_method==5"}银行卡支付{elseif
                             condition="$it.payment_method==6"}其他{elseif condition="$it.payment_method==7"}美团支付{/if}</td>
-                        <td class="">￥{$it.pay_amount}</td>
+                        <td class="">￥{$it.pay_amount/100}</td>
                         <td class="td-manage">
                             {if condition="$it.state==1"}
                             <button value="{$it.order_id}" onclick="disappointment(this)" id="appointment">取消预约</button>

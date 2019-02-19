@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    {include file="common/common_css"}
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>充值列表</title>
+</head>
+
+<body>
+    <nav class="breadcrumb">
+        <i class="Hui-iconfont">&#xe67f;</i> 首页
+        <span class="c-gray en">&gt;</span> 账单记录
+        <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);"
+            title="刷新">
+            <i class="Hui-iconfont">&#xe68f;</i>
+        </a>
+    </nav>
+    <div class="page-container">
+        <!-- <div class="text-c"> 日期范围：
+            <input type="text" onfocus="WdatePicker({})" value="" id="datemin" class="input-text Wdate" style="width:120px;"> -
+            <input type="text" onfocus="WdatePicker({})" value="" id="datemax" class="input-text Wdate" style="width:120px;">
+            <button type="submit" class="btn btn-success radius" id="search" name="">
+                <i class="Hui-iconfont">&#xe665;</i> 搜记录
+            </button>
+            <button type="button" onclick="location.reload()" class="btn btn-success radius" id="refresh" name="">
+                     清空筛选条件
+            </button>
+        </div> -->
+        <div class="cl pd-5 bg-1 bk-gray mt-20">
+            <span class="r">共有数据：
+                <strong>{$count}</strong> 条</span>
+        </div>
+        <div class="mt-20">
+            <table class="table table-border table-bordered table-hover table-bg table-sort">
+                <thead>
+                    <tr class="text-c">
+                        <th width="130">单号</th>
+                        <th width="150">用户名</th>
+                        <th width="150">用户openid</th>
+                        <th width="140">额度</th>
+                        <th width="150">支付方式</th>
+                        <th width="100">备注</th>
+                        <th width="120">技师工号</th>
+                        <th width="150">支付时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {volist name="$record" id="it" key="k"}
+                    <tr class="text-c" id="row{$k-1}">
+                        <td>{$it.ID}</td>
+                        <td id="">{$it.username}</td>
+                        <td id="time{$k-1}">{$it.openid}</td>
+                        <td>
+                            ￥{$it.money}
+                        </td>
+                        <td id="total_state{$k-1}">{if condition="$it.payment_method==1"}微信支付{elseif condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif condition="$it.payment_method==4"}现金 {else /}未支付{/if}</td>
+                        <td>{$it.note}</td>
+                        <td class="">{$it.job_number}</td>
+                        <td>{$it.generated_time}</td>
+                    </tr>
+                    {/volist}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {include file="common/common_script"}
+
+    <!--请在下方写此页面业务相关的脚本-->
+    <script type="text/javascript" src="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
+    <script type="text/javascript">
+        var table = $('.table-sort').DataTable({
+            "aaSorting": [
+                [6, "desc"]
+            ], //默认第几个排序
+            "bStateSave": false, //状态保存
+            "aoColumnDefs": [
+                //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+                {
+                    "orderable": false,
+                    "aTargets": [0, 2, 3]
+                } // 制定列不参与排序
+            ]
+        });
+        $.fn.dataTable.ext.search.push(
+            function (settings, data, dataIndex) {
+                var min = $('#datemin').val();
+                var max = $("#datemax").val();
+                max += " 23:59:59"
+                var time = data[5]; // use data for the age column
+                if (min == "" || max == "") return true;
+
+                if ((time >= min && time <= max)) {
+                    return true;
+                }
+                return false;
+            }
+        );
+        $(function () {
+
+        });
+        var time_button_click = false;
+        var down_click = false;
+        /*用户-添加*/
+        function member_add(title, url, w, h) {
+            layer_show(title, url, w, h);
+        }
+
+        /*用户-查看*/
+        function zhidingren(title, url, id, w, h) {
+            layer_show(title, url, w, h);
+        }
+        $("#down_search").on("change", () => {
+            target = $("#down_search").val();
+            if (target != "全部类型") table.columns(3).search(target).draw();
+            else {
+                table.columns(3).search("").draw();
+            }
+
+        })
+        $("#search").on("click", () => {
+            table.draw();
+        })
+
+        /*用户-编辑*/
+        function member_edit(title, url, id, w, h) {
+            layer_show(title, url, w, h);
+        }
+
+
+    </script>
+</body>
+
+</html>

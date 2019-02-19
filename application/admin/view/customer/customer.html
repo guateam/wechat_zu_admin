@@ -61,12 +61,12 @@
                         <td>{$it.level}</td>
                         <td>
                             ￥{$it.charge}
-                            <button onclick="recharge_detail('{$it.name}')">充值记录</button>
                         </td>
                         <td>￥{$it.cash}</td>
                         <td>{$it.registration_date}</td>
                         {if condition="$edit == 1"}
                         <td class="td-manage">
+                            <a class="ml-5 btn btn-warning" onclick="recharge_detail('{$it.user_id}')">账单</a>
                             <a title="线下支付" href="javascript:;" onclick="pay('{$it.user_id}')" class="ml-5 btn btn-success"
                                 style="text-decoration:none">
                                 支付线下订单
@@ -244,9 +244,9 @@
             })
         }
     
-        function recharge_detail(username){
-            url = "__ROOT__/index.php/admin/Rechargerecord/index/edit/{$edit}/username/"+username
-            layer_show(username, url, 1000, 600);
+        function recharge_detail(openid){
+            url = "__ROOT__/index.php/admin/Rechargerecord/bill/edit/{$edit}/openid/"+openid
+            layer_show("账单查看", url, 1200, 600);
         }
     </script>
 </body>

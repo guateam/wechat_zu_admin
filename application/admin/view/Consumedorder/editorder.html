@@ -48,10 +48,10 @@
         <div style="width:90px ; display:inline-block">订单状态:</div>
         <select class="theinput" name="" id="state">
                 <option value="0"{if condition="$order['state'] == 0"}selected{/if} >订单取消</option>
-                <option value="3"{if condition="$order['state'] == 3"}selected{/if}>等待支付</option>
-                <option value="1"{if condition="$order['state'] == 1"}selected{/if}>预约</option>
+                <option value="3"{if condition="$order['state'] == 3"}selected{/if}>待付款</option>
+                <option value="1"{if condition="$order['state'] == 1"}selected{/if}>待消费</option>
                 <option value="2"{if condition="$order['state'] == 2"}selected{/if}>服务中</option>
-                <option value="4"{if condition="$order['state'] == 4"}selected{/if}>服务完成</option>
+                <option value="4"{if condition="$order['state'] == 4"}selected{/if}>待评价</option>
                 <option value="5"{if condition="$order['state'] == 5"}selected{/if}>评价完成</option>
         </select><br>
         <div style="width:90px ; display:inline-block">支付方式:</div>

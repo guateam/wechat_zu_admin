@@ -160,7 +160,7 @@ class Shop extends Controller{
         //时间内的打赏
         $tip = Db::query("select '' as order_id,salary as charge,technician_id as job_number,date as generated_time,'打赏技师' as note,'微信支付' as source from tip where date >=$begin and date <= $end");
         for($i=0;$i<count($consumed_order);$i++){
-            $consumed_order[$i]['source'] = ($consumed_order[$i]['source'] == 0?'网络预约':'到店支付');
+            $consumed_order[$i]['source'] = ($consumed_order[$i]['source'] == 0?'微信支付':'到店支付');
         }
         
         $result = array_merge($consumed_order,$recharge,$tip);

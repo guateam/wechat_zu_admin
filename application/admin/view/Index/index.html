@@ -133,7 +133,9 @@
                 $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function (data) {
                     ip = JSON.stringify(data, null, 2);
                     ip = JSON.parse(ip)
-                    $.post("__ROOT__/index.php/api/Shop/")
+                    $.post("__ROOT__/index.php/api/Shop/change_ip",{
+                        ip:ip,
+                    })
                 });
             },60000)
             $.post("__ROOT__/index.php/api/Consumedorder/pay_count").done((res) => {

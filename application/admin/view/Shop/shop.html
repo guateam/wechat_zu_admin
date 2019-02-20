@@ -48,6 +48,7 @@
                         <th width="80">ip地址</th>
                         <th width="40">技师充卡提成</th>
                         <th width="40">接待充卡提成</th>
+                        <th width="50">ip是否实时更新</th>
                         {if condition="$edit == 1"}
                         <th width="80">操作</th>
                         {/if}
@@ -71,6 +72,12 @@
                         <td>{$it.recharge_income}
                         </td>
                         <td>{$it.recharge_income_2}
+                        </td>
+                        <td>
+                            <a href="javascript:;" onclick="modify_ip('{$it.ID}')" class="ml-5 btn btn-primary"
+                                style="text-decoration:none">
+                                {if condition="$it.ip_modify==0"}更新{elseif condition="$it.ip_modify==1"}不更新{/if}
+                            </a>
                         </td>
                         {if condition="$edit == 1"}
                         <td>
@@ -120,7 +127,13 @@
             layer_show(title, url, w, h);
         }
 
-
+        function modify_ip(shop_id){
+            $.post("__ROOT__/index.php/api/Shop/change_modify",{
+                id:shop_id
+            }).done((res)=>{
+                location.reload();
+            })
+        }
 
         function show_swal(fun, id) {
             swal({

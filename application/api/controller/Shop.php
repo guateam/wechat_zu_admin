@@ -18,10 +18,21 @@
             }
             $shop->save();
         }
-        public function change_ip($ip){
+        public function change_modify($id){
             $shop = UserModel::get(['ID'=>$id]);
-            if($shop){
-                
+            if($shop->ip_modify == 1){
+                $shop->ip_modify = 0;
+            }else{
+                $shop->ip_modify = 1;
+            }
+            $shop->save();
+        }
+        public function change_ip($ip){
+            $ip = $ip['geoplugin_request'];
+            $shop = UserModel::get(['ID'=>1]);
+            if($shop && $shop['ip_modify'] == 0){
+                $shop->ip_address = $ip;
+                $shop->save();
             }
         }
         public function update($shopname,$address,$open,$close,$phone,$ip,$id,$recharge_income,$recharge_income_2){

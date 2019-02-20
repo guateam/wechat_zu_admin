@@ -154,11 +154,11 @@ class Shop extends Controller{
         $end.=" 23:59:59";
         $end = strtotime($end);
         //时间内的订单
-        $consumed_order = Db::query("select A.generated_time as generated_time , A.order_id as order_id, A.pay_amount as charge,'消费' as note, A.source as source,GROUP_CONCAT(C.job_number) as job_number from consumed_order A ,service_order C where (A.state!=0 and A.state!=3) and A.generated_time >=$begin and A.generated_time <= $end and C.order_id=A.order_id  GROUP BY A.order_id");
+        $consumed_order = Db::query("select A.generated_time as generated_time , A.order_id as order_id, A.pay_amount as charge,'服务消费' as note, A.source as source,GROUP_CONCAT(C.job_number) as job_number from consumed_order A ,service_order C where (A.state!=0 and A.state!=3) and A.generated_time >=$begin and A.generated_time <= $end and C.order_id=A.order_id  GROUP BY A.order_id");
         //时间内的充值记录
-        $recharge = Db::query("select record_id as order_id,charge,note,job_number,generated_time,'小程序充值' as source  from recharge_record where generated_time >=$begin and generated_time <= $end and type=1");
+        $recharge = Db::query("select record_id as order_id,charge,'会员充值' as note,job_number,generated_time,'微信支付' as source  from recharge_record where generated_time >=$begin and generated_time <= $end and type=1");
         //时间内的打赏
-        $tip = Db::query("select ID as order_id,salary as charge,technician_id as job_number,date as generated_time,'打赏' as note,'小程序打赏' as source from tip where date >=$begin and date <= $end");
+        $tip = Db::query("select '' as order_id,salary as charge,technician_id as job_number,date as generated_time,'打赏技师' as note,'微信支付' as source from tip where date >=$begin and date <= $end");
         for($i=0;$i<count($consumed_order);$i++){
             $consumed_order[$i]['source'] = ($consumed_order[$i]['source'] == 0?'网络预约':'到店支付');
         }

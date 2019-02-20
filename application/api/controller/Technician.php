@@ -280,7 +280,6 @@ class Technician extends Controller
                 $new_data->data([
                     'inviter_job_number' => $inviter_job_number,
                     'freshman_job_number' => $job_number,
-                    'persentage' => 0,
                 ]);
                 $new_data->save();
             } else {

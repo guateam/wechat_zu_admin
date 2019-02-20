@@ -228,12 +228,25 @@
             });
             return deferred.state() == "resolved" ? true : false;
         }
+
+
+
         $(function () {
             $('.skin-minimal input').iCheck({
                 checkboxClass: 'icheckbox-blue',
                 radioClass: 'iradio-blue',
                 increaseArea: '20%'
             });
+
+            $("#invite").on('change',()=>{
+                if( $("#invite").val() == ""){
+                    $("#yongjing").attr('hidden',true);
+                }else{
+                    $("#yongjing").attr('hidden',false);
+                }
+            })
+
+
             $("#form-member-add").validate({
                 rules: {
                     username: {
@@ -355,6 +368,7 @@
                     invite = $('#invite').val();
                     phone = $("#mobile").val();
                     job_number = $("#job_number").val();
+
                     $(form).ajaxSubmit({
                         type: 'post', // 提交方式 get/post
                         url: '__ROOT__/index.php/api/Technician/add_technician', // 需要提交的 url

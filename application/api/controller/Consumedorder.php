@@ -96,8 +96,16 @@
 
         public function change_clock($order_id,$state){
             $order = UserModel::get(['order_id'=>$order_id]);
+            
             if($order)
             {
+                if($state == 2){
+                    //调整为繁忙
+                    Db::query("update service_order A,technician B  set B.busy = 1 where A.order_id='$order_id' and B.job_number = A.job_number")
+                }else if($state == 4){
+                    //调整为空闲
+                    Db::query("update service_order A,technician B  set B.busy = 0 where A.order_id='$order_id' and B.job_number = A.job_number")
+                }
                 $order->state = $state;
                 $order->save();
                 return json(['status'=>1]);

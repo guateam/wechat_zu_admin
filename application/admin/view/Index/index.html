@@ -112,6 +112,7 @@
     <script type="text/javascript">
         var count = 0;
         var sound = "/vcr/sound.wav";
+        var ip_interval_id = "";
         $(function () {
             /*$("#min_title_list li").contextMenu('Huiadminmenu', {
                 bindings: {
@@ -127,6 +128,14 @@
                 }
             });*/
             //检查是否有新订单
+            ip_interval_id = setInterval(()=>{
+                //获取ip地址
+                $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function (data) {
+                    ip = JSON.stringify(data, null, 2);
+                    ip = JSON.parse(ip)
+                    $.post("__ROOT__/index.php/api/Shop/")
+                });
+            },60000)
             $.post("__ROOT__/index.php/api/Consumedorder/pay_count").done((res) => {
                 count = res;
                 setInterval(() => {

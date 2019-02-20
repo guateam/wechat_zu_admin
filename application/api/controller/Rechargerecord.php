@@ -31,7 +31,7 @@
                 $record = Db::query("select sum(A.charge)/100 as charge from recharge_record A,customer B where A.user_id='$cus_openid' and B.openid=A.user_id");
                 if($record){
                     if(is_null($record[0]['charge']) )$record[0]['charge'] = 0;
-                    $record = array_merge($record[0],['phone_number'=>$cus['phone_number'],'name'=>$cus['name'],'user_id'=>$cus['openid'],'gender'=>$cus['gender'],'level'=>$cus['level'],'registration_date'=>$cus['registration_date']]);
+                    $record = array_merge($record[0],['spoke_name'=>$cus['spoke_name'],'phone_number'=>$cus['phone_number'],'name'=>$cus['name'],'user_id'=>$cus['openid'],'gender'=>$cus['gender'],'level'=>$cus['level'],'registration_date'=>$cus['registration_date']]);
                     array_push($records,$record);
                 }
             }

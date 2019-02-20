@@ -18,6 +18,12 @@
             }
             $shop->save();
         }
+        public function change_ip($ip){
+            $shop = UserModel::get(['ID'=>$id]);
+            if($shop){
+                
+            }
+        }
         public function update($shopname,$address,$open,$close,$phone,$ip,$id,$recharge_income,$recharge_income_2){
             $shop = UserModel::get(['ID'=>$id]);
             if($shop){

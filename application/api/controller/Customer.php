@@ -43,4 +43,9 @@
                 return false;
             }
         }
+
+        public function addinfo($openid,$spoke_name,$phone){
+            Db::query("update customer set spoke_name='$spoke_name',phone_number='$phone' where openid='$openid'");
+            return json(['status'=>1]);
+        }
     }

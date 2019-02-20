@@ -41,6 +41,7 @@
                 <thead>
                     <tr class="text-c">
                         <th>用户名</th>
+                        <th>微信名</th>
                         <th>性别</th>
                         <th>手机</th>
                         <th>VIP等级</th>
@@ -56,6 +57,7 @@
                 <tbody>
                     {volist name="$customer" id="it" key="k"}
                     <tr class="text-c">
+                        <td>{$it.spoke_name}</td>
                         <td>{$it.name}</td>
                         <td>{if condition="$it.gender==1"}男{elseif condition="$it.gender==2"}女{else /}未知{/if}</td>
                         <td>{$it.phone_number}</td>
@@ -68,8 +70,13 @@
                         <td>
                             <a class="ml-5 btn btn-warning" onclick="recharge_detail('{$it.user_id}')">账单</a>
                         </td>
-                        {if condition="$edit == 1"}
+                        
                         <td class="td-manage">
+                            <a title="录入信息" href="javascript:;" onclick="addinfo('{$it.user_id}',800,600)" class="ml-5 btn btn-primary"
+                                style="text-decoration:none">
+                                录入信息
+                            </a>
+                            {if condition="$edit == 1"}
                             <a title="线下支付" href="javascript:;" onclick="pay('{$it.user_id}')" class="ml-5 btn btn-success"
                                 style="text-decoration:none">
                                 支付线下订单
@@ -78,8 +85,9 @@
                                 style="text-decoration:none">
                                 <i class="Hui-iconfont">&#xe6e2;</i>
                             </a>
+                            {/if}
                         </td>
-                        {/if}
+
                     </tr>
                     {/volist}
                 </tbody>
@@ -124,6 +132,9 @@
         /*用户-添加*/
         function member_add(title, url, w, h) {
             layer_show(title, url, w, h);
+        }
+        function addinfo(openid,w,h){
+            layer_show("录入信息","__ROOT__/index.php/admin/Customer/addinfo/openid/"+openid,w,h)
         }
 
         function pay(openid) {

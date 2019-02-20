@@ -224,7 +224,7 @@ class Technician extends Controller
      *
      */
     public function update_technician($ori_job_number, $name, $idcard, $birthday, $gender,
-        $mobile, $job_number, $skill = '', $describe = '', $level = '', $invite = '', $type = 1) {
+        $mobile, $job_number, $skill = '', $describe = '', $level = '', $invite = '', $type = 1,$nickname = '') {
 
         $is_repeat = self::check_repeat($name, $mobile, $job_number, $idcard, $ori_job_number);
         if ($is_repeat != 1) {
@@ -241,7 +241,8 @@ class Technician extends Controller
         $data->id_number = $idcard;
         $data->birthday = $birthday;
         $data->description = $describe;
-
+        $data->nickname = $nickname;
+        
         $skill_info = \app\api\model\Skill::all(['job_number' => $ori_job_number]);
         foreach ($skill_info as $it) {
             $it->delete();

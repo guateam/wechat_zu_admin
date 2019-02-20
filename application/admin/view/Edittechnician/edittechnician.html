@@ -36,6 +36,13 @@
 			</div>
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-3">
+					<span class="c-red">*</span>昵称：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="{$technician.nickname}" placeholder="" id="nickname" name="username">
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">
 					<span class="c-red">*</span>类别：</label>
 				<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 					<select id="type" onchange="change_type(this)">
@@ -392,6 +399,7 @@
 					ori_job_number = '{$technician.job_number}';
 					describe = $("#description").val();
 					invite = $("#invite").val();
+					nickname = $("#nickname").val();
 
 					$(form).ajaxSubmit({
 						type: 'post', // 提交方式 get/post
@@ -409,6 +417,7 @@
 							level: level,
 							invite: invite,
 							type:type,
+							nickname:nickname
 						},
 						success: function (result) {
 							if (result.status == 1) {

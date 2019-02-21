@@ -323,18 +323,9 @@ class Technician extends Controller
         $self_p = \app\api\model\Inviteship::get(['freshman_job_number' => $job_number]);
         //付给邀请自己的人的钱
         $lost = 0;
-
-        if ($so) {
-            foreach ($so as $svod) {
-
-                $item = \app\api\model\Servicetype::get(['ID' => $svod['item_id']]);
-                //计算支付给邀请人的钱
-                if ($item && $self_p) {
-                    $lost += $item->invite_income / 100;
-                }
-            }
+        foreach ($so as $svod) {
+            $lost += $svod['yongjin'];
         }
-
         return $lost;
     }
 
@@ -348,7 +339,7 @@ class Technician extends Controller
         $tech_self = $tech_self[0];
         //该技师在时间内自己做的所有订单
         $so = Db::query("select A.* from service_order A,consumed_order B where A.job_number = '$job_number'and A.order_id=B.order_id and B.end_time > $begin and B.end_time < $end");
-        //$so = \app\api\model\Serviceorder::all(['job_number'=>$job_number]);
+        // //$so = \app\api\model\Serviceorder::all(['job_number'=>$job_number]);
         //该技师邀请的人
         $invited = \app\api\model\Inviteship::all(['inviter_job_number' => $job_number]);
         //邀请该技师的人
@@ -375,40 +366,22 @@ class Technician extends Controller
         for($i=0;$i<count($consumed_orders);$i++){
             $yeji+=$consumed_orders[$i]['pay_amount'];
         }
-        $yeji/=100;
 
         if ($so) {
             foreach ($so as $svod) {
-                $item = \app\api\model\Servicetype::get(['ID' => $svod['item_id']]);
                 $order_id = $svod['order_id'];
                 $co =Db::query("select state from consumed_order where order_id='$order_id'");
                 //不存在的订单不计算
                 if(!$co)continue;
                 //订单状态未达到待评价或评价完成的不计算
                 if($co[0]['state'] != 4 && $co[0]['state'] != 5)continue;
-
-                if ($item) {
-                    $per = 0;
-                    //如果该技师被邀请,计算支付给邀请人的钱
-                    if ($self_p) {
-                        $lost += $item->invite_income / 100;
-                    }
-                    //如果是排钟，则计数增加，根据技师类别计算排钟提成
-                    if ($svod['clock_type'] == 1) {
-                        $pai++;
-                        if($tech_self['type'] == 1)
-                            $pai_price+=$item->pai_commission /100;
-                        else
-                            $pai_price+=$item->pai_commissio2 /100;
-                    //如果是点钟，则计数增加，根据技师类别计算点钟提成
-                    } else if ($svod['clock_type'] == 2) {
-                        $dian++;
-                        if($tech_self['type'] == 1)
-                            $dian_price += $item->commission / 100;
-                        else
-                            $dian_price+=$item->commissio2 /100;
-                    }
-
+                //排钟
+                if($svod['clock_type']==1){
+                    $pai++;
+                    $pai_price += $svod['ticheng'];
+                }else if($svod['clock_type']==2){
+                    $dian++;
+                    $dian_price += $svod['ticheng'];
                 }
 
             }
@@ -425,12 +398,12 @@ class Technician extends Controller
             'status' => 1,
             'pai' => $pai,
             'dian' => $dian,
-            'pai_earn' => $pai_price,
-            'dian_earn'=> $dian_price,
-            'come_from_other' => $come_frome_other,
-            'yeji' =>$yeji,
-            'lost' => $lost,
-            'final_salary' => $pai_price + $dian_price + $come_frome_other,
+            'pai_earn' => $pai_price/100,
+            'dian_earn'=> $dian_price/100,
+            'come_from_other' => $come_frome_other/100,
+            'yeji' =>$yeji/100,
+            'lost' => $lost/100,
+            'final_salary' => ($pai_price + $dian_price + $come_frome_other)/100,
         ];
     }
 
@@ -575,7 +548,9 @@ class Technician extends Controller
             }
             //获取充值额,从数据库查出来的单位是分，转换成元
             $recharge= Db::query("select sum(charge)/100 as salary from recharge_record where generated_time >= $begin and generated_time <= $end and job_number = '$job_number'");
+            $recharge_income = 0;
             if ($recharge) {
+                $recharge_income = $recharge[0]['ticheng'];
                 $recharge = (int) $recharge[0]['salary'];
                 if (is_null($recharge)) {
                     $recharge = 0;
@@ -583,13 +558,7 @@ class Technician extends Controller
             } else {
                 $recharge = 0;
             }
-            //根据技师类型计算充值提成
-            $recharge_income = 0;
-            if($tech['type'] == 1){
-                $recharge_income = $recharge*$recharge_ticheng;
-            }else if($tech['type'] == 2){
-                $recharge_income = $recharge*$recharge_ticheng_2;
-            }
+
             //获取打赏金额
             $dashang = Db::query("select sum(salary)/100 as salary from tip where technician_id = '$job_number' and date >=$begin and date <= $end");
             if($dashang){
@@ -604,7 +573,7 @@ class Technician extends Controller
             $salary = array_merge($salary, ['name' => $tech['name'], 'job_number' => $tech['job_number'], 
             'entry_date' => date("Y-m-d", $tech['entry_date']),'pai_income'=>$yeji['pai_earn'], 'dian_income' => $yeji['dian_earn'], 
             'dian' => $yeji['dian'],'pai'=>$yeji['pai'], 'dian_bonus' => 0, 'invite_income' => $yeji['come_from_other'], 
-            'recharge_amount'=>$recharge,'tip_income'=>$dashang,'recharge_income' => (int)($recharge*$recharge_ticheng)]);
+            'recharge_amount'=>$recharge,'tip_income'=>$dashang,'recharge_income' => (int)($recharge_income)]);
             array_push($salarys, $salary);
         }
         //根据点钟数量计算排行并赋予点钟奖励

@@ -108,27 +108,21 @@ class Shop extends Controller{
         foreach($technicians as $idx => $tc){
             $job_number = $tc['job_number'];
             $select_time = time();
-            //获取刷钟情况
-            $clock = Db::query("select state from clock where job_number = '$job_number' order by `time` limit 1");
-            //获取预约情况
-            $appoint_tech = Db::query("select * from service_order where job_number = '$job_number' and appoint_time > ($select_time - (select Sum(duration)*60 from service_order A,service_type B where A.item_id = B.ID and A.order_id =(select order_id from service_order where job_number = '$job_number' and appoint_time < $select_time order by appoint_time desc limit 1)  ))");
-            //是否在上钟
-            $up_clock = false;
+            
+            //在选择的时间以后最近订单被预约并且时间间隔在1个半小时以内,并且订单在预约状态或服务中状态的
+            $appoint_after = sql_str("select A.* from service_order A,consumed_order B where  B.order_id = A.order_id and (B.state=1 or B.state=2) and A.appoint_time >= $select_time and A.appoint_time-90*60 <= $select_time and A.job_number='$job_number' order by (A.appoint_time - $select_time) ASC");
+            //在选择的时间之前最近订单被预约并且时间间隔在1个半小时以内的,并且订单在预约状态或服务中状态的
+            $appoint_before = sql_str("select A.* from service_order A,consumed_order B where  B.order_id = A.order_id and (B.state=1 or B.state=2) and A.appoint_time <= $select_time and A.appoint_time+90*60 >= $select_time and A.job_number='$job_number' order by ($select_time - A.appoint_time ) ASC");
+
             //是否被预约
             $already_appoint = false;
-            //若有刷钟记录
-            if($clock){
-                //若最近的刷钟记录为上钟，则上钟情况为true
-                if($clock[0]['state'] == 1)
-                    $up_clock = true;
-            }
             //若有预约
-            if($appoint_tech){
+            if($appoint_after || $appoint_after){
                 //预约情况为true
                 $already_appoint = true;
             }
 
-            if(!$already_appoint && !$up_clock){
+            if(!$already_appoint && $tc['busy'] == 0){
                 array_push($spare_tech,$tc);
             }
         }

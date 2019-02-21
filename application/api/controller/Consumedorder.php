@@ -148,9 +148,41 @@
             'pay_amount'=>$total_price*100,'user_num'=>1,'payment_user_id'=>$user_id,'note'=>$note,'source'=>1,'end_time'=>$time]);
             $order->save();
             foreach($info as $it){
+                $item_id = $it['service_id'];
+                $job_number = $it['job_number'];
+                $ticheng = 0;
+                $yongjin = 0;
+
+
+                $service_type = Db::query("select * from service_type where ID='$item_id' ");
+                $technician = Db::query("select * from technician where job_number='$job_number'");
+
+                $yongjin = $service_type[0]['invite_income'];
+                //技师
+                if($technician[0]['type']==1){
+                    //排钟
+                    if($it['clock'] == 1){
+                        $ticheng = $service_type[0]['pai_commission'];
+                    //点钟
+                    }else if($it['clock'] == 2){
+                        $ticheng = $service_type[0]['commission'];
+                    }
+                //接待
+                }else if($technician[0]['type']==2){
+                    //排钟
+                    if($it['clock'] == 1){
+                        $ticheng = $service_type[0]['pai_commission2'];
+                    //点钟
+                    }else if($it['clock'] == 2){
+                        $ticheng = $service_type[0]['commission2'];
+                    }
+                }
+
                 $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
                 'item_id'=>$it['service_id'],'job_number'=>$it['job_number'],'price'=>$it['price'],
-                'private_room_number'=>$it['room_number'],'clock_type'=>$it['clock'],'appoint_time'=>$time]);
+                'private_room_number'=>$it['room_number'],'clock_type'=>$it['clock'],'appoint_time'=>$time,
+                'ticheng'=>$ticheng,'yongjin'=>$yongjin]);
+
                 $sv_order->save();
             }
             return json(['status'=>1,'data'=>$order_id]);

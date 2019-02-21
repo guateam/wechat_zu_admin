@@ -56,6 +56,12 @@
             <option value="6">其他</option>
             <option value="7">美团支付</option>
         </select><br>
+        <div id="check_div" hidden>
+            <div style="width:90px ; display:inline-block"><span style="color:red;">*</span>验证码:</div>
+            <input type="text" id="check_code" class="theinput">
+            <button class="btn btn-success" onclick="message()" id="check_button">获取验证码</button>
+        </div>
+        <br>
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>支付金额(元):</div>
         <input type="text" id="cash" class="theinput"><br><br>
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>技师:</div>
@@ -106,21 +112,65 @@
         var info = []
         var total_price = 0
         var phone = ""
+        var message_interval = 0;
+        var cooldown = 0;
+        var check_code = "";
+        $("#pay_method").change(()=>{
+            choosen = $('#pay_method option:selected').val()
+            if(choosen == 3){
+                $("#check_div").attr('hidden',false);
+            }else{
+                $("#check_div").attr('hidden',true);
+            }
+        })
+
         $('#tech').change(() => {
             $("#add").attr('disabled', true);
             var choosen = $('#tech option:selected').val()
             if (choosen == "") return;
+        
             $.post('__ROOT__/index.php/api/Skill/get_skill', {
                 job_number: choosen
             }).done((res) => {
                 $('#service').empty()
                 for (var i = 0; i < res.length; i++) {
-                    $('#service').append("<option value ='" + res[i]['service_id'] + ',' + res[i]['name'] + ',' +
+                    $('#service').append("<option value ='" + res[i]['service_id'] + ',' + res[i][
+                            'name'
+                        ] + ',' +
                         res[i]['price'] + "'>" + res[i]['name'] + "</option>")
                 }
                 $("#add").attr('disabled', false);
             })
         })
+
+        function message() {
+            phone = $("#phone").val();
+            var myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
+            if (!myreg.test(phone)) {
+                swal({
+                    title: '请填写正确的手机号',
+                    type: 'error'
+                })
+                return;
+            }
+            if (cooldown != 0) {
+                return;
+            }
+            $.post("__ROOT__/index.php/api/Shop/message", {
+                phone: phone
+            }).done((res) => {
+                check_code = res.code;
+                cooldown = 45
+                message_interval = setInterval(() => {
+                    $("#check_button").html(cooldown);
+                    cooldown -= 1;
+                    if (cooldown == 0) {
+                        clearInterval(message_interval);
+                        $("#check_button").html('获取验证码');
+                    }
+                }, 1000)
+            })
+        }
 
         function addservice() {
             var tech = $('#tech option:selected').val()
@@ -137,11 +187,11 @@
                 'service_id': service[0],
                 'price': service[2],
                 'room_number': room[0],
-                'clock':clock
+                'clock': clock
             }
-            
+
             $('#confirm_service').append("<p style='display:inline-block'>技师: " + tech + "\t服务:" + service[1] + "\t包厢:" +
-                room[0] + "\t上钟类型:"+(clock==1?'排钟':'点钟') + "</p><br>")
+                room[0] + "\t上钟类型:" + (clock == 1 ? '排钟' : '点钟') + "</p><br>")
             //总价通过服务价格自动计算，暂时改成手动输入
             //total_price += parseInt(service[2]) / 100;
             //$('#cash').val(total_price);
@@ -164,7 +214,7 @@
                 })
                 return;
             }
-            if ( $("#cash").val() == "" ) {
+            if ($("#cash").val() == "") {
                 swal({
                     title: "",
                     text: "金额不能为空"
@@ -172,15 +222,25 @@
                 return;
             }
             total_price = $('#cash').val();
+            //余额支付需要验证码
+            if ($('#pay_method option:selected').val() == 3) {
+                if($('#check_code').val()!= check_code){
+                    swal({
+                        title:"验证码错误",
+                        type:'error'
+                    })
+                    return;
+                }
+            }
             $.post("__ROOT__/index.php/api/Consumedorder/create_order", {
                 info: info,
                 total_price: total_price,
                 phone: phone,
                 method: $('#pay_method option:selected').val(),
                 username: $('#username').val(),
-                note:$('#note').val()
+                note: $('#note').val()
             }).done((res) => {
-                
+
                 if (res.status == 1) {
                     swal({
                         title: "订单创建成功",
@@ -188,7 +248,7 @@
                         type: "success"
                     })
                     location.reload();
-                }else{
+                } else {
                     swal({
                         title: "订单创建失败",
                         text: res.msg,

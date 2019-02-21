@@ -52,13 +52,17 @@
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
-                        <th width="100">工号</th>
-                        <th width="80">排钟数量</th>
-                        <th width="80">点钟数量</th>
-                        <th width="100">排钟提成</th>
-                        <th width="100">点钟提成</th>
+					
+						<th width="90">姓名</th>
+                        <th width="90">工号</th>
+                        
+                        <th width="60">点钟数量</th>
+						<th width="80">点钟提成</th>
+						<th width="60">排钟数量</th>
+                        <th width="80">排钟提成</th>
+                       
                         <th width="80">业绩</th>
-                        <th width="80">来自推荐</th>
+                        <th width="80">佣金</th>
                         <th width="100">总收入</th>
                         <th width="60" >明细</th>
                     </tr>
@@ -66,11 +70,14 @@
                 <tbody>
                     {volist name="$yeji" id="it"}
                     <tr class="text-c">
+						<td>{$it.name}</td>
                         <td>{$it.job_number}</td>
-                        <td>{$it.pai}</td>
+                        
                         <td>{$it.dian}</td>
+						<td>￥{$it.dian_earn}</td>
+						<td>{$it.pai}</td>
                         <td>￥{$it.pai_earn}</td>
-                        <td>￥{$it.dian_earn}</td>
+                        
                         <td>￥{$it.yeji}</td>
                         <td>￥{$it.come_from_other}</td>
                         <td>￥{$it.final_salary}</td>

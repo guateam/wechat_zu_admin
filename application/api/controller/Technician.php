@@ -547,7 +547,7 @@ class Technician extends Controller
                 $recharge_ticheng = 0;
             }
             //获取充值额,从数据库查出来的单位是分，转换成元
-            $recharge= Db::query("select sum(charge)/100 as salary from recharge_record where generated_time >= $begin and generated_time <= $end and job_number = '$job_number'");
+            $recharge= Db::query("select sum(charge)/100 as salary,ticheng from recharge_record where generated_time >= $begin and generated_time <= $end and job_number = '$job_number'");
             $recharge_income = 0;
             if ($recharge) {
                 $recharge_income = $recharge[0]['ticheng'];

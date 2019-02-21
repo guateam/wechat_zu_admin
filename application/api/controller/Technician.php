@@ -361,6 +361,9 @@ class Technician extends Controller
         $dian = 0;
         //排钟数量
         $pai = 0;
+		
+		$name = $tech_self['name'];
+		
         //来自邀请的人的收入
         $come_frome_other = 0;
         //邀请自己的人将得到的钱，不从自己这里出，由店内承担支出
@@ -417,7 +420,8 @@ class Technician extends Controller
             }
         }
         return [
-            'job_number' => $job_number,
+            'name' => $name,
+			'job_number' => $job_number,
             'status' => 1,
             'pai' => $pai,
             'dian' => $dian,

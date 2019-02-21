@@ -53,10 +53,12 @@
                 <thead>
                     <tr class="text-c">
                         <th width="100">工号</th>
-                        <th width="80">排钟数量</th>
+                        
                         <th width="80">点钟数量</th>
+						<th width="100">点钟提成</th>
+						<th width="80">排钟数量</th>
                         <th width="100">排钟提成</th>
-                        <th width="100">点钟提成</th>
+                       
                         <th width="80">业绩</th>
                         <th width="80">来自推荐</th>
                         <th width="100">总收入</th>
@@ -67,10 +69,12 @@
                     {volist name="$yeji" id="it"}
                     <tr class="text-c">
                         <td>{$it.job_number}</td>
-                        <td>{$it.pai}</td>
+                        
                         <td>{$it.dian}</td>
+						<td>￥{$it.dian_earn}</td>
+						<td>{$it.pai}</td>
                         <td>￥{$it.pai_earn}</td>
-                        <td>￥{$it.dian_earn}</td>
+                        
                         <td>￥{$it.yeji}</td>
                         <td>￥{$it.come_from_other}</td>
                         <td>￥{$it.final_salary}</td>

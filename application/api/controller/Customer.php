@@ -11,10 +11,10 @@
                 return $data;
             }
         }
-        public function get_name_by_phone($phone){
-            $data = Db::query("select name from customer where phone_number = '$phone'");
+        public function get_spokename_by_phone($phone){
+            $data = Db::query("select spoke_name from customer where phone_number = '$phone'");
             if($data){
-                return json(['name'=>$data[0]['name']]);
+                return json(['name'=>$data[0]['spoke_name']]);
             }
             return json(['name'=>'']);
         }

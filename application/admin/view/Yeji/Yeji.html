@@ -57,8 +57,10 @@
                         <th width="80">点钟数量</th>
                         <th width="100">排钟提成</th>
                         <th width="100">点钟提成</th>
+                        <th width="80">业绩</th>
                         <th width="80">来自推荐</th>
                         <th width="100">总收入</th>
+                        <th width="60" >明细</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,8 +71,12 @@
                         <td>{$it.dian}</td>
                         <td>￥{$it.pai_earn}</td>
                         <td>￥{$it.dian_earn}</td>
+                        <td>￥{$it.yeji}</td>
                         <td>￥{$it.come_from_other}</td>
                         <td>￥{$it.final_salary}</td>
+                        <td>
+                            <button type="btn btn-primary" onclick="detail('{$it.job_number}','{begin}','{end}')">明细</button>
+                        </td>
                     </tr>
                     {/volist}
                 </tbody>
@@ -109,7 +115,10 @@
         function zhidingren(title, url, id, w, h) {
             layer_show(title, url, w, h);
         }
-
+        function detail(job_number,begin,end){
+            
+            layer_show()
+        }
         function show_swal(fun, id) {
             swal({
                 title: "请输入要修改的" + fun,

@@ -365,6 +365,14 @@ class Technician extends Controller
         $come_frome_other = 0;
         //邀请自己的人将得到的钱，不从自己这里出，由店内承担支出
         $lost = 0;
+        //业绩
+        $yeji = 0;
+        //获取所有该技师参与的consumed_order,计算业绩
+        $consumed_orders = Db::query("select A.* from consumed_order A,service_order B where B.job_number='$job_number' and A.order_id= B.order_id group by A.order_id");
+        for($i=0;$i<count($consumed_orders);$i++){
+            $yeji+=$consumed_orders[$i]['pay_amount'];
+        }
+        $yeji/=100;
 
         if ($so) {
             foreach ($so as $svod) {
@@ -416,6 +424,7 @@ class Technician extends Controller
             'pai_earn' => $pai_price,
             'dian_earn'=> $dian_price,
             'come_from_other' => $come_frome_other,
+            'yeji' =>$yeji,
             'lost' => $lost,
             'final_salary' => $pai_price + $dian_price + $come_frome_other,
         ];

@@ -204,6 +204,13 @@
                 })
                 return;
             }
+            if(info.length > 0){
+                swal({
+                    title:"一次只能添加一项服务",
+                    type:'info'
+                })
+                return;
+            }
             var service = $('#service option:selected').val()
             service = service.split(',')
             var room = $('#room option:selected').val()

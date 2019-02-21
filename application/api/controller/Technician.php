@@ -317,9 +317,8 @@ class Technician extends Controller
     }
     public static function get_lost($job_number, $begin, $end)
     {
-        //该技师在时间内自己做的所有订单
-        $so = Db::query("select * from service_order where job_number = '$job_number' and appoint_time > $begin and appoint_time < $end");
-        //$so = \app\api\model\Serviceorder::all(['job_number'=>$job_number]);
+        //该技师在时间内自己做的所有完成的（4，5）订单
+        $so = Db::query("select A.* from service_order A,consumed_order B where A.job_number='$job_number' and B.order_id = A.order_id and B.end_time >=$begin and B.end_time <= $end and (B.state=4 or B.state=5)");
         //邀请该技师的人
         $self_p = \app\api\model\Inviteship::get(['freshman_job_number' => $job_number]);
         //付给邀请自己的人的钱
@@ -327,6 +326,7 @@ class Technician extends Controller
 
         if ($so) {
             foreach ($so as $svod) {
+
                 $item = \app\api\model\Servicetype::get(['ID' => $svod['item_id']]);
                 //计算支付给邀请人的钱
                 if ($item && $self_p) {
@@ -347,7 +347,7 @@ class Technician extends Controller
         $tech_self = Db::query("select * from technician where job_number='$job_number'");
         $tech_self = $tech_self[0];
         //该技师在时间内自己做的所有订单
-        $so = Db::query("select * from service_order where job_number = '$job_number' and appoint_time > $begin and appoint_time < $end");
+        $so = Db::query("select A.* from service_order A,consumed_order B where A.job_number = '$job_number'and A.order_id=B.order_id and B.end_time > $begin and B.end_time < $end");
         //$so = \app\api\model\Serviceorder::all(['job_number'=>$job_number]);
         //该技师邀请的人
         $invited = \app\api\model\Inviteship::all(['inviter_job_number' => $job_number]);

@@ -338,7 +338,7 @@ class Technician extends Controller
         $tech_self = Db::query("select * from technician where job_number='$job_number'");
         $tech_self = $tech_self[0];
         //该技师在时间内自己做的所有订单
-        $so = Db::query("select A.* from service_order A,consumed_order B where A.job_number = '$job_number'and A.order_id=B.order_id and B.end_time > $begin and B.end_time < $end");
+        $so = Db::query("select A.* from service_order A,consumed_order B where A.job_number = '$job_number'and A.order_id=B.order_id and B.end_time > $begin and B.end_time < $end and (B.state=4 or B.state=5)");
         // //$so = \app\api\model\Serviceorder::all(['job_number'=>$job_number]);
         //该技师邀请的人
         $invited = \app\api\model\Inviteship::all(['inviter_job_number' => $job_number]);
@@ -362,7 +362,7 @@ class Technician extends Controller
         //业绩
         $yeji = 0;
         //获取所有该技师参与的consumed_order,计算业绩
-        $consumed_orders = Db::query("select A.* from consumed_order A,service_order B where B.job_number='$job_number' and A.order_id= B.order_id group by A.order_id");
+        $consumed_orders = Db::query("select A.* from consumed_order A,service_order B where B.job_number='$job_number' and A.order_id= B.order_id and A.end_time >= $begin and A.end_time <= $end and(A.state=4 or A.state=5) group by A.order_id");
         for($i=0;$i<count($consumed_orders);$i++){
             $yeji+=$consumed_orders[$i]['pay_amount'];
         }

@@ -100,33 +100,13 @@ class Shop extends Controller{
     }
 
     public function payatshop(){
-        $technicians = Db::query("select * from technician");
+        $technicians = Db::query("select * from technician where type !=2");
         $service = Db::query("select ID,name,price from service_type");
         $room = Db::query("select ID,name from private_room");
-        $spare_tech = [];
-        //去除有约的技师
-        foreach($technicians as $idx => $tc){
-            $job_number = $tc['job_number'];
-            $select_time = time();
-            
-            //在选择的时间以后最近订单被预约并且时间间隔在1个半小时以内,并且订单在预约状态或服务中状态的
-            $appoint_after = Db::query("select A.* from service_order A,consumed_order B where  B.order_id = A.order_id and (B.state=1 or B.state=2) and A.appoint_time >= $select_time and A.appoint_time-90*60 <= $select_time and A.job_number='$job_number' order by (A.appoint_time - $select_time) ASC");
-            //在选择的时间之前最近订单被预约并且时间间隔在1个半小时以内的,并且订单在预约状态或服务中状态的
-            $appoint_before = Db::query("select A.* from service_order A,consumed_order B where  B.order_id = A.order_id and (B.state=1 or B.state=2) and A.appoint_time <= $select_time and A.appoint_time+90*60 >= $select_time and A.job_number='$job_number' order by ($select_time - A.appoint_time ) ASC");
 
-            //是否被预约
-            $already_appoint = false;
-            //若有预约
-            if($appoint_after || $appoint_after){
-                //预约情况为true
-                $already_appoint = true;
-            }
+        
 
-            if(!$already_appoint && $tc['busy'] == 0){
-                array_push($spare_tech,$tc);
-            }
-        }
-        $this->assign('technicians',$spare_tech);
+        $this->assign('technicians',$technicians);
         $this->assign('service',$service);
         $this->assign('room',$room);
         return $this->fetch('Shop/payatshop');
@@ -156,14 +136,17 @@ class Shop extends Controller{
         $tip = Db::query("select '' as order_id,salary as charge,technician_id as job_number,date as generated_time,'打赏技师' as note,'小程序支付' as source,'微信支付' as payment_method from tip where date >=$begin and date <= $end");
         
         for($i=0;$i<count($consumed_order);$i++){
-            $consumed_order[$i]['source'] = ($consumed_order[$i]['source'] == 0?'小程序支付':'到店支付');
-            if($consumed_order[$i]['payment_method'] == 1)$consumed_order[$i]['payment_method'] = "微信支付";
+            if($consumed_order[$i]['payment_method'] == 1){
+                $consumed_order[$i]['payment_method'] = $consumed_order[$i]['source'] == 0?'微信支付':'微信扫码支付';
+            }
             elseif($consumed_order[$i]['payment_method'] == 2)$consumed_order[$i]['payment_method'] = "支付宝支付";
             elseif($consumed_order[$i]['payment_method'] == 3)$consumed_order[$i]['payment_method'] = "会员卡支付";
             elseif($consumed_order[$i]['payment_method'] == 4)$consumed_order[$i]['payment_method'] = "现金支付";
             elseif($consumed_order[$i]['payment_method'] == 5)$consumed_order[$i]['payment_method'] = "银行卡支付";
             elseif($consumed_order[$i]['payment_method'] == 6)$consumed_order[$i]['payment_method'] = "其他方式支付";
             elseif($consumed_order[$i]['payment_method'] == 7)$consumed_order[$i]['payment_method'] = "美团支付";
+
+            $consumed_order[$i]['source'] = ($consumed_order[$i]['source'] == 0?'小程序支付':'到店支付');
         }
         
         $result = array_merge($consumed_order,$recharge,$tip);

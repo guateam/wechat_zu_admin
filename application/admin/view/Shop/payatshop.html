@@ -42,10 +42,10 @@
         </a>
     </nav>
     <div id="step1" style="margin-top: 5px;margin-bottom: 5px;margin-left:25px;padding-left: 10px">
-        <div style="width:90px ; display:inline-block">&nbsp;&nbsp;顾客姓名:</div>
-        <input type="text" id="username" class="theinput"><br>
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>顾客手机号:</div>
         <input type="text" id="phone" class="theinput"><br>
+        <div style="width:90px ; display:inline-block">&nbsp;&nbsp;顾客姓名:</div>
+        <input type="text" id="username" class="theinput"><br>
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>支付方式:</div>
         <select class="theinput" name="" id="pay_method">
             <option value="1">微信支付</option>
@@ -59,7 +59,10 @@
         <div id="check_div" hidden>
             <div style="width:90px ; display:inline-block"><span style="color:red;">*</span>验证码:</div>
             <input type="text" id="check_code" class="theinput">
-            <button class="btn btn-success" onclick="message()" id="check_button">获取验证码</button>
+            <button class="btn btn-success" onclick="message()" id="check_button">获取验证码</button><br>
+
+            <div style="width:90px ; display:inline-block"><span style="color:red;">*</span>余额剩余:</div>
+            <span id="cus_cash">待查询...</span>
         </div>
         <br>
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>支付金额(元):</div>
@@ -115,24 +118,41 @@
         var message_interval = 0;
         var cooldown = 0;
         var check_code = "";
+        var busy = null;
+
         $("#pay_method").change(()=>{
             choosen = $('#pay_method option:selected').val()
             if(choosen == 3){
                 $("#check_div").attr('hidden',false);
+                $.post("__ROOT__/index.php/api/Customer/get_cash_by_phone2",{
+                phone:$('#phone').val()
+                }).done((res)=>{
+                    $("#cus_cash").html('￥' + res.cash/100);
+                })
             }else{
                 $("#check_div").attr('hidden',true);
             }
+            
+        })
+
+        $('#phone').blur(()=>{  
+            $.post("__ROOT__/index.php/api/Customer/get_name_by_phone",{
+                phone:$('#phone').val()
+            }).done((res)=>{
+                $('#username').val(res.name);
+            })
         })
 
         $('#tech').change(() => {
             $("#add").attr('disabled', true);
             var choosen = $('#tech option:selected').val()
             if (choosen == "") return;
-        
+            
             $.post('__ROOT__/index.php/api/Skill/get_skill', {
                 job_number: choosen
             }).done((res) => {
                 $('#service').empty()
+                busy = res[0]['busy'];
                 for (var i = 0; i < res.length; i++) {
                     $('#service').append("<option value ='" + res[i]['service_id'] + ',' + res[i][
                             'name'
@@ -175,7 +195,13 @@
         function addservice() {
             var tech = $('#tech option:selected').val()
             if (tech == "") return;
-
+            if(busy == 1){
+                swal({
+                    title:"该技师目前繁忙，不可约",
+                    type:'error'
+                })
+                return;
+            }
             var service = $('#service option:selected').val()
             service = service.split(',')
             var room = $('#room option:selected').val()

@@ -12,6 +12,8 @@
          */
         public function get_skill($job_number){
             $skill_list = Db::query("select * from skill where job_number='$job_number'");
+            $tech = Db::query("select busy from technician where job_number='$job_number'");
+
             $ctrl = new \app\api\controller\Servicetype();
             foreach($skill_list as $idx => $sk){
                 $name = $ctrl->getservicename($sk['service_id']);
@@ -19,6 +21,7 @@
                 if($name){
                     $skill_list[$idx]['name'] = $name;
                     $skill_list[$idx]['price'] = $price;
+                    $skill_list[$idx]['busy'] = $tech[0]['busy'];
                 }
             }
             return $skill_list;

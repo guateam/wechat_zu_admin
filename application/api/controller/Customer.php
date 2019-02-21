@@ -11,6 +11,13 @@
                 return $data;
             }
         }
+        public function get_name_by_phone($phone){
+            $data = Db::query("select name from customer where phone_number = '$phone'");
+            if($data){
+                return json(['name'=>$data[0]['name']]);
+            }
+            return json(['name'=>'']);
+        }
 
         public function delete_customer($id){
             foreach($id as $i){
@@ -27,11 +34,21 @@
             $charge =0;
             if(count($records)>0)
                 $charge = intval($records[0]['charge']);
-            $pay = Db::query("select sum(pay_amount)/100 as pay from consumed_order where user_id='$openid' and (state!=3) and payment_method=3");
+            $pay = Db::query("select sum(pay_amount)/100 as pay from consumed_order where user_id='$openid' and (state!=3 and state !=0) and payment_method=3");
             if(count($pay)>0)
                 $pay = intval($pay[0]['pay']);
             $money = $charge - $pay;
             return $money;
+        }
+        
+        public function get_cash_by_phone2($phone){
+            $tech = Db::query("select * from customer where phone_number = $phone");
+            if($tech){
+                $money = self::get_cash($tech[0]['openid']);
+                return json(['cash'=>$money]);
+            }else{
+                return json(['cash'=>0]) ;
+            }
         }
 
         public function get_cash_by_phone($phone){

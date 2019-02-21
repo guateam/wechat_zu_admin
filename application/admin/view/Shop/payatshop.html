@@ -118,6 +118,7 @@
         var message_interval = 0;
         var cooldown = 0;
         var check_code = "";
+        var get_message = false;
         var busy = null;
 
         $("#pay_method").change(()=>{
@@ -127,7 +128,7 @@
                 $.post("__ROOT__/index.php/api/Customer/get_cash_by_phone2",{
                 phone:$('#phone').val()
                 }).done((res)=>{
-                    $("#cus_cash").html('￥' + res.cash/100);
+                    $("#cus_cash").html('￥' + res.cash);
                 })
             }else{
                 $("#check_div").attr('hidden',true);
@@ -136,7 +137,7 @@
         })
 
         $('#phone').blur(()=>{  
-            $.post("__ROOT__/index.php/api/Customer/get_name_by_phone",{
+            $.post("__ROOT__/index.php/api/Customer/get_spokename_by_phone",{
                 phone:$('#phone').val()
             }).done((res)=>{
                 $('#username').val(res.name);
@@ -180,6 +181,7 @@
                 phone: phone
             }).done((res) => {
                 check_code = res.code;
+                get_message = true;
                 cooldown = 45
                 message_interval = setInterval(() => {
                     $("#check_button").html(cooldown);
@@ -253,6 +255,13 @@
                 if($('#check_code').val()!= check_code){
                     swal({
                         title:"验证码错误",
+                        type:'error'
+                    })
+                    return;
+                }
+                if(!get_message){
+                    swal({
+                        title:"请先获取验证码",
                         type:'error'
                     })
                     return;

@@ -110,9 +110,9 @@ class Shop extends Controller{
             $select_time = time();
             
             //在选择的时间以后最近订单被预约并且时间间隔在1个半小时以内,并且订单在预约状态或服务中状态的
-            $appoint_after = sql_str("select A.* from service_order A,consumed_order B where  B.order_id = A.order_id and (B.state=1 or B.state=2) and A.appoint_time >= $select_time and A.appoint_time-90*60 <= $select_time and A.job_number='$job_number' order by (A.appoint_time - $select_time) ASC");
+            $appoint_after = Db::query("select A.* from service_order A,consumed_order B where  B.order_id = A.order_id and (B.state=1 or B.state=2) and A.appoint_time >= $select_time and A.appoint_time-90*60 <= $select_time and A.job_number='$job_number' order by (A.appoint_time - $select_time) ASC");
             //在选择的时间之前最近订单被预约并且时间间隔在1个半小时以内的,并且订单在预约状态或服务中状态的
-            $appoint_before = sql_str("select A.* from service_order A,consumed_order B where  B.order_id = A.order_id and (B.state=1 or B.state=2) and A.appoint_time <= $select_time and A.appoint_time+90*60 >= $select_time and A.job_number='$job_number' order by ($select_time - A.appoint_time ) ASC");
+            $appoint_before = Db::query("select A.* from service_order A,consumed_order B where  B.order_id = A.order_id and (B.state=1 or B.state=2) and A.appoint_time <= $select_time and A.appoint_time+90*60 >= $select_time and A.job_number='$job_number' order by ($select_time - A.appoint_time ) ASC");
 
             //是否被预约
             $already_appoint = false;

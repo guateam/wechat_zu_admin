@@ -24,6 +24,7 @@
         <i class="Hui-iconfont">&#xe67f;</i> 首页
         <span class="c-gray en">&gt;</span> 技师管理
         <span class="c-gray en">&gt;</span> 业绩查询
+        <span class="c-gray en">&gt;</span> 业绩明细
         <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);"
             title="刷新">
             <i class="Hui-iconfont">&#xe68f;</i>
@@ -55,35 +56,24 @@
 					
 						<th width="90">姓名</th>
                         <th width="90">工号</th>
-                        
-                        <th width="60">点钟数量</th>
-						<th width="80">点钟提成</th>
-						<th width="60">排钟数量</th>
-                        <th width="80">排钟提成</th>
-                       
+                        <th width="90">订单号</th>
                         <th width="80">业绩</th>
-                        <th width="80">佣金</th>
-                        <th width="100">总收入</th>
-                        <th width="60" >明细</th>
+                        <th width="60">钟类型</th>
+						<th width="80">提成</th>
+                        <th width="140">时间</th>
                     </tr>
                 </thead>
                 <tbody>
                     {volist name="$yeji" id="it"}
                     <tr class="text-c">
-						<td>{$it.name}</td>
-                        <td>{$it.job_number}</td>
+						<td>{$tech.name}</td>
+                        <td>{$tech.job_number}</td>
                         
-                        <td>{$it.dian}</td>
-						<td>￥{$it.dian_earn}</td>
-						<td>{$it.pai}</td>
-                        <td>￥{$it.pai_earn}</td>
-                        
-                        <td>￥{$it.yeji}</td>
-                        <td>￥{$it.come_from_other}</td>
-                        <td>￥{$it.final_salary}</td>
-                        <td>
-                            <button type="btn btn-primary" onclick="detail('{$it.job_number}','{begin}','{end}')">明细</button>
-                        </td>
+                        <td>{$it.order_id}</td>
+						<td>{$it.yeji}</td>
+						<td>{$it.clock_type}</td>
+                        <td>{$it.ticheng}</td>
+                        <td>{$it.end_time}</td>
                     </tr>
                     {/volist}
                 </tbody>
@@ -130,8 +120,6 @@
         function member_edit(title, url, id, w, h) {
             layer_show(title, url, w, h);
         }
-
-
         $("#search").on("click", () => {
             if ($("#datemin").val() == "" || $("#datemax").val() == "") {
                 swal({

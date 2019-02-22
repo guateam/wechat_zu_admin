@@ -106,7 +106,10 @@
                     $dura = Db::query("select SUM(D.duration) as duration from consumed_order A,(select B.order_id,C.duration from service_order B, service_type C where B.item_id = C.ID and B.order_id='$order_id'  GROUP BY B.ID) D where A.order_id = '$order_id' GROUP BY A.order_id");
                     if(!$dura)$dura = 0;
                     else $dura = $dura[0]['duration']*60;
-                    Db::query("update consumed_order set end_time=appoint_time+100 where order_id='$order_id'");
+                    
+					//Db::query("update consumed_order set end_time=appoint_time+100 where order_id='$order_id'");//手动点了下钟，下钟时间为预约时间加100？
+					$t = time();
+					Db::query("update consumed_order set end_time=$t where order_id='$order_id'");//手动点了下钟，下钟时间为预约时间加100？
 
                 }else if($state == 4){
                     //调整为空闲

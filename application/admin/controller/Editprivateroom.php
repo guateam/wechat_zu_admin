@@ -3,9 +3,10 @@ namespace app\admin\controller;
 use think\Controller;
 use \app\api\model\admin as UserModel;
 
-class Editprivateroom extends Controller{
-
-    public function index($id){
+class Editprivateroom extends Controller
+{
+    public function index($id)
+	{
         //if(isset($_COOKIE['login'])){
         //    $user=new \app\api\controller\admin();
         //    if($user->checkuser($_COOKIE['userid'])){

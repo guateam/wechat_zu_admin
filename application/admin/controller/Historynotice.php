@@ -3,9 +3,10 @@ namespace app\admin\controller;
 use think\Controller;
 use \app\api\model\Notice as UserModel;
 
-class Historynotice extends Controller{
-
-    public function index($edit){
+class Historynotice extends Controller
+{
+    public function index($edit)
+	{
         $ctrl =new \app\api\controller\Notice();
         $notice = $ctrl->get_all_notice();
         $count = $ctrl->count_all();
@@ -15,7 +16,8 @@ class Historynotice extends Controller{
         return $this->fetch("Historynotice/lishigonggao");
     }
 
-    public function techindex($edit){
+    public function techindex($edit)
+	{
         $ctrl =new \app\api\controller\Notice();
         $notice = $ctrl->get_technotice();
         $count = count($notice);
@@ -25,10 +27,12 @@ class Historynotice extends Controller{
         return $this->fetch("Historynotice/history_tech_notice");
     }
 
-    public function edittech($id){
+    public function edittech($id)
+	{
         $ctrl = new \app\api\controller\Notice();
         $notice = $ctrl->get_technotice_by_id($id);
-        if($notice){
+        if($notice)
+		{
             $this->assign("notice",$notice);
             return $this->fetch("Historynotice/edit_tech_notice");
         }

@@ -2,9 +2,10 @@
 namespace app\admin\controller;
 use think\Controller;
 use think\Db;
-class Shop extends Controller{
-
-    public function index($edit){
+class Shop extends Controller
+{
+    public function index($edit)
+	{
         $ctrl = new \app\api\controller\Shop();
         $shop = $ctrl->get_all();
         $count = count($shop);
@@ -13,7 +14,9 @@ class Shop extends Controller{
         $this->assign("edit",$edit);
         return $this->fetch('Shop/shop');
     }
-    public function pic($id){
+	
+    public function pic($id)
+	{
         $ctrl = new \app\api\controller\Shopphoto();
         $photo = $ctrl->get_by_id($id);
         $sv = \app\api\model\Servicetype::all();
@@ -24,29 +27,39 @@ class Shop extends Controller{
         $this->assign("shop_id",$id);
         return $this->fetch('Shop/shop_picture');
     }
-    public function promotion(){
+	
+    public function promotion()
+	{
         $ctrl = new \app\api\controller\Promotion();
         $promotion = $ctrl->get_all();
         $this->assign("promotion",$promotion);
         $this->assign("count",count($promotion));
         return $this->fetch('Shop/promotion');
     }
-    public function promotion_edit($id){
+	
+    public function promotion_edit($id)
+	{
         $ctrl = new \app\api\controller\Promotion();
         $promotion = $ctrl->get($id);
-        if($promotion){
+        if($promotion)
+		{
             $promotion = $promotion[0];
-        }else{
+        }
+		else
+		{
             $promotion = new \app\api\model\Promotion();
         }
         $this->assign("promotion",$promotion);
         return $this->fetch('Shop/promotion_edit');
     }
-    public function promotion_add(){
+	
+    public function promotion_add()
+	{
         return $this->fetch('Shop/promotion_add');
     }
 
-    public function account($edit){
+    public function account($edit)
+	{
         $account = Db::query("select * from admin");
         for($i=0;$i<count($account);$i++){
             $permissions = $account[$i]['permission'];
@@ -57,7 +70,8 @@ class Shop extends Controller{
                 continue;
             }
             $names = [];
-            foreach($permissions as $permission){
+            foreach($permissions as $permission)
+			{
                 $name = Db::query("select name from menu where `ID`='$permission'");
                 array_push($names,$name[0]['name']);
             }
@@ -69,7 +83,8 @@ class Shop extends Controller{
         return $this->fetch('Shop/account');
     }
 
-    public function editpermission($user){
+    public function editpermission($user)
+	{
         $user = urldecode($user);
         $menu_ctrl = new \app\api\controller\Mmenu();
         $menu = $menu_ctrl->getchoosenmenu($user);
@@ -78,14 +93,16 @@ class Shop extends Controller{
         return $this->fetch('Shop/editpermission');
     }
 
-    public function newaccount(){
+    public function newaccount()
+	{
         $menu_ctrl = new \app\api\controller\Mmenu();
         $menu = $menu_ctrl->getmenu();
         $this->assign('menu',$menu);
         return $this->fetch('Shop/newaccount');
     }
 
-    public function editmenu($edit){
+    public function editmenu($edit)
+	{
         $menu_ctrl = new \app\api\controller\Mmenu();
         $menu = $menu_ctrl->getmenu();
         $this->assign('menu',$menu);
@@ -93,18 +110,18 @@ class Shop extends Controller{
         return $this->fetch('Shop/menu');
     }
 
-    public function editinfo($id){
+    public function editinfo($id)
+	{
         $shop = Db::query("select * from shop where `ID` = '$id'");
         $this->assign('shop',$shop[0]);
         return $this->fetch('Shop/editinfo');
     }
 
-    public function payatshop(){
+    public function payatshop()
+	{
         $technicians = Db::query("select * from technician where type !=2");
         $service = Db::query("select ID,name,price from service_type");
         $room = Db::query("select ID,name from private_room");
-
-        
 
         $this->assign('technicians',$technicians);
         $this->assign('service',$service);
@@ -112,16 +129,18 @@ class Shop extends Controller{
         return $this->fetch('Shop/payatshop');
     }
 
-    public function boss($begin = '',$end = ''){
-        if($begin==''){
+    public function boss($begin = '',$end = '')
+	{
+        if($begin=='')
+		{
             $begin = date("Y-m-01",time());
         }
         $this->assign('begin',$begin);
         $begin.=" 00:00:00";
 
-
         $begin = strtotime($begin);
-        if($end==''){
+        if($end=='')
+		{
             $end = date("Y-m-t",time());
         }
         $this->assign('end',$end);
@@ -135,8 +154,10 @@ class Shop extends Controller{
         //时间内的打赏
         $tip = Db::query("select '' as order_id,salary as charge,technician_id as job_number,date as generated_time,'打赏技师' as note,'小程序支付' as source,'微信支付' as payment_method from tip where date >=$begin and date <= $end");
         
-        for($i=0;$i<count($consumed_order);$i++){
-            if($consumed_order[$i]['payment_method'] == 1){
+        for($i=0;$i<count($consumed_order);$i++)
+		{
+            if($consumed_order[$i]['payment_method'] == 1)
+			{
                 $consumed_order[$i]['payment_method'] = $consumed_order[$i]['source'] == 0?'微信支付':'微信扫码支付';
             }
             elseif($consumed_order[$i]['payment_method'] == 2)$consumed_order[$i]['payment_method'] = "支付宝支付";
@@ -150,7 +171,8 @@ class Shop extends Controller{
         }
         
         $result = array_merge($consumed_order,$recharge,$tip);
-        for($i=0;$i<count($result);$i++){
+        for($i=0;$i<count($result);$i++)
+		{
             $result[$i]['generated_time'] = date("Y-m-d H:i:s", $result[$i]['generated_time']);
         }
         $this->assign('info',$result);

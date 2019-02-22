@@ -2,9 +2,10 @@
 namespace app\admin\controller;
 use think\Controller;
 
-class Servicelist extends Controller{
-
-    public function index($edit){
+class Servicelist extends Controller
+{
+    public function index($edit)
+	{
         $ctrl =new \app\api\controller\Servicetype();
         $shop =\app\api\model\Shop::get(['ID'=>1]);
         $servicelist = $ctrl->get_all();
@@ -16,7 +17,8 @@ class Servicelist extends Controller{
         return $this->fetch('Servicelist/service');
     }
 
-    public function detail($id){
+    public function detail($id)
+	{
         $sv = \app\api\model\Servicetype::get(['ID'=>$id]);
         $this->assign("service_id",$id);
         $this->assign("service",$sv);

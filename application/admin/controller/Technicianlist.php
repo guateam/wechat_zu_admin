@@ -3,15 +3,15 @@ namespace app\admin\controller;
 use think\Controller;
 use \app\api\model\Technician as UserModel;
 
-class Technicianlist extends Controller{
-
-    public function Technicianlist($edit){
+class Technicianlist extends Controller
+{
+    public function Technicianlist($edit)
+	{
         $ctrl =new \app\api\controller\Technician();
         $sk = new \app\api\controller\Skill();
         $so = new \app\api\controller\Serviceorder();
         $rt = new \app\api\controller\Rate();
-        $recharge_ctrl = new \app\api\controller\Rechargerecord();
-        
+        $recharge_ctrl = new \app\api\controller\Rechargerecord();        
 
 
         $skill = [];
@@ -20,42 +20,55 @@ class Technicianlist extends Controller{
         $aver_score = [];
         $charge = [];
         $technicians = $ctrl->get_all_technician();
-        foreach($technicians as $idx => $tc){
+        foreach($technicians as $idx => $tc)
+		{
             //技能等级
             $level = $ctrl->get_skill($tc->job_number);
             $technicians[$idx]['level'] = $level;
             $money = $recharge_ctrl->get_by_jobnumber($tc->job_number);
             $money = $money->getdata();
             if($money['status'] ==1)array_push($charge,$money['charge']);
-            else{
+            else
+			{
                 array_push($charge,0);
             }
         }
 
-        foreach($technicians as $tc){
+        foreach($technicians as $tc)
+		{
             $sk_name = $sk->get_skill_name($tc->job_number);
-            if($sk_name){
+            if($sk_name)
+			{
                 array_push($skill,$sk_name);
-            }else{
+            }
+			else
+			{
                 array_push($skill,"无");
             }
             $od = $so->get_order_by_job_number($tc->job_number);
-            if($od){
+            if($od)
+			{
                 array_push($order,$od);
-            }else{
+            }
+			else
+			{
                 array_push($order,null);
             }
         }
         //单个技师的订单序列
-        foreach($order as $od){
+        foreach($order as $od)
+		{
             $total_score = 0;
             $score_count=0;
             if($od){
                 //单个订单
-                foreach($od as $orderinfo){
+                foreach($od as $orderinfo)
+				{
                     $all_rate = $rt->get_service_rate($orderinfo[0],$orderinfo[2]);
-                    if($all_rate){
-                        foreach($all_rate as $rate){
+                    if($all_rate)
+					{
+                        foreach($all_rate as $rate)
+						{
                             if($rate->bad==1)
                             {
                                 $score_count+=1;
@@ -77,7 +90,8 @@ class Technicianlist extends Controller{
         $this->assign("edit",$edit);
         return $this->fetch('Technicianlist/technicianlist');
     }
-    public function salary($first_day = "",$last_day = ""){
+    public function salary($first_day = "",$last_day = "")
+	{
         $ctrl =new \app\api\controller\Technician();
         //本月第一天
         if($first_day === "")$first_day = date("Y-m-01");
@@ -92,11 +106,13 @@ class Technicianlist extends Controller{
         return $this->fetch('Technicianlist/salary');
     }
 
-    public function salary_detail($job_number,$begin,$end){
+    public function salary_detail($job_number,$begin,$end)
+	{
         return $this->fetch('Technicianlist/salarydetail');
     }
 
-    public function techstate($edit){
+    public function techstate($edit)
+	{
         $ctrl =new \app\api\controller\Technician();
         $technicians = $ctrl->get_all_technician();
         $this->assign('technicians',$technicians);
@@ -105,3 +121,4 @@ class Technicianlist extends Controller{
         return $this->fetch('Technicianlist/techstate');
     }
 }
+?>

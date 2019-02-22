@@ -4,28 +4,31 @@ use think\Controller;
 use \app\api\model\Rate as RateModel;
 use think\Db;
 
-class Comment extends Controller{
-    public function index($edit){
+class Comment extends Controller
+{
+    public function index($edit)
+	{
         $data = Db::query("select * from rate");
-            for($i=0;$i<count($data);$i++){
-                $openid = $data[$i]['customer_id'];
-                $service_id = $data[$i]['service_id'];
+		for($i=0;$i<count($data);$i++)
+		{
+			$openid = $data[$i]['customer_id'];
+			$service_id = $data[$i]['service_id'];
 
-                $name = Db::query("select name from customer where openid='$openid'");
-                $service_name = Db::query("select name from service_type where ID='$service_id'");
+			$name = Db::query("select name from customer where openid='$openid'");
+			$service_name = Db::query("select name from service_type where ID='$service_id'");
 
-                if($name){
-                    $data[$i]['username'] = $name[0]['name'];
-                }else{
-                    $data[$i]['username'] = "用户不存在";
-                }
-                if($service_name){
-                    $data[$i]['service_name'] = $service_name[0]['name'];
-                }else{
-                    $data[$i]['service_name'] = "服务不存在";
-                }
-                $data[$i]['time'] = date("Y-m-d H:i:s",$data[$i]['time']);
-            }
+			if($name){
+				$data[$i]['username'] = $name[0]['name'];
+			}else{
+				$data[$i]['username'] = "用户不存在";
+			}
+			if($service_name){
+				$data[$i]['service_name'] = $service_name[0]['name'];
+			}else{
+				$data[$i]['service_name'] = "服务不存在";
+			}
+			$data[$i]['time'] = date("Y-m-d H:i:s",$data[$i]['time']);
+		}
         $att = $data;
         $svs = new \app\api\controller\Servicetype();
         $itp = new \app\api\controller\Itemtype();

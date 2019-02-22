@@ -4,9 +4,10 @@ use think\Controller;
 use \app\api\model\Technician as UserModel;
 use think\Db;
 
-class Edittechnician extends Controller{
-
-    public function Edittechnician($name,$gender,$phonenum,$jobnum){
+class Edittechnician extends Controller
+{
+    public function Edittechnician($name,$gender,$phonenum,$jobnum)
+	{
         $ctrl =new \app\api\controller\Technician();
         $serve_ctrl = new \app\api\controller\Servicetype();
         $skill_ctrl = new \app\api\controller\Skill();
@@ -20,9 +21,12 @@ class Edittechnician extends Controller{
         $skillname = $ctrl->get_skill($jobnum);
         $techlist = Db::query("select * from technician where job_number <> '".$jobnum."'");
 
-        for($i=0;$i<count($service_list);$i++){
-            for($j=0;$j<count($skill_list);$j++){
-                if($service_list[$i]['id'] == $skill_list[$j]){
+        for($i=0;$i<count($service_list);$i++)
+		{
+            for($j=0;$j<count($skill_list);$j++)
+			{
+                if($service_list[$i]['id'] == $skill_list[$j])
+				{
                     $service_list[$i]['check'] = true;
                 }
             }

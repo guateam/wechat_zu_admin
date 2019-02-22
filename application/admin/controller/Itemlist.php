@@ -2,8 +2,10 @@
 namespace app\admin\controller;
 use think\Controller;
 use think\Db;
-class Itemlist extends Controller{
-    public function index($edit){
+class Itemlist extends Controller
+{
+    public function index($edit)
+	{
         $tea_ctrl = new \app\api\controller\Itemtype();
         $tea_list = $tea_ctrl->get_tea();
         $this->assign("edit",$edit);
@@ -12,11 +14,13 @@ class Itemlist extends Controller{
         return $this->fetch('Itemlist/itemlist');
     }
 
-    public function add(){
+    public function add()
+	{
         return $this->fetch('Itemlist/additem');
     }
 
-    public function edit($id){
+    public function edit($id)
+	{
         $tea = Db::query("select * from item_type where `ID` = '$id'");
         if(count($tea) == 1)
             $this->assign('tea',$tea[0]);

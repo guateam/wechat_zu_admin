@@ -144,7 +144,7 @@
             $.post("__ROOT__/index.php/api/Consumedorder/pay_count").done((res) => {
                 count = res;
                 setInterval(() => {
-                    console.log("开始查询是否有新订单");
+                    //console.log("开始查询是否有新订单");
                     $.post("__ROOT__/index.php/api/Consumedorder/check_new/count_ori/" + count).done(
                         (res) => {
                             if (res) {
@@ -153,7 +153,7 @@
                                 load_sound(sound);
                                 alert("有新的订单");
                             }
-                            console.log("无新订单");
+                            //console.log("无新订单");
                         })
                 }, 10000);
             })

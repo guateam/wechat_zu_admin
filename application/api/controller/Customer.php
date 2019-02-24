@@ -52,7 +52,73 @@
             }
         }
 		
-		public function getPayInfo($roomname)
+		public function getRoomInfo($roomname)
+		{
+			$API_URL = "http://103.239.247.197:8899";
+			
+			$url = $API_URL."/api?url=http://www.dzbsaas.com/footmassage/receptiondesk/listroom.do";			
+			$content = file_get_contents($url);	
+			$obj = json_decode($content);
+			if ($obj->success == false)
+			{
+				echo $content;//success:false;msg:token is Invalid
+				return;
+			}
+
+			$ret1 = $obj->data;			
+			$RoomRet = json_decode($ret1);
+			$Rooms = $RoomRet->Rooms;
+			$getRoom = false;
+
+			foreach($Rooms as $eachroom)
+			{
+				if ($eachroom->name == $roomname)
+				{
+					if ($eachroom->status == "Occupied")
+					{
+						if ($eachroom->occupied->Finish->AllFinish == true)
+						{
+							//准备结帐
+							echo json_encode([									
+									'success'=>true,
+									'status'=>'Finish',
+									'checkInId'=>$checkInId = $eachroom->checkin->id,
+							]);
+							return;
+						}
+						else
+						{
+							//还在服务中							
+							echo json_encode([
+									'success'=>true,
+									'status'=>'Busy',
+							]);
+							return;
+						}
+					}
+					else //空闲或者打扫卫生
+					{						
+						echo json_encode([
+								'success'=>true,
+								'status'=>'Idle',
+						]);
+						return;
+					}
+				}
+			}
+		}
+		
+		public function getPayInfo($checkInId)
+		{
+			$API_URL = "http://103.239.247.197:8899";
+			$mt = time()."000";
+			$url2 = $API_URL."/api?url=http://www.dzbsaas.com/footmassage/receptiondesk/getpayinfo.do?checkInId=".$checkInId."&_=".$mt;
+			$content2 = file_get_contents($url2);
+			echo $content2;//直接返回获取到的json
+			return;
+		}
+		
+		public function getPayInfo2($roomname)
 		{
 			$API_URL = "http://103.239.247.197:8899";
 			
@@ -85,7 +151,9 @@
 
 							$checkInId = $eachroom->checkin->id;
 
-							$mt = getMillisecond();
+							//$mt = app\api\controller\getMillisecond();
+							$mt = time()."000";
+							
 							$url2 = $API_URL."/api?url=http://www.dzbsaas.com/footmassage/receptiondesk/getpayinfo.do?checkInId=".$checkInId."&_=".$mt;
 
 							$content2 = file_get_contents($url2);
@@ -120,14 +188,16 @@
 						'info'=>"No Result"
 				]);
 			return;
+
+			function getMillisecond()
+			{
+				list($msec, $sec) = explode(' ', microtime());
+				$msectime =  (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
+				return $msectimes = substr($msectime,0,13);
+			}
 		}
 		
-		public function getMillisecond()
-		{
-			list($msec, $sec) = explode(' ', microtime());
-			$msectime =  (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
-			return $msectimes = substr($msectime,0,13);
-		}
+		
 
         public function get_cash_by_phone($phone){
             $user = Db::query("select * from customer where phone_number = '$phone'");

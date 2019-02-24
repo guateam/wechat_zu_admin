@@ -53,6 +53,27 @@
         </select>
 		<br>
 		<br>
+		
+		 <div class="mt-20" style="width:60%;display:none" id="payinfoarea">
+            <table class="table table-border table-bordered table-hover table-bg table-sort" id="paytable">
+                <thead>
+                    <tr class="text-c">
+                        <th width="40">No</th>
+                        <th width="80">类型</th>
+                        <th width="80">名称</th>
+                        <th width="80">单价</th>
+                        <th width="60">数量</th>
+						<th width="60">退单量</th>
+						<th width="80">折扣</th>
+						<th width="80">金额</th>
+						<th width="80">技师</th>
+						<th width="80">安排</th>						
+                    </tr>
+                </thead>
+                <tbody>                   
+                </tbody>
+            </table>
+        </div>
        
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>技师:</div>
         <select name="" id="tech" class="theinput">
@@ -68,14 +89,17 @@
             <option value="{$it.ID}">{$it.name}</option>
             {/volist}
         </select><br>
-
-        
 		
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>上钟类型:</div>
         <select class="theinput" name="" id="clock">
             <option value="1">排钟</option>
             <option value="2">点钟</option>
         </select><br>
+		
+		<div style="width:90px ; display:inline-block"></div>
+        <button id="add" onclick="addservice()" class="btn btn-primary" style="margin-top: 6px;width: 90px" disabled>手动添加
+        </button><br><br>
+		
         <div style="width:90px ; display:inline-block">&nbsp;&nbsp;</span>订单备注:</div>
         <input type="text" id="note" class="theinput"><br>
 		
@@ -101,11 +125,6 @@
         <br>
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>支付金额(元):</div>
         <input type="text" id="cash" class="theinput"><br><br>
-		
-		
-        <div style="width:90px ; display:inline-block"></div>
-        <button id="add" onclick="addservice()" class="btn btn-primary" style="margin-top: 6px;width: 90px" disabled>添加服务
-        </button><br><br>
 
         <div style="width:90px ; display:inline-block">已选服务:</div>
         <div id="confirm_service"></div>
@@ -120,6 +139,10 @@
     <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
     <script type="text/javascript">
+	
+		var x = document.getElementById("room");  
+		x.selectedIndex = -1;  
+	
         var info = []
         var total_price = 0
         var phone = ""
@@ -147,17 +170,89 @@
 		//--------------------------------------------------------------
 		$("#room").change(()=>{ //选择房间号，获取接口json，并渲染图表
 		
-			//alert("hello");
+			$('#paytable').empty(); //清空所有子标签(元素)
+			
+			
+			
 			var room = $('#room option:selected').val();
             room = room.split(',');
 			room_name = room[1];
 			
 			//alert(room_name);
 			
-			$.post("__ROOT__/index.php/api/Customer/getPayInfo",{
+			$.post("__ROOT__/index.php/api/Customer/getRoomInfo",{
 				roomname:room_name
 			}).done((res)=>{
-				alert(res);
+				//console.log(res);				
+				res = JSON.parse(res);
+				if (res.success == true) {
+					//console.log(res.status);
+					
+					if (res.status == "Finish")
+					{
+						$('#paytable').append("<thead><tr class='text-c'><th width='40'>No</th> <th width='80'>类型</th><th width='80'>名称</th><th width='80'>单价</th><th width='60'>数量</th><th width='60'>退单量</th><th width='80'>折扣</th><th width='80'>金额</th><th width='80'>技师</th><th width='80'>安排</th></tr></thead><tbody></tbody>");
+						
+						//准备结帐
+						//console.log(res.checkInId);
+						
+						//调用另一个接口						
+						$.post("__ROOT__/index.php/api/Customer/getPayInfo",{
+								checkInId:res.checkInId
+							}).done((res)=>{
+							
+								//console.log(res);
+								$('#payinfoarea').css('display', '');
+								
+								res = JSON.parse(res);
+								
+								if(res.success == false)
+								{
+									alert("获取信息失败，需要手动录入订单");
+								}
+								else
+								{
+									var orderdata = res.data;
+									//console.log(orderdata);
+									
+									orderdata2 = JSON.parse(orderdata);
+									//console.log(orderdata2);
+									
+									orderItems = orderdata2.orderitems;
+									
+									for (var i = 0; i < orderItems.length; i++) {  
+										console.log(i,orderItems[i]); 
+										
+										 
+										if (orderItems[i].productType == "ServItem")
+										{
+											productType = "服务";
+										}
+										
+										if (orderItems[i].arrangeType == "Specify")
+										{
+											arrangeType = "点钟";
+										}
+										else if (orderItems[i].arrangeType == "Arrangements")
+										{
+											arrangeType = "排钟";
+										}
+										
+										$("#paytable").append("<tr class='text-c'><td>"+(i+1)+"</td><td>"+productType+"</td><td>"+orderItems[i].fullName+"</td><td>"+orderItems[i].price+"</td><td>"+orderItems[i].quantity+"</td><td>"+orderItems[i].returnQuantity+"</td><td>"+orderItems[i].scale+"</td><td>"+orderItems[i].subtotal+"</td><td>"+orderItems[i].servicePersonal+"</td><td>"+arrangeType+"</td><tr>");
+									}  
+									
+								}
+						})
+					}
+					else if (res.status == "Idle")
+					{
+						//房间空闲
+						alert("该房间空闲状态，不能结帐");
+					}
+					else if (res.status == "Busy")
+					{
+						alert("该房间正在服务，不能结帐");
+					}
+				}
 			})
         })
 
@@ -228,6 +323,8 @@
 		{
             var tech = $('#tech option:selected').val()
             if (tech == "") return;
+			
+			/*
             if(busy == 1)
 			{
                 swal({
@@ -235,7 +332,8 @@
                     type:'error'
                 })
                 return;
-            }
+            }			
+			
             if(info.length > 0)
 			{
                 swal({
@@ -244,6 +342,8 @@
                 })
                 return;
             }
+			*/
+			
             var service = $('#service option:selected').val()
             service = service.split(',')
             var room = $('#room option:selected').val()

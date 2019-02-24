@@ -595,21 +595,30 @@ class Technician extends Controller
                     break;
                 }
             }
-
         }
-        for ($i = 0; $i < count($salarys); $i++) {
-            //第一名赋予奖励
-            if ($salarys[$i]['job_number'] == $job_numbers[0]) {
-                $salarys[$i]['dian_bonus'] = $dian_bonus[0];
-            } else if ($salarys[$i]['job_number'] == $job_numbers[1]) {
-                $salarys[$i]['dian_bonus'] = $dian_bonus[1];
-            } else if ($salarys[$i]['job_number'] == $job_numbers[2]) {
-                $salarys[$i]['dian_bonus'] = $dian_bonus[2];
-            }
-        }
+		
+        // for ($i = 0; $i < count($salarys); $i++) //点钟前3名可以获得奖金，先去掉
+		// {
+            ///////第一名赋予奖励
+            // if ($salarys[$i]['job_number'] == $job_numbers[0]) 
+			// {
+                // $salarys[$i]['dian_bonus'] = $dian_bonus[0];
+            // } 
+			// else if ($salarys[$i]['job_number'] == $job_numbers[1]) 
+			// {
+                // $salarys[$i]['dian_bonus'] = $dian_bonus[1];
+            // } 
+			// else if ($salarys[$i]['job_number'] == $job_numbers[2]) 
+			// {
+                // $salarys[$i]['dian_bonus'] = $dian_bonus[2];
+            // }
+        // }
+		
         //计算总工资
-        for ($i = 0; $i < count($salarys); $i++) {
-            $salarys[$i] = array_merge($salarys[$i], ['total_salary' => $salarys[$i]['pai_income'] + $salarys[$i]['dian_income'] + $salarys[$i]['dian_bonus']+ $salarys[$i]['recharge_income'] + $salarys[$i]['invite_income'] + $salarys[$i]['tip_income']]);
+        for ($i = 0; $i < count($salarys); $i++) 
+		{
+            //$salarys[$i] = array_merge($salarys[$i], ['total_salary' => $salarys[$i]['pai_income'] + $salarys[$i]['dian_income'] + $salarys[$i]['dian_bonus']+ $salarys[$i]['recharge_income'] + $salarys[$i]['invite_income'] + $salarys[$i]['tip_income']]);
+			$salarys[$i] = array_merge($salarys[$i], ['total_salary' => $salarys[$i]['pai_income'] + $salarys[$i]['dian_income'] + $salarys[$i]['recharge_income'] + $salarys[$i]['invite_income'] + $salarys[$i]['tip_income']]);
         }
         return $salarys;
     }

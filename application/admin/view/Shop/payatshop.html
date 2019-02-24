@@ -42,7 +42,7 @@
         </a>
     </nav>
     <div id="step1" style="margin-top: 5px;margin-bottom: 5px;margin-left:25px;padding-left: 10px">
-        <div style="width:90px ; display:inline-block"><span style="color:red">*</span>顾客手机号:</div>        <input type="text" id="phone" class="theinput"><br>
+        <div style="width:90px ; display:inline-block"><span style="color:red">*</span>顾客手机号:</div>   <input type="text" id="phone" class="theinput"><br>
         <div style="width:90px ; display:inline-block">&nbsp;&nbsp;顾客姓名:</div>     <input type="text" id="username" class="theinput"><br>
 		
 		<div style="width:90px ; display:inline-block"><span style="color:red">*</span>包厢:</div>
@@ -79,6 +79,9 @@
             </table>
         </div>
        
+	   <br>
+	   <br>
+	   <br>
 	    <div id = "manualAdd" style="display:none">
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>技师:</div>
         <select name="" id="tech" class="theinput">
@@ -124,9 +127,12 @@
             <option value="7">美团支付</option>
         </select><br>
         <div id="check_div" hidden>
+		
+			<!--
             <div style="width:90px ; display:inline-block"><span style="color:red;">*</span>验证码:</div>
             <input type="text" id="check_code" class="theinput">
             <button class="btn btn-success" onclick="message()" id="check_button">获取验证码</button><br>
+			-->
 
             <div style="width:90px ; display:inline-block"><span style="color:red;">*</span>余额剩余:</div>
             <span id="cus_cash">待查询...</span>
@@ -155,6 +161,14 @@
 		var x = document.getElementById("room");  
 		x.selectedIndex = -1;  
 		
+		var y = document.getElementById("tech");  
+		y.selectedIndex = -1;  
+		
+		var z = document.getElementById("pay_method");  
+		z.selectedIndex = -1;  
+				
+		$("#phone").val("");
+		$("#username").val("");		
 		$("#cash").val("");
 	
         var info = [];
@@ -165,18 +179,24 @@
         var check_code = "";
         var get_message = false;
         var busy = null;
+		
+		var itemcount = 0;
 
+		
 		//--------------------------------------------------------------
         $("#pay_method").change(()=>{ //改变支付方式，余额支付，获取客户余额
             choosen = $('#pay_method option:selected').val()
-            if(choosen == 3){
+            if(choosen == 3)
+			{
                 $("#check_div").attr('hidden',false);
                 $.post("__ROOT__/index.php/api/Customer/get_cash_by_phone2",{
-                phone:$('#phone').val()
+					phone:$('#phone').val()
                 }).done((res)=>{
                     $("#cus_cash").html('￥' + res.cash);
                 })
-            }else{
+            }
+			else
+			{
                 $("#check_div").attr('hidden',true);
             }            
         })
@@ -227,6 +247,11 @@
 								{
 									alert("获取信息失败，需要手动录入订单");									
 									$('#manualAdd').css('display', '');
+									
+									$('#loading').css('display', 'none');
+									$('#payinfoarea').css('display', '');
+									
+									$('#paytable').append("<thead><tr class='text-c'><th width='40'>No</th> <th width='80'>类型</th><th width='80'>名称</th><th width='80'>单价</th><th width='60'>数量</th><th width='60'>退单量</th><th width='80'>折扣</th><th width='80'>金额</th><th width='80'>技师</th><th width='80'>安排</th></tr></thead><tbody></tbody>");
 								}
 								else
 								{
@@ -280,11 +305,18 @@
 					}
 					else if (res.status == "Idle")
 					{
-						//房间空闲
-						//alert("该房间空闲状态，不能结帐");
-						
+						//房间空闲						
 						$('#loading').css('display', 'none');
 						$("#roomwarning").html("该房间空闲状态，不能结帐");
+						
+						//alert("获取信息失败，需要手动录入订单");									
+						//$('#manualAdd').css('display', '');
+						
+						//$('#loading').css('display', 'none');
+						//$('#payinfoarea').css('display', '');
+						
+						//$('#paytable').append("<thead><tr class='text-c'><th width='40'>No</th> <th width='80'>类型</th><th width='80'>名称</th><th width='80'>单价</th><th width='60'>数量</th><th width='60'>退单量</th><th width='80'>折扣</th><th width='80'>金额</th><th width='80'>技师</th><th width='80'>安排</th></tr></thead><tbody></tbody>");
+						
 					}
 					else if (res.status == "Busy")
 					{
@@ -298,11 +330,26 @@
 
 		//--------------------------------------------------------------
         $('#phone').blur(()=>{  //输入客户手机号码，自动获取客户姓名
-            $.post("__ROOT__/index.php/api/Customer/get_spokename_by_phone",{
-                phone:$('#phone').val()
-            }).done((res)=>{
-                $('#username').val(res.name);
-            })
+		
+			if ($('#phone').val() != '')
+			{
+				$.post("__ROOT__/index.php/api/Customer/get_spokename_by_phone",{
+					phone:$('#phone').val()
+				}).done((res)=>{
+					$('#username').val(res.name);
+				})
+				
+				
+				choosen = $('#pay_method option:selected').val()
+				if(choosen == 3)
+				{
+					$.post("__ROOT__/index.php/api/Customer/get_cash_by_phone2",{
+						phone:$('#phone').val()
+					}).done((res)=>{
+						$("#cus_cash").html('￥' + res.cash);
+					})
+				}
+			}
         })
 
 		//--------------------------------------------------------------
@@ -359,7 +406,7 @@
         }
 
 		//--------------------------------------------------------------
-        function addservice() //添加服务
+        function addservice() //添加服务，并且添加到表格中
 		{
             var tech = $('#tech option:selected').val()
             if (tech == "") return;
@@ -373,6 +420,7 @@
                 return;
             }			
 			
+			/*
             if(info.length > 0)
 			{
                 swal({
@@ -381,7 +429,7 @@
                 })
                 return;
             }
-			
+			*/
 			
             var service = $('#service option:selected').val()
             service = service.split(',')
@@ -396,6 +444,8 @@
                 'room_number': room[0],
                 'clock': clock
             }
+			
+			itemcount = itemcount + 1;
 
             //$('#confirm_service').append("<p style='display:inline-block'>技师: " + tech + "\t服务:" + service[1] + "\t包厢:" + room[0] + "\t上钟类型:" + (clock == 1 ? '排钟' : '点钟') + "</p><br>")
 				
@@ -403,21 +453,39 @@
             //total_price += parseInt(service[2]) / 100;
             //$('#cash').val(total_price);
 			
+			servicename = $('#service option:selected').text();			
+			price =  service[2] / 100;
+			
+			if (clock == 1)
+			{
+				arrange = "排钟";				
+			}
+			else if (clock == 2)
+			{
+				arrange = "点钟";				
+			}
+			
+			$("#paytable").append("<tr class='text-c'><td>"+itemcount+"</td><td>服务</td><td>"+servicename+"</td><td>"+price+"</td><td>1</td><td>0</td><td>100</td><td>"+price+"</td><td>"+tech+"</td><td>"+arrange+"</td><tr>");
+			
             info.push(unit);
         }
 
 		//--------------------------------------------------------------
         function done() //订单支付
 		{
-            phone = $('#phone').val()
-            if (phone == "") 
+			paymethod = $('#pay_method option:selected').val();
+			if (paymethod == 3)
 			{
-                swal({
-                    title: "",
-                    text: "手机号不能为空"
-                })
-                return;
-            }
+				phone = $('#phone').val()
+				if (phone == "") 
+				{
+					swal({
+						title: "",
+						text: "选择会员卡余额支付，手机号不能为空"
+					})
+					return;
+				}
+			}
 			
             if (info.length == 0) 
 			{

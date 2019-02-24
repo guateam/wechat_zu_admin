@@ -41,7 +41,8 @@
             return $money;
         }
         
-        public function get_cash_by_phone2($phone){
+        public function get_cash_by_phone2($phone)
+		{
             $tech = Db::query("select * from customer where phone_number = $phone");
             if($tech){
                 $money = self::get_cash($tech[0]['openid']);
@@ -50,6 +51,83 @@
                 return json(['cash'=>0]) ;
             }
         }
+		
+		public function getPayInfo($roomname)
+		{
+			$API_URL = "http://103.239.247.197:8899";
+			
+			//$roomname = $_GET["roomname"];
+			//$roomname = $_POST["roomname"];
+			
+			$url = $API_URL."/api?url=http://www.dzbsaas.com/footmassage/receptiondesk/listroom.do";			
+			$content = file_get_contents($url);	
+			$obj = json_decode($content);
+			if ($obj->success == false)
+			{
+				echo $content;//success:false;msg:token is Invalid
+				return;
+			}
+
+			$ret1 = $obj->data;			
+			$RoomRet = json_decode($ret1);
+			$Rooms = $RoomRet->Rooms;
+			$getRoom = false;
+
+			foreach($Rooms as $eachroom)
+			{
+				if ($eachroom->status == "Occupied")
+				{
+					if ($eachroom->occupied->Finish->AllFinish == true)
+					{
+						if ($eachroom->name == $roomname)
+						{
+							$getRoom = true;
+
+							$checkInId = $eachroom->checkin->id;
+
+							$mt = getMillisecond();
+							$url2 = $API_URL."/api?url=http://www.dzbsaas.com/footmassage/receptiondesk/getpayinfo.do?checkInId=".$checkInId."&_=".$mt;
+
+							$content2 = file_get_contents($url2);
+
+							$obj2 = json_decode($content2);
+
+							//这里要判断一下 token掉线 获取不到数据
+							if ($obj2->success == false)
+							{
+								echo $content2;//success:false;msg:token is Invalid
+								return;
+							}
+
+							echo $content2;//直接返回获取到的json
+							return;
+						}
+					}
+				}
+			}
+
+			if ($getRoom == false)
+			{
+				echo json_encode([
+						'success'=>false,
+						'info'=>"Found No Room"
+				]);
+				return;
+			}
+
+			echo json_encode([
+						'success'=>false,
+						'info'=>"No Result"
+				]);
+			return;
+		}
+		
+		public function getMillisecond()
+		{
+			list($msec, $sec) = explode(' ', microtime());
+			$msectime =  (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
+			return $msectimes = substr($msectime,0,13);
+		}
 
         public function get_cash_by_phone($phone){
             $user = Db::query("select * from customer where phone_number = '$phone'");

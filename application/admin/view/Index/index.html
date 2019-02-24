@@ -127,7 +127,8 @@
                     },
                 }
             });*/
-            //检查是否有新订单
+           
+		   //检查店里的IP并更新
             ip_interval_id = setInterval(()=>{
                 //获取ip地址
                 $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function (data) {
@@ -137,7 +138,9 @@
                         ip:ip,
                     })
                 });
-            },60000)
+            },60000);
+			
+			 //检查是否有新订单
             $.post("__ROOT__/index.php/api/Consumedorder/pay_count").done((res) => {
                 count = res;
                 setInterval(() => {

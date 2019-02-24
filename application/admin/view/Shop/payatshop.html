@@ -79,6 +79,7 @@
             </table>
         </div>
        
+	    <div id = "manualAdd" style="display:none">
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>技师:</div>
         <select name="" id="tech" class="theinput">
             <option value="" selected>请选择技师</option>
@@ -102,11 +103,15 @@
 		
 		<div style="width:90px ; display:inline-block"></div>
         <button id="add" onclick="addservice()" class="btn btn-primary" style="margin-top: 6px;width: 90px" disabled>手动添加
-        </button><br><br>
+        </button>
+		</div>
 		
-        <div style="width:90px ; display:inline-block">&nbsp;&nbsp;</span>订单备注:</div>
-        <input type="text" id="note" class="theinput"><br>
+		<br><br>
 		
+		<div style="width:90px ; display:inline-block"><span style="color:red">*</span>支付金额:</div>
+        <input type="text" id="cash" class="theinput" style="color:red;">(元)
+		
+		<br><br>
 		
 		<div style="width:90px ; display:inline-block"><span style="color:red">*</span>支付方式:</div>
         <select class="theinput" name="" id="pay_method">
@@ -125,13 +130,16 @@
 
             <div style="width:90px ; display:inline-block"><span style="color:red;">*</span>余额剩余:</div>
             <span id="cus_cash">待查询...</span>
-        </div>
-        <br>
-        <div style="width:90px ; display:inline-block"><span style="color:red">*</span>支付金额(元):</div>
-        <input type="text" id="cash" class="theinput"><br><br>
+        </div>		
+        <br>        
 
+		<div style="width:90px ; display:inline-block">&nbsp;&nbsp;</span>订单备注:</div>
+        <input type="text" id="note" class="theinput"><br>
+		
+		<!--
         <div style="width:90px ; display:inline-block">已选服务:</div>
         <div id="confirm_service"></div>
+		-->
 
         <div style="width:90px ; display:inline-block"></div>
         <button onclick="done()" class="btn btn-primary" style="margin-top: 6px;width: 90px">订单支付
@@ -146,8 +154,10 @@
 	
 		var x = document.getElementById("room");  
 		x.selectedIndex = -1;  
+		
+		$("#cash").val("");
 	
-        var info = []
+        var info = [];
         var total_price = 0
         var phone = ""
         var message_interval = 0;
@@ -201,8 +211,6 @@
 						$('#paytable').append("<thead><tr class='text-c'><th width='40'>No</th> <th width='80'>类型</th><th width='80'>名称</th><th width='80'>单价</th><th width='60'>数量</th><th width='60'>退单量</th><th width='80'>折扣</th><th width='80'>金额</th><th width='80'>技师</th><th width='80'>安排</th></tr></thead><tbody></tbody>");
 						
 						//准备结帐
-						//console.log(res.checkInId);
-						
 						//调用另一个接口						
 						$.post("__ROOT__/index.php/api/Customer/getPayInfo",{
 								checkInId:res.checkInId
@@ -217,7 +225,8 @@
 								
 								if(res.success == false)
 								{
-									alert("获取信息失败，需要手动录入订单");
+									alert("获取信息失败，需要手动录入订单");									
+									$('#manualAdd').css('display', '');
 								}
 								else
 								{
@@ -229,7 +238,10 @@
 									
 									orderItems = orderdata2.orderitems;
 									
-									for (var i = 0; i < orderItems.length; i++) {  
+									info = [];
+									
+									for (var i = 0; i < orderItems.length; i++) 
+									{  
 										console.log(i,orderItems[i]); 
 										
 										 
@@ -241,15 +253,28 @@
 										if (orderItems[i].arrangeType == "Specify")
 										{
 											arrangeType = "点钟";
+											clock = 2;
 										}
 										else if (orderItems[i].arrangeType == "Arrangements")
 										{
 											arrangeType = "排钟";
+											clock = 1;
 										}
 										
 										$("#paytable").append("<tr class='text-c'><td>"+(i+1)+"</td><td>"+productType+"</td><td>"+orderItems[i].fullName+"</td><td>"+orderItems[i].price+"</td><td>"+orderItems[i].quantity+"</td><td>"+orderItems[i].returnQuantity+"</td><td>"+orderItems[i].scale+"</td><td>"+orderItems[i].subtotal+"</td><td>"+orderItems[i].servicePersonal+"</td><td>"+arrangeType+"</td><tr>");
-									}  
-									
+										
+										var unit = {
+												'job_number': orderItems[i].servicePersonal,
+												'service_name':orderItems[i].fullName,
+												'service_id': '',
+												'price': orderItems[i].subtotal,
+												'room_number': room_name,
+												'clock': clock,
+											};
+										info.push(unit);											
+									}
+
+									$("#cash").val(orderdata2.countinfo.receivable);									
 								}
 						})
 					}
@@ -339,7 +364,6 @@
             var tech = $('#tech option:selected').val()
             if (tech == "") return;
 			
-			/*
             if(busy == 1)
 			{
                 swal({
@@ -357,7 +381,7 @@
                 })
                 return;
             }
-			*/
+			
 			
             var service = $('#service option:selected').val()
             service = service.split(',')
@@ -373,14 +397,13 @@
                 'clock': clock
             }
 
-            $('#confirm_service').append("<p style='display:inline-block'>技师: " + tech + "\t服务:" + service[1] + "\t包厢:" +
-                room[0] + "\t上钟类型:" + (clock == 1 ? '排钟' : '点钟') + "</p><br>")
+            //$('#confirm_service').append("<p style='display:inline-block'>技师: " + tech + "\t服务:" + service[1] + "\t包厢:" + room[0] + "\t上钟类型:" + (clock == 1 ? '排钟' : '点钟') + "</p><br>")
 				
             //总价通过服务价格自动计算，暂时改成手动输入
             //total_price += parseInt(service[2]) / 100;
             //$('#cash').val(total_price);
 			
-            info.push(unit)
+            info.push(unit);
         }
 
 		//--------------------------------------------------------------
@@ -400,7 +423,7 @@
 			{
                 swal({
                     title: "",
-                    text: "选择的服务不能为空"
+                    text: "没有录入订单，不能支付！"
                 })
                 return;
             }
@@ -415,8 +438,10 @@
             }
 			
             total_price = $('#cash').val();
-            //余额支付需要验证码
-            if ($('#pay_method option:selected').val() == 3) 
+			
+           
+		   /*
+            if ($('#pay_method option:selected').val() == 3)  //余额支付需要验证码
 			{
                 if($('#check_code').val()!= check_code){
                     swal({
@@ -433,14 +458,16 @@
                     return;
                 }
             }
+			*/
+			//余额支付，需要改成支付完发短信通知
 			
             $.post("__ROOT__/index.php/api/Consumedorder/create_order", {
-                info: info,
-                total_price: total_price,
-                phone: phone,
-                method: $('#pay_method option:selected').val(),
-                username: $('#username').val(),
-                note: $('#note').val()
+                info: info,//订单的多个服务信息
+                total_price: total_price,//支付价格
+                phone: phone,//手机号码
+                method: $('#pay_method option:selected').val(),//支付方式
+                username: $('#username').val(),//用户名
+                note: $('#note').val(),//备注
             }).done((res) => {
 
                 if (res.status == 1) {

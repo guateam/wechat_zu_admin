@@ -122,67 +122,96 @@
             return json(['status'=>0]);
         }
 
-        public function create_order($info,$total_price,$phone,$method,$username,$note){
+        public function create_order($info,$total_price,$phone,$method,$username,$note)
+		{
             $cus = Db::query("select * from customer where phone_number='$phone'");
             //若找不到该账号，则单子内的id自动填为用户名
             $user_id = $username;
             if($cus)
+			{
                 $user_id=$cus[0]['openid'];
+			}
 
             //若余额支付，判断余额是否足够
-            if($method == 3){
-                $ctrl =new \app\api\controller\Customer();
+            if($method == 3)
+			{
+                $ctrl = new \app\api\controller\Customer();
                 $cash = $ctrl->get_cash_by_phone($phone);
-                if($cash === false){
-                    return json(['status'=>0,'msg'=>"该手机号未注册会员"]);
+                if($cash === false)
+				{
+                    return json(['status'=>0,'msg'=>"该手机号未注册会员"]);//创建订单失败
                 }
-                if($cash < $total_price){
-                    return json(['status'=>0,'msg'=>"余额不足"]);
+                if($cash < $total_price)
+				{
+                    return json(['status'=>0,'msg'=>"余额不足"]);//创建订单失败
                 }
             }
             
             $time = time();
             $order_id = strval(date("Ymdhis",$time));
-            for($i=0;$i<10;$i++){
-                $order_id .= strval(rand(0,9));
+            for($i=0;$i<10;$i++)
+			{
+                $order_id .= strval(rand(0,9));//订单号
             }
-            $order = new UserModel(['order_id'=>$order_id,'user_id'=>$user_id,
+			
+            $order = new \app\api\model\Consumedorder(['order_id'=>$order_id,'user_id'=>$user_id,
             'state'=>4,'payment_method'=>$method,'generated_time'=>$time,'appoint_time'=>$time,'contact_phone'=>$phone,
             'pay_amount'=>$total_price*100,'user_num'=>1,'payment_user_id'=>$user_id,'note'=>$note,'source'=>1,'end_time'=>$time]);
+			
             $order->save();
-            foreach($info as $it){
-                $item_id = $it['service_id'];
+            
+			foreach($info as $it)
+			{
+                if ($it['service_id'] =='')
+                {
+                    $servicename = $it['service_name'];
+                    $item = Db::query("select * from service_type where name='$servicename'");
+
+                    if($item)
+                    {
+                        $item_id = $item[0]['ID'];
+                    }
+                }
+                else 
+                {
+                    $item_id = $it['service_id'];
+                }
+
                 $job_number = $it['job_number'];
+				
                 $ticheng = 0;
                 $yongjin = 0;
-
 
                 $service_type = Db::query("select * from service_type where ID='$item_id' ");
                 $technician = Db::query("select * from technician where job_number='$job_number'");
 
                 $yongjin = $service_type[0]['invite_income'];
-                //技师
-                if($technician[0]['type']==1){
-                    //排钟
-                    if($it['clock'] == 1){
-                        $ticheng = $service_type[0]['pai_commission'];
-                    //点钟
-                    }else if($it['clock'] == 2){
+               
+                if($technician[0]['type']==1) //技师
+				{   
+                    if($it['clock'] == 1)//排钟
+					{
+                        $ticheng = $service_type[0]['pai_commission'];                    
+                    }
+					else if($it['clock'] == 2)//点钟
+					{
                         $ticheng = $service_type[0]['commission'];
                     }
-                //接待
-                }else if($technician[0]['type']==2){
-                    //排钟
-                    if($it['clock'] == 1){
-                        $ticheng = $service_type[0]['pai_commission2'];
-                    //点钟
-                    }else if($it['clock'] == 2){
-                        $ticheng = $service_type[0]['commission2'];
+                }
+				else if($technician[0]['type']==2)//接待
+				{                    
+                    if($it['clock'] == 1)
+					{
+                        $ticheng = $service_type[0]['pai_commission2'];//排钟                    
+                    }
+					else if($it['clock'] == 2)
+					{
+                        $ticheng = $service_type[0]['commission2'];//点钟
                     }
                 }
 
                 $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
-                'item_id'=>$it['service_id'],'job_number'=>$it['job_number'],'price'=>$it['price'],
+                'item_id'=>$item_id,'job_number'=>$it['job_number'],'price'=>$it['price'],
                 'private_room_number'=>$it['room_number'],'clock_type'=>$it['clock'],'appoint_time'=>$time,
                 'ticheng'=>$ticheng,'yongjin'=>$yongjin]);
 

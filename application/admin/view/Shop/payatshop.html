@@ -51,6 +51,10 @@
             <option value="{$it.ID},{$it.name}">{$it.name}</option>
             {/volist}
         </select>
+		
+		<div style="display:inline-block"><img id="loading" style="display:none;width:30px;height:30px"/></div>
+		
+		<div style="width:200px ; display:inline-block"><span style="color:red" id="roomwarning" ></span></div>		
 		<br>
 		<br>
 		
@@ -172,13 +176,15 @@
 		
 			$('#paytable').empty(); //清空所有子标签(元素)
 			
+			//$("#loading").innerHTML = "<img src='http://css.c7k7.com/souhou/timg4.gif'>";
 			
+			$("#roomwarning").html("");
+			$('#loading').css('display', '');
+			$("#loading").attr('src',"http://css.c7k7.com/souhou/timg4.gif"); 
 			
 			var room = $('#room option:selected').val();
             room = room.split(',');
 			room_name = room[1];
-			
-			//alert(room_name);
 			
 			$.post("__ROOT__/index.php/api/Customer/getRoomInfo",{
 				roomname:room_name
@@ -190,6 +196,8 @@
 					
 					if (res.status == "Finish")
 					{
+						$("#roomwarning").html("");
+						
 						$('#paytable').append("<thead><tr class='text-c'><th width='40'>No</th> <th width='80'>类型</th><th width='80'>名称</th><th width='80'>单价</th><th width='60'>数量</th><th width='60'>退单量</th><th width='80'>折扣</th><th width='80'>金额</th><th width='80'>技师</th><th width='80'>安排</th></tr></thead><tbody></tbody>");
 						
 						//准备结帐
@@ -201,6 +209,8 @@
 							}).done((res)=>{
 							
 								//console.log(res);
+								
+								$('#loading').css('display', 'none');
 								$('#payinfoarea').css('display', '');
 								
 								res = JSON.parse(res);
@@ -246,11 +256,16 @@
 					else if (res.status == "Idle")
 					{
 						//房间空闲
-						alert("该房间空闲状态，不能结帐");
+						//alert("该房间空闲状态，不能结帐");
+						
+						$('#loading').css('display', 'none');
+						$("#roomwarning").html("该房间空闲状态，不能结帐");
 					}
 					else if (res.status == "Busy")
 					{
-						alert("该房间正在服务，不能结帐");
+						//alert("该房间正在服务，不能结帐");
+						$('#loading').css('display', 'none');
+						$("#roomwarning").html("该房间正在服务，不能结帐");
 					}
 				}
 			})

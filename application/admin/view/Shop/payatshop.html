@@ -166,13 +166,17 @@
 		
 		var z = document.getElementById("pay_method");  
 		z.selectedIndex = -1;  
+		
+		var p = document.getElementById("service");  
+		p.selectedIndex = -1;  		
+		
 				
 		$("#phone").val("");
 		$("#username").val("");		
 		$("#cash").val("");
 	
         var info = [];
-        var total_price = 0
+        var total_price = 0;
         var phone = ""
         var message_interval = 0;
         var cooldown = 0;
@@ -208,6 +212,7 @@
 			
 			//$("#loading").innerHTML = "<img src='http://css.c7k7.com/souhou/timg4.gif'>";
 			
+			$("#cash").val("");
 			$("#roomwarning").html("");
 			$('#loading').css('display', '');
 			$("#loading").attr('src',"http://css.c7k7.com/souhou/timg4.gif"); 

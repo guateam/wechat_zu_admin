@@ -42,8 +42,11 @@
         </a>
     </nav>
     <div id="step1" style="margin-top: 5px;margin-bottom: 5px;margin-left:25px;padding-left: 10px">
-        <div style="width:90px ; display:inline-block"><span style="color:red">*</span>顾客手机号:</div>   <input type="text" id="phone" class="theinput"><br>
-        <div style="width:90px ; display:inline-block">&nbsp;&nbsp;顾客姓名:</div>     <input type="text" id="username" class="theinput"><br>
+        <div style="width:90px ; display:inline-block"><span style="color:red">*</span>顾客手机号:</div>   <input type="text" id="phone" class="theinput">
+		<br><br>
+		
+        <div style="width:90px ; display:inline-block">&nbsp;&nbsp;顾客姓名:</div> <input type="text" id="username" class="theinput">
+		<br><br>
 		
 		<div style="width:90px ; display:inline-block"><span style="color:red">*</span>包厢:</div>
         <select name="" id="room" class="theinput">
@@ -51,6 +54,8 @@
             <option value="{$it.ID},{$it.name}">{$it.name}</option>
             {/volist}
         </select>
+		<br>
+		<br>
 		
 		<div style="display:inline-block"><img id="loading" style="display:none;width:30px;height:30px"/></div>
 		
@@ -208,10 +213,9 @@
 		//--------------------------------------------------------------
 		$("#room").change(()=>{ //选择房间号，获取接口json，并渲染图表
 		
+			
 			$('#paytable').empty(); //清空所有子标签(元素)
-			
-			//$("#loading").innerHTML = "<img src='http://css.c7k7.com/souhou/timg4.gif'>";
-			
+		
 			$("#cash").val("");
 			$("#roomwarning").html("");
 			$('#loading').css('display', '');
@@ -221,14 +225,20 @@
             room = room.split(',');
 			room_name = room[1];
 			
+			var timestamp = (new Date()).getTime();
+			console.log("begin getRoomInfo" + timestamp);
+			
 			$.post("__ROOT__/index.php/api/Customer/getRoomInfo",{
 				roomname:room_name
 			}).done((res)=>{
-				//console.log(res);				
+							
 				res = JSON.parse(res);
-				if (res.success == true) {
-					//console.log(res.status);
-					
+				
+				timestamp = (new Date()).getTime();
+				console.log("end getRoomInfo" + timestamp);
+			
+				if (res.success == true) 
+				{
 					if (res.status == "Finish")
 					{
 						$("#roomwarning").html("");
@@ -237,11 +247,16 @@
 						
 						//准备结帐
 						//调用另一个接口						
+						
+						timestamp = (new Date()).getTime();
+						console.log("begin getPayInfo" + timestamp);
+				
 						$.post("__ROOT__/index.php/api/Customer/getPayInfo",{
 								checkInId:res.checkInId
 							}).done((res)=>{
 							
-								//console.log(res);
+								timestamp = (new Date()).getTime();
+								console.log("end getPayInfo" + timestamp);
 								
 								$('#loading').css('display', 'none');
 								$('#payinfoarea').css('display', '');
@@ -250,21 +265,21 @@
 								
 								if(res.success == false)
 								{
-									alert("获取信息失败，需要手动录入订单");									
-									$('#manualAdd').css('display', '');
+									//alert("获取信息失败，需要手动录入订单");	
 									
-									$('#loading').css('display', 'none');
-									$('#payinfoarea').css('display', '');
+									alert("同步失败，重新登陆点钟宝后台，重启监控。或者手动录入订单信息");
+									
+									$('#manualAdd').css('display', '');//手动录入框显示									
+									$('#loading').css('display', 'none');//loading 不显示
+									$('#payinfoarea').css('display', '');//订单表头显示出来
 									
 									$('#paytable').append("<thead><tr class='text-c'><th width='40'>No</th> <th width='80'>类型</th><th width='80'>名称</th><th width='80'>单价</th><th width='60'>数量</th><th width='60'>退单量</th><th width='80'>折扣</th><th width='80'>金额</th><th width='80'>技师</th><th width='80'>安排</th></tr></thead><tbody></tbody>");
 								}
 								else
 								{
 									var orderdata = res.data;
-									//console.log(orderdata);
 									
 									orderdata2 = JSON.parse(orderdata);
-									//console.log(orderdata2);
 									
 									orderItems = orderdata2.orderitems;
 									
@@ -272,7 +287,7 @@
 									
 									for (var i = 0; i < orderItems.length; i++) 
 									{  
-										console.log(i,orderItems[i]); 
+										//console.log(i,orderItems[i]); 
 										
 										 
 										if (orderItems[i].productType == "ServItem")
@@ -329,6 +344,17 @@
 						$('#loading').css('display', 'none');
 						$("#roomwarning").html("该房间正在服务，不能结帐");
 					}
+				}
+				else //获取小曹接口失败
+				{
+					alert("同步失败，重新登陆点钟宝后台，重启监控。或者手动录入订单信息");
+					
+					//alert("获取信息失败，需要手动录入订单");									
+					$('#manualAdd').css('display', '');//手动录入框显示									
+					$('#loading').css('display', 'none');//loading 不显示
+					$('#payinfoarea').css('display', '');//订单表头显示出来
+					
+					$('#paytable').append("<thead><tr class='text-c'><th width='40'>No</th> <th width='80'>类型</th><th width='80'>名称</th><th width='80'>单价</th><th width='60'>数量</th><th width='60'>退单量</th><th width='80'>折扣</th><th width='80'>金额</th><th width='80'>技师</th><th width='80'>安排</th></tr></thead><tbody></tbody>");
 				}
 			})
         })

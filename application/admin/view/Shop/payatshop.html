@@ -28,10 +28,39 @@
         .thebut {
         }
     </style>
+	
+	<style>
+		.disable{
+			background-color: rgba(0, 0, 0, 0.4) !important;
+		}
+	</style>
+	
     <title>到店支付</title>
 </head>
 
 <body>
+	
+	<div id="loading-mask" style="display:none;position: fixed;background-color: rgba(0,0,0,0.65);top:0;bottom: 0;left: 0;right: 0;z-index: 99">
+            <div class="loading-main" style="position: absolute;width: 480px;height: 300px;top: 0;right: 0;bottom: 0;left: 0;margin: auto;text-align: center;">
+                <div title="2">
+                    <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                         width="120px" height="120px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+  <path fill="#FF6700" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+    <animateTransform attributeType="xml"
+                      attributeName="transform"
+                      type="rotate"
+                      from="0 25 25"
+                      to="360 25 25"
+                      dur="0.6s"
+                      repeatCount="indefinite"/>
+    </path>
+  </svg>
+                </div>
+                <p style="color: #fff">正在加载请等待......</p>
+            </div>
+
+        </div>
+		
     <nav class="breadcrumb">
         <i class="Hui-iconfont">&#xe67f;</i> 首页
         <span class="c-gray en">&gt;</span> 服务管理
@@ -42,7 +71,7 @@
         </a>
     </nav>
     <div id="step1" style="margin-top: 5px;margin-bottom: 5px;margin-left:25px;padding-left: 10px">
-        <div style="width:90px ; display:inline-block"><span style="color:red">*</span>顾客手机号:</div>   <input type="text" id="phone" class="theinput">
+        <div style="width:90px ; display:inline-block">顾客手机号:</div>   <input type="text" id="phone" class="theinput">
 		<br><br>
 		
         <div style="width:90px ; display:inline-block">&nbsp;&nbsp;顾客姓名:</div> <input type="text" id="username" class="theinput">
@@ -153,7 +182,7 @@
 		-->
 
         <div style="width:90px ; display:inline-block"></div>
-        <button onclick="done()" class="btn btn-primary" style="margin-top: 6px;width: 90px">订单支付
+        <button onclick="done()" class="btn btn-primary" style="margin-top: 6px;width: 90px" id = "submit">订单支付
         </button>
     </div>
     {include file="common/common_script"}
@@ -504,6 +533,11 @@
 		//--------------------------------------------------------------
         function done() //订单支付
 		{
+			if($('#submit').hasClass('disable'))
+			{
+				return;
+			}
+			
 			paymethod = $('#pay_method option:selected').val();
 			if (paymethod == 3)
 			{
@@ -536,8 +570,10 @@
                 return;
             }
 			
-            total_price = $('#cash').val();
+			$('#loading-mask').show();
+            $('#submit').addClass('disable');
 			
+            total_price = $('#cash').val();			
            
 		   /*
             if ($('#pay_method option:selected').val() == 3)  //余额支付需要验证码
@@ -569,14 +605,23 @@
                 note: $('#note').val(),//备注
             }).done((res) => {
 
-                if (res.status == 1) {
+                if (res.status == 1) 
+				{
+					$('#submit').removeClass('disable');
+                    $('#loading-mask').hide();
+					
                     swal({
                         title: "订单创建成功",
                         text: "订单号为" + res.data,
                         type: "success"
                     })
                     location.reload();
-                } else {
+                } 
+				else 
+				{
+					$('#submit').removeClass('disable');
+                    $('#loading-mask').hide();
+					
                     swal({
                         title: "订单创建失败",
                         text: res.msg,

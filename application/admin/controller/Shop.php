@@ -120,7 +120,7 @@ class Shop extends Controller
     public function payatshop()
 	{
         $technicians = Db::query("select * from technician where type !=2");
-        $service = Db::query("select ID,name,price from service_type");
+        $service = Db::query("select ID,name,market_price from service_type");
         $room = Db::query("select ID,name from private_room");
 
         $this->assign('technicians',$technicians);

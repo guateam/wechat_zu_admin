@@ -108,28 +108,32 @@
             return json(['state'=>1]);
         }
 
-        public function change_clock($order_id,$state){
+        public function change_clock($order_id,$state)
+		{
             $order = UserModel::get(['order_id'=>$order_id]);
             
             if($order)
             {
-                if($state == 2){
+                if($state == 2)
+				{
                     //调整为繁忙
                     Db::query("update service_order A,technician B  set B.busy = 1 where A.order_id='$order_id' and B.job_number = A.job_number");
-                    //计算订单结束时间
-                    $dura = Db::query("select SUM(D.duration) as duration from consumed_order A,(select B.order_id,C.duration from service_order B, service_type C where B.item_id = C.ID and B.order_id='$order_id'  GROUP BY B.ID) D where A.order_id = '$order_id' GROUP BY A.order_id");
-                    if(!$dura)$dura = 0;
-                    else $dura = $dura[0]['duration']*60;
                     
+					//计算订单结束时间
+                    // $dura = Db::query("select SUM(D.duration) as duration from consumed_order A,(select B.order_id,C.duration from service_order B, service_type C where B.item_id = C.ID and B.order_id='$order_id'  GROUP BY B.ID) D where A.order_id = '$order_id' GROUP BY A.order_id");
+                    // if(!$dura)$dura = 0;
+                    // else $dura = $dura[0]['duration']*60;
+                }
+				else if($state == 4)
+				{
 					//Db::query("update consumed_order set end_time=appoint_time+100 where order_id='$order_id'");//手动点了下钟，下钟时间为预约时间加100？
 					$t = time();
-					Db::query("update consumed_order set end_time=$t where order_id='$order_id'");//手动点了下钟，下钟时间为预约时间加100？
-
-                }else if($state == 4){
+					Db::query("update consumed_order set end_time=$t where order_id='$order_id'");
+					
                     //调整为空闲
                     Db::query("update service_order A,technician B  set B.busy = 0 where A.order_id='$order_id' and B.job_number = A.job_number");
                 }
-                $order->state = $state;
+                $order->state = $state;//修改订单状态
                 $order->save();
                 return json(['status'=>1]);
             }

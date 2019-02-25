@@ -25,9 +25,13 @@ class Consumedorder extends Controller
             $so = \app\api\model\Serviceorder::all(['order_id'=>$od['order_id']]);
             $str = "";
             $exist = [];
-            if($so)
+            if($so)//consumed_order表记录没有找到对应的service_oder表记录
 			{
                 $order[$index]['clock_type'] = $so[0]['clock_type'];
+            }
+            else 
+            {
+                $order[$index]['clock_type'] = 3;
             }
             foreach($so as  $s)
 			{

@@ -201,7 +201,6 @@
 
                 $yongjin = $service_type[0]['invite_income'];
                
-			    if ()
                 if($technician[0]['type']==1) //技师
 				{   
                     if($it['clock'] == 1)//排钟
@@ -226,7 +225,7 @@
                 }
 
                 $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
-                'item_id'=>$item_id,'job_number'=>$it['job_number'],'price'=>$it['price'],
+                'item_id'=>$item_id,'job_number'=>$it['job_number'],'price'=>$it['price']*100,
                 'private_room_number'=>$it['room_number'],'clock_type'=>$it['clock'],'appoint_time'=>$time,
                 'ticheng'=>$ticheng,'yongjin'=>$yongjin]);
 

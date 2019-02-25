@@ -56,8 +56,22 @@
 		{
 			$API_URL = "http://103.239.247.197:8899";
 			
-			$url = $API_URL."/api?url=http://www.dzbsaas.com/footmassage/receptiondesk/listroom.do";			
+			$url = $API_URL."/api?url=http://www.dzbsaas.com/footmassage/receptiondesk/listroom.do";	
+
+			//---------------------------------------------
+			$myfile = fopen("sdr2.txt", "a+") or die("Unable to open file!");				
+			fwrite($myfile, "begin getRoomInfo = ".time()."   "."\r\n");
+			fclose($myfile);
+			//---------------------------------------------
+			
 			$content = file_get_contents($url);	
+			
+			//---------------------------------------------
+			$myfile = fopen("sdr2.txt", "a+") or die("Unable to open file!");				
+			fwrite($myfile, "end getRoomInfo = ".time()."   "."\r\n");
+			fclose($myfile);
+			//---------------------------------------------
+			
 			$obj = json_decode($content);
 			if ($obj->success == false)
 			{
@@ -113,7 +127,21 @@
 			$API_URL = "http://103.239.247.197:8899";
 			$mt = time()."000";
 			$url2 = $API_URL."/api?url=http://www.dzbsaas.com/footmassage/receptiondesk/getpayinfo.do?checkInId=".$checkInId."&_=".$mt;
+			
+			//---------------------------------------------
+			$myfile = fopen("sdr2.txt", "a+") or die("Unable to open file!");				
+			fwrite($myfile, "begin getPayInfo = ".time()."   "."\r\n");
+			fclose($myfile);
+			//---------------------------------------------
+			
 			$content2 = file_get_contents($url2);
+			
+			//---------------------------------------------
+			$myfile = fopen("sdr2.txt", "a+") or die("Unable to open file!");				
+			fwrite($myfile, "end getPayInfo = ".time()."   "."\r\n");
+			fclose($myfile);
+			//---------------------------------------------
+			
 			echo $content2;//直接返回获取到的json
 			return;
 		}

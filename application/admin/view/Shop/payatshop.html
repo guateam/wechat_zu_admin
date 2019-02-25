@@ -287,7 +287,7 @@
 									
 									for (var i = 0; i < orderItems.length; i++) 
 									{  
-										//console.log(i,orderItems[i]); 
+										console.log(i,orderItems[i]); 
 										
 										 
 										if (orderItems[i].productType == "ServItem")
@@ -306,11 +306,11 @@
 											clock = 1;
 										}
 										
-										$("#paytable").append("<tr class='text-c'><td>"+(i+1)+"</td><td>"+productType+"</td><td>"+orderItems[i].fullName+"</td><td>"+orderItems[i].price+"</td><td>"+orderItems[i].quantity+"</td><td>"+orderItems[i].returnQuantity+"</td><td>"+orderItems[i].scale+"</td><td>"+orderItems[i].subtotal+"</td><td>"+orderItems[i].servicePersonal+"</td><td>"+arrangeType+"</td><td><a href='#' onclick=delRow('" + (i+1) +"') >删除</a></td><tr>");
+										$("#paytable").append("<tr class='text-c'><td>"+(i+1)+"</td><td>"+productType+"</td><td>"+orderItems[i].name+"</td><td>"+orderItems[i].price+"</td><td>"+orderItems[i].quantity+"</td><td>"+orderItems[i].returnQuantity+"</td><td>"+orderItems[i].scale+"</td><td>"+orderItems[i].subtotal+"</td><td>"+orderItems[i].servicePersonal+"</td><td>"+arrangeType+"</td><td><a href='#' onclick=delRow('" + (i+1) +"') >删除</a></td><tr>");
 										
 										var unit = {
 												'job_number': orderItems[i].servicePersonal,
-												'service_name':orderItems[i].fullName,
+												'service_name':orderItems[i].name,
 												'service_id': '',
 												'price': orderItems[i].subtotal,
 												'room_number': room_name,

@@ -52,6 +52,20 @@
             }
         }
 
+        public function ErrorLogTest()
+        {
+            try
+            {
+                throw new ExceptionNew("sunyue");
+            }
+            catch(Exception $e)
+            {
+               $info = $e->getMessage();
+               $time = time();
+               Db::query("insert into errorlog (`operation`,`loginfo`,`time`) values ('test','$info','$time')");
+            }
+        }
+
         public function pay_order($order_id,$open_id){
             $paying_order = UserModel::get(['order_id'=>$order_id]);
             if($paying_order){
@@ -187,6 +201,7 @@
 
                 $yongjin = $service_type[0]['invite_income'];
                
+			    if ()
                 if($technician[0]['type']==1) //技师
 				{   
                     if($it['clock'] == 1)//排钟

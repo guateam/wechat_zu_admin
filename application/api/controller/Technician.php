@@ -361,11 +361,21 @@ class Technician extends Controller
         $lost = 0;
         //业绩
         $yeji = 0;
-        //获取所有该技师参与的consumed_order,计算业绩
-        $consumed_orders = Db::query("select A.* from consumed_order A,service_order B where B.job_number='$job_number' and A.order_id= B.order_id and A.end_time >= $begin and A.end_time <= $end and(A.state=4 or A.state=5) group by A.order_id");
-        for($i=0;$i<count($consumed_orders);$i++){
-            $yeji+=$consumed_orders[$i]['pay_amount'];
+		
+        //获取所有该技师参与的consumed_order,计算业绩 错误
+        // $consumed_orders = Db::query("select A.* from consumed_order A,service_order B where B.job_number='$job_number' and A.order_id= B.order_id and A.end_time >= $begin and A.end_time <= $end and(A.state=4 or A.state=5) group by A.order_id");
+        // for($i=0;$i<count($consumed_orders);$i++)
+		// {
+            // $yeji+=$consumed_orders[$i]['pay_amount'];
+        // }
+		
+		//应该从service_order表查询
+		$service_orders = Db::query("select B.* from consumed_order A,service_order B where B.job_number='$job_number' and A.order_id= B.order_id and A.end_time >= $begin and A.end_time <= $end and(A.state=4 or A.state=5) group by A.order_id");
+		for($i=0;$i<count($service_orders);$i++)
+		{
+            $yeji += $service_orders[$i]['price'];
         }
+		
 
         if ($so) {
             foreach ($so as $svod) {

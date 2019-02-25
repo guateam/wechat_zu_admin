@@ -68,7 +68,7 @@
                 <option value="6"{if condition="$order['payment_method'] == 6"}selected{/if}>其他</option>
                 <option value="7"{if condition="$order['payment_method'] == 7"}selected{/if}>美团支付</option>
         </select><br>
-        <div style="width:90px ; display:inline-block">支付金额(元):</div>
+        <div style="width:90px ; display:inline-block">支付金额(分):</div>
         <input style="margin-bottom: 10px" type="text" id="cash" class="theinput" value="{$order['pay_amount']}"><br>
         <div style="width:90px ; display:inline-block">上钟时间:</div>
         <input type="text" id="appoint_time" value="{$order['appoint_time']}" class="theinput" ><br>

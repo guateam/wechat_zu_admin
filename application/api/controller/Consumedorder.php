@@ -235,10 +235,16 @@
 					$jd_ticheng = $service_type[0]['commission2'];
 				}
 				
+				$room_number = $it['room_number'];
+				$room = Db::query("select * from private_room where name='$room_number' ");
+				if($room)
+				{
+					$room_id = $room[0]['ID'];
+				}				
 
                 $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
                 'item_id'=>$item_id,'job_number'=>$it['job_number'],'price'=>$it['price']*100,
-                'private_room_number'=>$it['room_number'],'clock_type'=>$it['clock'],'appoint_time'=>$time,
+                'private_room_number'=>$room_id,'clock_type'=>$it['clock'],'appoint_time'=>$time,
                 'ticheng'=>$ticheng,'yongjin'=>$yongjin,'jd_number'=>$jiedai,'jd_ticheng'=>$jd_ticheng]);
 
                 $sv_order->save();

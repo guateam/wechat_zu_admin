@@ -359,7 +359,7 @@
 											clock = 1;
 										}
 										
-										$("#paytable").append("<tr class='text-c'><td>"+(i+1)+"</td><td>"+productType+"</td><td>"+orderItems[i].name+"</td><td>"+orderItems[i].price+"</td><td>"+orderItems[i].quantity+"</td><td>"+orderItems[i].returnQuantity+"</td><td>"+orderItems[i].scale+"</td><td>"+orderItems[i].subtotal+"</td><td>"+orderItems[i].servicePersonal+"</td><td>"+arrangeType+"</td><td><a href='#' onclick=delRow('" + (i+1) +"') >删除</a></td><tr>");
+										$("#paytable").append("<tr class='text-c'><td>"+(i+1)+"</td><td>"+productType+"</td><td>"+orderItems[i].name+"</td><td>"+orderItems[i].price+"</td><td>"+orderItems[i].quantity+"</td><td>"+orderItems[i].returnQuantity+"</td><td>"+orderItems[i].scale+"</td><td>"+orderItems[i].subtotal+"</td><td>"+orderItems[i].servicePersonal+"</td><td>"+arrangeType+"</td><td><a href='#' onclick=delRow(this) >删除</a></td><tr>");
 										
 										var unit = {
 												'job_number': orderItems[i].servicePersonal,
@@ -379,16 +379,18 @@
 					else if (res.status == "Idle")
 					{
 						//房间空闲						
-						$('#loading').css('display', 'none');
-						$("#roomwarning").html("该房间空闲状态，不能结帐");
+						//$('#loading').css('display', 'none');
+						//$("#roomwarning").html("该房间空闲状态，不能结帐");
 						
-						//alert("同步失败，重新登陆点钟宝后台，重启监控。或者手动录入订单信息");
-						//////alert("获取信息失败，需要手动录入订单");									
-						//$('#manualAdd').css('display', '');//手动录入框显示									
-						//$('#loading').css('display', 'none');//loading 不显示
-						//$('#payinfoarea').css('display', '');//订单表头显示出来
 						
-						//$('#paytable').append("<thead><tr class='text-c'><th width='40'>No</th> <th width='80'>类型</th><th width='80'>名称</th><th width='80'>单价</th><th width='60'>数量</th><th width='60'>退单量</th><th width='80'>折扣</th><th width='80'>金额</th><th width='80'>技师</th><th width='80'>安排</th><th>操作</th></tr></thead><tbody></tbody>");
+						alert("同步失败，重新登陆点钟宝后台，重启监控。或者手动录入订单信息");
+						////alert("获取信息失败，需要手动录入订单");									
+						
+						$('#manualAdd').css('display', '');//手动录入框显示									
+						$('#loading').css('display', 'none');//loading 不显示
+						$('#payinfoarea').css('display', '');//订单表头显示出来
+						
+						$('#paytable').append("<thead><tr class='text-c'><th width='40'>No</th> <th width='80'>类型</th><th width='80'>名称</th><th width='80'>单价</th><th width='60'>数量</th><th width='60'>退单量</th><th width='80'>折扣</th><th width='80'>金额</th><th width='80'>技师</th><th width='80'>安排</th><th>操作</th></tr></thead><tbody></tbody>");
 						
 					}
 					else if (res.status == "Busy")
@@ -414,6 +416,19 @@
 		
 		//--------------------------------------------------------------
 		//删除表格一行
+		
+		function delRow(obj)
+		{
+			//获取当前对象的父元素，在其下寻找id为“id”的元素的值
+			var id1=$(obj).parents("tr").find("#id").val();
+			var res=confirm("确定要删除么？");
+			if(res)
+			{
+				//删除界面元素，当前行
+				$(obj).parents("tr").remove();
+			}			
+		}
+
 
 		//--------------------------------------------------------------
         $('#phone').blur(()=>{  //输入客户手机号码，自动获取客户姓名
@@ -553,7 +568,7 @@
 				arrange = "点钟";				
 			}
 			
-			$("#paytable").append("<tr class='text-c'><td>"+itemcount+"</td><td>服务</td><td>"+servicename+"</td><td>"+price+"</td><td>1</td><td>0</td><td>100</td><td>"+price+"</td><td>"+tech+"</td><td>"+arrange+"</td><td>删除</td><tr>");
+			$("#paytable").append("<tr class='text-c'><td>"+itemcount+"</td><td>服务</td><td>"+servicename+"</td><td>"+price+"</td><td>1</td><td>0</td><td>100</td><td>"+price+"</td><td>"+tech+"</td><td>"+arrange+"</td><td><a href='#' onclick=delRow(this) >删除</a></td><tr>");
 			
             info.push(unit);
         }

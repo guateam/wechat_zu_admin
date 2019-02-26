@@ -337,9 +337,11 @@ class Technician extends Controller
         //该技师自己的信息
         $tech_self = Db::query("select * from technician where job_number='$job_number'");
         $tech_self = $tech_self[0];
+		
         //该技师在时间内自己做的所有订单
-        $so = Db::query("select A.* from service_order A,consumed_order B where A.job_number = '$job_number'and A.order_id=B.order_id and B.end_time > $begin and B.end_time < $end and (B.state=4 or B.state=5)");
-        // //$so = \app\api\model\Serviceorder::all(['job_number'=>$job_number]);
+        //$so = Db::query("select A.* from service_order A,consumed_order B where A.job_number = '$job_number'and A.order_id=B.order_id and B.end_time > $begin and B.end_time < $end and (B.state=4 or B.state=5)");
+        $so = Db::query("select * from service_order where job_number ='$job_number' and order_id in (select order_id from consumed_order A where  A.end_time >= $begin and A.end_time <= $end and(A.state=4 or A.state=5))");
+        
         //该技师邀请的人
         $invited = \app\api\model\Inviteship::all(['inviter_job_number' => $job_number]);
         //邀请该技师的人
@@ -362,23 +364,19 @@ class Technician extends Controller
         //业绩
         $yeji = 0;
 		
-        //获取所有该技师参与的consumed_order,计算业绩 错误
-        // $consumed_orders = Db::query("select A.* from consumed_order A,service_order B where B.job_number='$job_number' and A.order_id= B.order_id and A.end_time >= $begin and A.end_time <= $end and(A.state=4 or A.state=5) group by A.order_id");
-        // for($i=0;$i<count($consumed_orders);$i++)
-		// {
-            // $yeji+=$consumed_orders[$i]['pay_amount'];
-        // }
-		
 		//应该从service_order表查询
-		$service_orders = Db::query("select B.* from consumed_order A,service_order B where B.job_number='$job_number' and A.order_id= B.order_id and A.end_time >= $begin and A.end_time <= $end and(A.state=4 or A.state=5) group by A.order_id");
+		//$service_orders = Db::query("select B.* from consumed_order A,service_order B where B.job_number='$job_number' and A.order_id= B.order_id and A.end_time >= $begin and A.end_time <= $end and(A.state=4 or A.state=5) group by A.order_id");		
+		$service_orders = Db::query("select * from service_order where job_number ='$job_number' and order_id in (select order_id from consumed_order A where  A.end_time >= $begin and A.end_time <= $end and(A.state=4 or A.state=5))");
 		for($i=0;$i<count($service_orders);$i++)
 		{
             $yeji += $service_orders[$i]['price'];
         }
 		
 
-        if ($so) {
-            foreach ($so as $svod) {
+        if ($so) 
+		{
+            foreach ($so as $svod) 
+			{
                 $order_id = $svod['order_id'];
                 $co =Db::query("select state from consumed_order where order_id='$order_id'");
                 //不存在的订单不计算
@@ -386,22 +384,28 @@ class Technician extends Controller
                 //订单状态未达到待评价或评价完成的不计算
                 if($co[0]['state'] != 4 && $co[0]['state'] != 5)continue;
                 //排钟
-                if($svod['clock_type']==1){
+                if($svod['clock_type']==1)
+				{
                     $pai++;
                     $pai_price += $svod['ticheng'];
-                }else if($svod['clock_type']==2){
+                }
+				else if($svod['clock_type']==2)
+				{
                     $dian++;
                     $dian_price += $svod['ticheng'];
                 }
-
             }
         }
-        if ($invited) {
-            foreach ($invited as $inv) {
+		
+        if ($invited) //佣金
+		{
+            foreach ($invited as $inv) 
+			{
                 $data = self::get_lost($inv->freshman_job_number, $begin, $end);
                 $come_frome_other += $data;
             }
         }
+		
         return [
             'name' => $name,
 			'job_number' => $job_number,

@@ -238,17 +238,22 @@
             return json(['status'=>1,'data'=>$order_id]);
         }
 
-        public function update_order($order_id,$info,$state,$pay_method,$cash,$appoint_time,$note,$source){
+        public function update_order($order_id,$info,$state,$pay_method,$cash,$appoint_time,$note,$source)
+		{
             $order = UserModel::get(['order_id'=>$order_id]);
-            if(gettype($appoint_time) == "string"){
+            if(gettype($appoint_time) == "string")
+			{
                 $appoint_time = strtotime($appoint_time);
             }
             $service_orders = Db::query("select * from service_order where order_id='$order_id'");
-            for($i=0;$i<count($info);$i++){
+            for($i=0;$i<count($info);$i++)
+			{
                 $info[$i]['appoint_time']=$service_orders[$i]['appoint_time'];
             }
-            Db::query("delete from service_order where order_id='$order_id'");
-            if($order){
+            Db::query("delete from service_order where order_id='$order_id'");//把service_order表中与本订单相关内容先删除
+            //为什么需要先删除，service_order订单号相同的很多，技师也可以改，服务项目也可以改，找不到相应的去更新
+            if($order)
+			{
                 $order->state = $state;
                 $order->payment_method = $pay_method;
                 $order->pay_amount = $cash;
@@ -256,18 +261,28 @@
                 $order->note = $note;
                 $order->source = $source;
                 $order->save();
-                foreach($info as $it){
+                foreach($info as $it)
+				{
                     $service_id = $it['service_id'];
-                    $price = Db::query("select price from service_type where ID='$service_id'");
-                    if($price){
-                        $price = $price[0]['price'];
-                    }else{
+                    $eachservice = Db::query("select * from service_type where ID='$service_id'");//service_type表根据service_id查询到价格
+                    if($eachservice)
+					{
+                        $price = $eachservice[0]['price'];
+                    }
+					else
+					{
                         $price="服务不存在";
                     }
+
+                    //包厢号不对，提成和佣金没有了
+
+                    //提成从service表里取
+
                     $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
                     'item_id'=>$it['service_id'],'job_number'=>$it['job_number'],'price'=>$price,
                     'private_room_number'=>$it['room_number'],'clock_type'=>$it['clock'],'appoint_time'=>$it['appoint_time']]);
-                    $sv_order->save();
+                    
+					$sv_order->save();
                 }
                 return json(['status'=>1]);
             }

@@ -87,26 +87,29 @@ class Consumedorder extends Controller
         $svod = Db::query("select * from service_order where order_id = '$order_id'");
         $room = Db::query("select ID,name from private_room");
 
-        $order[0]['appoint_time'] = date("Y-m-d H:i:s",$order[0]['appoint_time']);
+        $order[0]['appoint_time'] = date("Y-m-d H:i:s",$order[0]['appoint_time']);//显示Y-m-d H:i:s
         foreach($svod as $idx => $sv)
 		{
             $service_id = $sv['item_id'];
             $name = Db::query("select name from service_type where ID='$service_id'");
             if($name)
 			{
-                $svod[$idx]['name'] = $name[0]['name'];
+                $svod[$idx]['name'] = $name[0]['name'];//服务名称
             }
         }
         $technicians = Db::query("select * from technician");
         $service = Db::query("select ID,name,price from service_type");
-        $room = Db::query("select ID,name from private_room");
-        $spare_tech = [];
+        $room = Db::query("select ID,name from private_room");//又查了一次
+        
+        //$spare_tech = [];
+        
+        /*
         //去除有约的技师
         foreach($technicians as $idx => $tc)
 		{
             $job_number = $tc['job_number'];
             $select_time = time();
-            //获取刷钟情况
+            //获取签到情况
             $clock = Db::query("select state from clock where job_number = '$job_number' order by `time` limit 1");
             //获取预约情况
             $appoint_tech = Db::query("select * from service_order where job_number = '$job_number' and appoint_time > ($select_time - (select Sum(duration)*60 from service_order A,service_type B where A.item_id = B.ID and A.order_id =(select order_id from service_order where job_number = '$job_number' and appoint_time < $select_time order by appoint_time desc limit 1)  ))");
@@ -133,19 +136,21 @@ class Consumedorder extends Controller
                 array_push($spare_tech,$tc);
             }
         }
+        */
         
 		for($i=0;$i<count($svod);$i++)
 		{
             $ctrl = new \app\api\controller\Skill();
             $skills = $ctrl->get_skill($svod[$i]['job_number']);
-            $svod[$i]['skill'] = $skills;
+            $svod[$i]['skill'] = $skills;//获取每个技师的技能
         }
 
-        $this->assign('technicians',$spare_tech);
+        //$this->assign('technicians',$spare_tech);//本意是获得空闲状态的技师，实际没有必要
+        $this->assign('technicians',$technicians);
         $this->assign('order',$order[0]);
         $this->assign('service_orders',$svod);
         $this->assign('service_num',count($svod));
-        $this->assign('room',$room);
+        $this->assign('room',$room);//房间列表
 
         return $this->fetch('Consumedorder/editorder');
     }

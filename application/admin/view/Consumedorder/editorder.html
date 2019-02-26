@@ -95,7 +95,8 @@
         <span>包厢</span>
         <select>
             {volist name="$room" id="rm" key='m'}
-            <option value="{$rm.ID},{$rm.name}">{$rm.name}</option>
+            <!--<option value="{$rm.ID},{$rm.name}">{$rm.name}</option>-->			
+			<option value="{$rm.ID},{$rm.name}" {if condition="$it['private_room_number']==$rm['name']"}selected{/if}>{$rm.name}</option>
             {/volist}
         </select>
         <br>
@@ -116,7 +117,8 @@
     <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
     <script type="text/javascript">
-        function link(e){
+        function link(e)//修改技师获得相应的服务列表
+		{
             //e是技师下拉框，两个next后是服务下拉框
             service = $(e).next().next();
             $("#modify").attr('disabled', true);
@@ -132,46 +134,41 @@
                 $("#modify").attr('disabled', false);
             })
         }
-        function done() {
-            phone = $('#phone').val()
+		
+        function done() //点击修改订单按钮
+		{
             info = [];
-            if (phone == "") {
-                swal({
-                    title: "",
-                    text: "手机号不能为空"
-                })
-                return;
-            }
-            if ($('#order_id').val() == "") {
+			
+            if ($('#order_id').val() == "") 
+			{
                 swal({
                     title: "",
                     text: "订单号不能为空"
                 })
                 return;
             }
-            if ( $("#cash").val() == "" ) {
+			
+            if ( $("#cash").val() == "" ) 
+			{
                 swal({
                     title: "",
                     text: "金额不能为空"
                 })
                 return;
             }
-            if ($('#appoint_time').val() == "") {
+			
+            if ($('#appoint_time').val() == "") 
+			{
                 swal({
                     title: "",
                     text: "上钟时间不能为空"
                 })
                 return;
-            }
-            if ($('#num').val() == "") {
-                swal({
-                    title: "",
-                    text: "顾客数量不能为空"
-                })
-                return;
-            }
+            }			
+           
             tech = $('#positionZero');
-            for(i=0;i<{$service_num};i++){
+            for(i=0;i<{$service_num};i++)
+			{
                 var service = tech.next().next();
                 var clock = service.next().next();
                 var room = clock.next().next();
@@ -190,19 +187,21 @@
                     'clock':clock_data,
                     'room_number':room_data[0]
                 }
+				console.log(data);
                 info.push(data);
                 tech = room.next().next().next().next();
             }
+			
             total_price = $('#cash').val();
             $.post("__ROOT__/index.php/api/Consumedorder/update_order", {
-                order_id: $('#order_id').val(),
-                info:info,
-                state: $('#state option:selected').val(),
-                pay_method: $('#pay_method option:selected').val(),
-                cash: $('#cash').val(),
-                appoint_time: $('#appoint_time').val(),
-                note:$('#note').val(),
-                source:$('#source').val()
+                order_id: $('#order_id').val(),//订单号
+                info:info,//服务情况信息
+                state: $('#state option:selected').val(),//订单状态
+                pay_method: $('#pay_method option:selected').val(),//支付方式
+                cash: $('#cash').val(),//支付金额
+                appoint_time: $('#appoint_time').val(),//预约时间
+                note:$('#note').val(),//备注
+                source:$('#source').val()//来自
             }).done((res) => {
                 if (res.status == 1) {
                     swal({

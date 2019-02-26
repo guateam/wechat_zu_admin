@@ -63,18 +63,22 @@
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
-                        <th width="130">订单号</th>
-                        <th width="150">订单生成时间</th>
-                        <th width="150">预约时间</th>
-                        <th width="80">预约人用户名</th>
+                        <th width="120">订单号</th>
+                        <th width="120">订单生成时间</th>
+                        <th width="120">预约时间</th>
+                        <th width="60">预约人</th>
                         <th width="80">预约人手机号</th>
                        
                         <th width="80">技师编号</th>
                         <th width="40">订单来自</th>
                         <th width="30">上钟类型</th>
-                        <th width="80">上钟下钟</th>
-						<th width="100">订单状态</th>
-                        <th width="100">备注</th>
+						
+						<th width="60">包厢号</th>
+						<th width="60">接待工号</th>
+						
+                        <th width="60">上钟下钟</th>
+						<th width="60">订单状态</th>
+                        <th width="60">备注</th>
                         <!-- <th width="60">付款顾客用户名</th>
                         <th width="80">付款顾客手机号</th> -->
                         <th width="50">付款方式</th>
@@ -111,6 +115,26 @@
                         </td>
                         <td>{if condition="$it.clock_type == 1"}排钟{elseif condition="$it.clock_type == 2"}点钟{/if}</td>
                        
+					   <td>
+					   
+					  
+					   <select name="" id="myroom">
+							<option value="" selected>请选择包厢</option>								
+								{volist name="$room" id="pp" key="qq"}						
+								<option value="{$pp.ID}">{$pp.name}</option>
+								{/volist}
+						</select>	
+					    </td>
+						
+					   <td>	
+						<select name="" id="jiedai">
+							<option value="" selected>请选择接待</option>								
+							{volist name="$jiedai" id="tt" key="kk"}						
+							<option value="{$tt.job_number}">{$tt.job_number}</option>
+							{/volist}
+						</select>					  
+					   </td>
+					   
 					   <td>
                            <button {if condition="$it.state==1"}onclick="up_clock('{$it.order_id}',this)" value="2"
                                     {elseif condition="$it.state==2"}onclick="down_clock('{$it.order_id}',this)" value="4"

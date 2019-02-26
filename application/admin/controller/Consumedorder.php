@@ -78,6 +78,13 @@ class Consumedorder extends Controller
                 array_push($payer,$od['contact_phone']);
             }
         }
+		
+		$jiedai = Db::query("select * from technician where type =2");
+		$this->assign('jiedai',$jiedai);
+		
+		$room = Db::query("select ID,name from private_room");
+		$this->assign('room',$room);
+		
         $this->assign("order",$order);
         $this->assign("tech",$tech);
         $this->assign("phone",$user);

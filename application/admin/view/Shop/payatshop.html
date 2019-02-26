@@ -420,12 +420,15 @@
 		function delRow(obj)
 		{
 			//获取当前对象的父元素，在其下寻找id为“id”的元素的值
-			var id1=$(obj).parents("tr").find("#id").val();
-			var res=confirm("确定要删除么？");
+			//var id1 = $(obj).parents("tr").find("#id").val();
+			var res = confirm("确定要删除么？");
 			if(res)
 			{
+				var value = $(".price_1")[0].innerHTML;
+				console.log(value);
+				
 				//删除界面元素，当前行
-				$(obj).parents("tr").remove();
+				//$(obj).parents("tr").remove();
 			}			
 		}
 
@@ -568,7 +571,7 @@
 				arrange = "点钟";				
 			}
 			
-			$("#paytable").append("<tr class='text-c'><td>"+itemcount+"</td><td>服务</td><td>"+servicename+"</td><td>"+price+"</td><td>1</td><td>0</td><td>100</td><td>"+price+"</td><td>"+tech+"</td><td>"+arrange+"</td><td><a href='#' onclick=delRow(this) >删除</a></td><tr>");
+			$("#paytable").append("<tr class='text-c'><td>"+itemcount+"</td><td>服务</td><td>"+servicename+"</td><td >"+price+"</td><td>1</td><td>0</td><td>100</td><td class='price_"+itemcount+"'>"+price+"</td><td>"+tech+"</td><td>"+arrange+"</td><td><a href='#' onclick=delRow(this) >删除</a></td><tr>");
 			
             info.push(unit);
         }

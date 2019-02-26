@@ -121,25 +121,29 @@
                        
 					   <td>
 					   
-							{if condition="$it.source == 0"}
+							{if condition="($it.source == 0) && ($it.state == 1)"}
 						   <select name="" id="myroom" class="roomclass_{$it.order_id}">
 								<option value="" selected>请选择包厢</option>								
 									{volist name="$room" id="pp" key="qq"}						
 									<option value="{$pp.ID}">{$pp.name}</option>
 									{/volist}
 							</select>	
-							{elseif condition="$it.source == 1"}{$it.username}{/if}
+							{elseif condition="$it.source == 1"}{$it.room_number}
+							{elseif condition="$it.state != 1"}{$it.room_number}
+							{/if}
 					   </td>
 						
 					   <td>	
-							{if condition="$it.source == 0"}
+							{if condition="($it.source == 0) && ($it.state == 1)"}
 							<select name="" id="jiedai" class="jdclass_{$it.order_id}">
 								<option value="" selected>请选择接待</option>								
 								{volist name="$jiedai" id="tt" key="kk"}						
 								<option value="{$tt.job_number}">{$tt.job_number}</option>
 								{/volist}
 							</select>	
-							{elseif condition="$it.source == 1"}{$it.username}{/if}
+							{elseif condition="$it.source == 1"}{$it.jd_number}
+							{elseif condition="$it.state != 1"}{$it.jd_number}
+							{/if}
 					   </td>
 					   
 					   <td>
@@ -154,10 +158,7 @@
                                 服务结束
                                 {/if}
                            </button>
-                            <!-- <input onclick="up_clock('{$it.order_id}',this)" name="clock{$k}" type="checkbox" value="2"
-                                {if condition="$it.state==2" }checked{/if} {if condition="$it.state==2 or $it.state==4 or $it.state==5"} disabled {/if}/>上钟 
-                            <input onclick="down_clock('{$it.order_id}',this)" name="clock{$k}" type="checkbox" value="4" {if condition="$it.state==4 or $it.state==5"
-                                }checked{/if} {if condition="$it.state==4 or $it.state==5 or $it.state==1"}  disabled {/if}/>下钟  -->
+                           
                         </td> 
 						
 						<td id="total_state{$k-1}">{if condition="$it.state==0"}订单取消{elseif
@@ -234,7 +235,6 @@
         function up_clock(order_id,element)
 		{	
 			var roomstr = ".roomclass_"+order_id;
-			//console.log( $(roomstr).val() );
 			if ($(roomstr).val() == '')
 			{
 				alert("上钟前必须选择包厢号");
@@ -242,20 +242,22 @@
 			}
 			
 			var jdstr = ".jdclass_"+order_id;
-			//console.log( $(roomstr).val() );
 			if ($(jdstr).val() == '')
 			{
 				alert("上钟前必须选择接待工号");
 				return;
 			}			
 			
-            change_clock(order_id,2,"确认上钟吗？",element);
+            change_clock(order_id,2,$(roomstr).val(),$(jdstr).val(),"确认上钟吗？",element);
         }
-        function down_clock(order_id,element){
-            change_clock(order_id,4,"确认下钟吗？",element);
+		
+        function down_clock(order_id,element)
+		{
+            change_clock(order_id,4, '', '',"确认下钟吗？",element);
         }
 
-        function change_clock(order_id,state,text,element) {
+        function change_clock(order_id,state,roomval,jdval,text,element) 
+		{
             swal({
                 title: text,
                 allowOutsideClick: false,
@@ -279,7 +281,9 @@
                     });
                     $.post("__ROOT__/index.php/api/Consumedorder/change_clock", {
                         order_id: order_id,
-                        state: state
+                        state: state,
+						roomid:roomval,
+						jdid:jdval,
                     }).done((res) => {
                         if (res.status == 1) {
                             swal({
@@ -301,10 +305,9 @@
                     })
                 }
             });
-
-
-            
         }
+		
+		
         var time_button_click = false;
         var down_click = false;
         /*用户-添加*/

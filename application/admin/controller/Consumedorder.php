@@ -34,8 +34,20 @@ class Consumedorder extends Controller
             if($so)//consumed_order表记录没有找到对应的service_oder表记录
 			{
                 $order[$index]['clock_type'] = $so[0]['clock_type'];
+                
+                $room_id = $so[0]['private_room_number'];
 
-                $order[$index]['room_number'] = $so[0]['private_room_number'];
+                $room = Db::query("select * from private_room where ID =$room_id");
+
+                if ($room)
+                {
+                    $order[$index]['room_number'] = $room[0]['name'];
+                }
+                else
+                {
+                    $order[$index]['room_number'] = '';
+                }
+
                 $order[$index]['jd_number'] = $so[0]['jd_number'];
             }
             else 

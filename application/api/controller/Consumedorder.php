@@ -108,7 +108,7 @@
             return json(['state'=>1]);
         }
 
-        public function change_clock($order_id,$state)
+        public function change_clock($order_id,$state,$roomid,$jdid)
 		{
             $order = UserModel::get(['order_id'=>$order_id]);
             
@@ -116,17 +116,18 @@
             {
                 if($state == 2)
 				{
-                    //调整为繁忙
-                    Db::query("update service_order A,technician B  set B.busy = 1 where A.order_id='$order_id' and B.job_number = A.job_number");
-                    
-					//计算订单结束时间
-                    // $dura = Db::query("select SUM(D.duration) as duration from consumed_order A,(select B.order_id,C.duration from service_order B, service_type C where B.item_id = C.ID and B.order_id='$order_id'  GROUP BY B.ID) D where A.order_id = '$order_id' GROUP BY A.order_id");
-                    // if(!$dura)$dura = 0;
-                    // else $dura = $dura[0]['duration']*60;
+					Db::query("update service_order A,technician B  set B.busy = 1 where A.order_id='$order_id' and B.job_number = A.job_number");//调整为繁忙
+
+					$jd = Db::query("select B.commission2 from service_order A, service_type B where A.order_id = $order_id and A.item_id = B.id");
+					if($jd)
+					{
+						$jd_ticheng = $jd[0]['commission2'];
+					}
+					
+					Db::query("update service_order set private_room_number = $roomid, jd_number = $jdid, jd_ticheng = $jd_ticheng where order_id='$order_id'");//填入房间id和接待工号 接待提成
                 }
 				else if($state == 4)
 				{
-					//Db::query("update consumed_order set end_time=appoint_time+100 where order_id='$order_id'");//手动点了下钟，下钟时间为预约时间加100？
 					$t = time();
 					Db::query("update consumed_order set end_time=$t where order_id='$order_id'");
 					

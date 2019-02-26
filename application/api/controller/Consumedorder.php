@@ -253,7 +253,7 @@
             return json(['status'=>1,'data'=>$order_id]);
         }
 
-        public function update_order($order_id,$info,$state,$pay_method,$cash,$appoint_time,$note,$source,$jiedai)
+        public function update_order($order_id,$info,$state,$pay_method,$cash,$appoint_time,$note,$source)
 		{
             $order = UserModel::get(['order_id'=>$order_id]);
             if(gettype($appoint_time) == "string")

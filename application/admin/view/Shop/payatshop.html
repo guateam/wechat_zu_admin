@@ -226,12 +226,25 @@
             choosen = $('#pay_method option:selected').val()
             if(choosen == 3)
 			{
-                $("#check_div").attr('hidden',false);
-                $.post("__ROOT__/index.php/api/Customer/get_cash_by_phone2",{
-					phone:$('#phone').val()
-                }).done((res)=>{
-                    $("#cus_cash").html('￥' + res.cash);
-                })
+				phone = $('#phone').val()
+				if (phone == "") 
+				{
+					$('#phone').focus();
+					swal({
+						title: "",
+						text: "选择会员卡余额支付，手机号不能为空"
+					})
+					return;
+				}
+				else
+				{				
+					$("#check_div").attr('hidden',false);
+					$.post("__ROOT__/index.php/api/Customer/get_cash_by_phone2",{
+						phone:$('#phone').val()
+					}).done((res)=>{
+						$("#cus_cash").html('￥' + res.cash);
+					})
+				}
             }
 			else
 			{
@@ -403,6 +416,7 @@
 				choosen = $('#pay_method option:selected').val()
 				if(choosen == 3)
 				{
+					$("#check_div").attr('hidden',false);
 					$.post("__ROOT__/index.php/api/Customer/get_cash_by_phone2",{
 						phone:$('#phone').val()
 					}).done((res)=>{

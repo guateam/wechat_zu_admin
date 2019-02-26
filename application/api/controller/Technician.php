@@ -523,6 +523,7 @@ class Technician extends Controller
             return json_encode(["state" => "格式错误:" . $_FILES["file"]["type"]]);
         }
     }
+	
     public function get_all_salary($begin, $end)
     {
         //如果是字符串类型的日期，转换成时间戳

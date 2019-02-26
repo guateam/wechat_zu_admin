@@ -79,9 +79,13 @@
                         <th width="60">上钟下钟</th>
 						<th width="60">订单状态</th>
                         <th width="60">备注</th>
-                        <!-- <th width="60">付款顾客用户名</th>
-                        <th width="80">付款顾客手机号</th> -->
-                        <th width="50">付款方式</th>
+						
+                        <!-- 
+						<th width="60">付款顾客用户名</th>
+                        <th width="80">付款顾客手机号</th> 
+						-->
+                        
+						<th width="50">付款方式</th>
                         <th width="50">付款金额</th>
                         <th width="100">操作</th>
                     </tr>
@@ -117,26 +121,29 @@
                        
 					   <td>
 					   
-					  
-					   <select name="" id="myroom">
-							<option value="" selected>请选择包厢</option>								
-								{volist name="$room" id="pp" key="qq"}						
-								<option value="{$pp.ID}">{$pp.name}</option>
-								{/volist}
-						</select>	
-					    </td>
+							{if condition="$it.source == 0"}
+						   <select name="" id="myroom" class="roomclass_{$it.order_id}">
+								<option value="" selected>请选择包厢</option>								
+									{volist name="$room" id="pp" key="qq"}						
+									<option value="{$pp.ID}">{$pp.name}</option>
+									{/volist}
+							</select>	
+							{elseif condition="$it.source == 1"}{$it.username}{/if}
+					   </td>
 						
 					   <td>	
-						<select name="" id="jiedai">
-							<option value="" selected>请选择接待</option>								
-							{volist name="$jiedai" id="tt" key="kk"}						
-							<option value="{$tt.job_number}">{$tt.job_number}</option>
-							{/volist}
-						</select>					  
+							{if condition="$it.source == 0"}
+							<select name="" id="jiedai" class="jdclass_{$it.order_id}">
+								<option value="" selected>请选择接待</option>								
+								{volist name="$jiedai" id="tt" key="kk"}						
+								<option value="{$tt.job_number}">{$tt.job_number}</option>
+								{/volist}
+							</select>	
+							{elseif condition="$it.source == 1"}{$it.username}{/if}
 					   </td>
 					   
 					   <td>
-                           <button {if condition="$it.state==1"}onclick="up_clock('{$it.order_id}',this)" value="2"
+                           <button data-orderid="{$it.order_id}" {if condition="$it.state==1"} class="mybtn" onclick="up_clock('{$it.order_id}',this)" value="2"
                                     {elseif condition="$it.state==2"}onclick="down_clock('{$it.order_id}',this)" value="4"
                                     {else}disabled{/if}>
                                {if condition="$it.state==1"}
@@ -224,7 +231,24 @@
         $(function () {
 
         });
-        function up_clock(order_id,element){
+        function up_clock(order_id,element)
+		{	
+			var roomstr = ".roomclass_"+order_id;
+			//console.log( $(roomstr).val() );
+			if ($(roomstr).val() == '')
+			{
+				alert("上钟前必须选择包厢号");
+				return;
+			}
+			
+			var jdstr = ".jdclass_"+order_id;
+			//console.log( $(roomstr).val() );
+			if ($(jdstr).val() == '')
+			{
+				alert("上钟前必须选择接待工号");
+				return;
+			}			
+			
             change_clock(order_id,2,"确认上钟吗？",element);
         }
         function down_clock(order_id,element){

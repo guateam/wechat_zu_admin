@@ -34,11 +34,15 @@ class Consumedorder extends Controller
             if($so)//consumed_order表记录没有找到对应的service_oder表记录
 			{
                 $order[$index]['clock_type'] = $so[0]['clock_type'];
+
+                $order[$index]['room_number'] = $so[0]['private_room_number'];
+                $order[$index]['jd_number'] = $so[0]['jd_number'];
             }
             else 
             {
                 $order[$index]['clock_type'] = 3;
             }
+
             foreach($so as  $s)
 			{
                 $repeat = false;
@@ -54,9 +58,10 @@ class Consumedorder extends Controller
 				{
                     $str = $str.$s->job_number.',';
                     array_push($exist,$s->job_number);
-                }
-               
+                }               
             }
+
+            
             $str = substr($str,0,strlen($str)-1);
             array_push($tech,$str);
             if($info != null && $info != '')

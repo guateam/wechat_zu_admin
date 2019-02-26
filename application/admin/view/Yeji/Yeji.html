@@ -53,17 +53,23 @@
                 <thead>
                     <tr class="text-c">
 					
-						<th width="90">姓名</th>
-                        <th width="90">工号</th>
+						<th width="60">姓名</th>
+                        <th width="60">工号</th>
                         
                         <th width="60">点钟数量</th>
-						<th width="80">点钟提成</th>
+						<th width="60">点钟提成</th>
 						<th width="60">排钟数量</th>
-                        <th width="80">排钟提成</th>
+                        <th width="60">排钟提成</th>
+						<th width="40">充卡</th>
+						<th width="40">充卡提成</th>
                        
-                        <th width="80">业绩</th>
-                        <th width="80">佣金</th>
-                        <th width="100">总收入</th>
+                        <th width="60">业绩</th>
+                        <th width="60">佣金</th>
+						
+						
+						<th width="40">打赏</th>
+						
+                        <th width="60">总收入</th>
                         <th width="60" >明细</th>
                     </tr>
                 </thead>
@@ -78,8 +84,14 @@
 						<td>{$it.pai}</td>
                         <td>￥{$it.pai_earn}</td>
                         
+						<td>{$it.recharge}</td>
+						<td>{$it.recharge_ticheng}</td>
+						
                         <td>￥{$it.yeji}</td>
                         <td>￥{$it.come_from_other}</td>
+						
+						<td></td>
+						
                         <td>￥{$it.final_salary}</td>
                         <td>
                             <button type="btn btn-primary" onclick="detail('{$it.job_number}','{begin}','{end}')">明细</button>

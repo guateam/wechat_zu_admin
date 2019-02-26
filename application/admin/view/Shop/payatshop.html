@@ -171,10 +171,21 @@
             <div style="width:90px ; display:inline-block"><span style="color:red;">*</span>余额剩余:</div>
             <span id="cus_cash">待查询...</span>
         </div>		
-        <br>        
-
+        <br>  
+		
+		<div style="width:90px ; display:inline-block"><span style="color:red">*</span>选择接待:</div>
+		 <select name="" id="jiedai" class="theinput">
+            <option value="" selected>请选择接待</option><!--技师type=2-->
+            {volist name="$jiedai" id="it" key="k"}
+            <option value="{$it.job_number}">{$it.job_number}</option>
+            {/volist}
+        </select><br>
+		
+		<br>
+		
 		<div style="width:90px ; display:inline-block">&nbsp;&nbsp;</span>订单备注:</div>
         <input type="text" id="note" class="theinput"><br>
+        
 		
 		<!--
         <div style="width:90px ; display:inline-block">已选服务:</div>
@@ -400,6 +411,9 @@
 				}
 			})
         })
+		
+		//--------------------------------------------------------------
+		//删除表格一行
 
 		//--------------------------------------------------------------
         $('#phone').blur(()=>{  //输入客户手机号码，自动获取客户姓名
@@ -584,6 +598,15 @@
                 return;
             }
 			
+			if ($("#jiedai").val() == "") 
+			{
+                swal({
+                    title: "",
+                    text: "没有录入接待，不能支付！"
+                })
+                return;
+            }
+			
 			$('#loading-mask').show();
             $('#submit').addClass('disable');
 			
@@ -610,12 +633,14 @@
 			*/
 			//余额支付，需要改成支付完发短信通知
 			
+			phone = $('#phone').val();
             $.post("__ROOT__/index.php/api/Consumedorder/create_order", {
                 info: info,//订单的多个服务信息
                 total_price: total_price,//支付价格
                 phone: phone,//手机号码
                 method: $('#pay_method option:selected').val(),//支付方式
                 username: $('#username').val(),//用户名
+				jiedai: $('#jiedai').val(),//接待工号
                 note: $('#note').val(),//备注
             }).done((res) => {
 

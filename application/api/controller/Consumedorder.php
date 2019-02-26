@@ -140,15 +140,26 @@
             return json(['status'=>0]);
         }
 
-        public function create_order($info,$total_price,$phone,$method,$username,$note)
+        public function create_order($info,$total_price,$phone,$method,$username,$jiedai,$note)
 		{
-            $cus = Db::query("select * from customer where phone_number='$phone'");
-            //若找不到该账号，则单子内的id自动填为用户名
-            $user_id = $username;
-            if($cus)
-			{
-                $user_id=$cus[0]['openid'];
-			}
+            if ($phone != '')
+            {
+                $cus = Db::query("select * from customer where phone_number='$phone'");
+                if($cus)
+                {
+                    $user_id=$cus[0]['openid'];
+                }
+                else
+                {
+                    //若找不到该账号，则单子内的id自动填为用户名
+                    $user_id = $username;   
+                }
+            }
+            else//没有输入手机号码
+            {  
+                //若找不到该账号，则单子内的id自动填为用户名
+                $user_id = $username;          
+            }
 
             //若余额支付，判断余额是否足够
             if($method == 3)
@@ -205,40 +216,37 @@
 
                 $yongjin = $service_type[0]['invite_income'];
                
-                if($technician[0]['type']==1) //技师
-				{   
-                    if($it['clock'] == 1)//排钟
-					{
-                        $ticheng = $service_type[0]['pai_commission'];                    
-                    }
-					else if($it['clock'] == 2)//点钟
-					{
-                        $ticheng = $service_type[0]['commission'];
-                    }
-                }
-				else if($technician[0]['type']==2)//接待
-				{                    
-                    if($it['clock'] == 1)
-					{
-                        $ticheng = $service_type[0]['pai_commission2'];//排钟                    
-                    }
-					else if($it['clock'] == 2)
-					{
-                        $ticheng = $service_type[0]['commission2'];//点钟
-                    }
-                }
+                 
+				if($it['clock'] == 1)//排钟
+				{
+					$ticheng = $service_type[0]['pai_commission'];                    
+				}
+				else if($it['clock'] == 2)//点钟
+				{
+					$ticheng = $service_type[0]['commission'];
+				}
+				
+				if($it['clock'] == 1)//排钟
+				{
+					$jd_ticheng = $service_type[0]['pai_commission2'];              
+				}
+				else if($it['clock'] == 2)//点钟
+				{
+					$jd_ticheng = $service_type[0]['commission2'];
+				}
+				
 
                 $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
                 'item_id'=>$item_id,'job_number'=>$it['job_number'],'price'=>$it['price']*100,
                 'private_room_number'=>$it['room_number'],'clock_type'=>$it['clock'],'appoint_time'=>$time,
-                'ticheng'=>$ticheng,'yongjin'=>$yongjin]);
+                'ticheng'=>$ticheng,'yongjin'=>$yongjin,'jd_number'=>$jiedai,'jd_ticheng'=>$jd_ticheng]);
 
                 $sv_order->save();
             }
             return json(['status'=>1,'data'=>$order_id]);
         }
 
-        public function update_order($order_id,$info,$state,$pay_method,$cash,$appoint_time,$note,$source)
+        public function update_order($order_id,$info,$state,$pay_method,$cash,$appoint_time,$note,$source,$jiedai)
 		{
             $order = UserModel::get(['order_id'=>$order_id]);
             if(gettype($appoint_time) == "string")
@@ -281,20 +289,27 @@
                     if ($it['clock'] == 2)//点钟
                     {
                         $ticheng = $eachservice[0]['commission'];
+						$jd_ticheng = $eachservice[0]['commission2'];
                     }
                     else if ($it['clock'] == 1)//排钟
                     {
                         $ticheng = $eachservice[0]['pai_commission'];
-                    }
+						$jd_ticheng = $eachservice[0]['pai_commission2'];   
+                    }					
+					
 
                     //佣金从service表里取
                     $yongjin = $eachservice[0]['invite_income'];
                     
+					$jiedai = 0;//这里有问题，回头再改，修改订单，技师工号都会变成 0
+					
                     $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
                     'item_id'=>$it['service_id'],'job_number'=>$it['job_number'],'price'=>$price,
                     'private_room_number'=>$it['room_id'],'clock_type'=>$it['clock'],'appoint_time'=>$it['appoint_time'], 
                     'ticheng'=>$ticheng,
-                    'yongjin'=>$yongjin
+                    'yongjin'=>$yongjin,
+					'jd_number'=>$jiedai,
+					'jd_ticheng'=>$jd_ticheng
                     ]);
                     
 					$sv_order->save();

@@ -338,9 +338,7 @@ class Technician extends Controller
         $tech_self = Db::query("select * from technician where job_number='$job_number'");
         $tech_self = $tech_self[0];
 		
-        //该技师在时间内自己做的所有订单
-        //$so = Db::query("select A.* from service_order A,consumed_order B where A.job_number = '$job_number'and A.order_id=B.order_id and B.end_time > $begin and B.end_time < $end and (B.state=4 or B.state=5)");
-        $so = Db::query("select * from service_order where job_number ='$job_number' and order_id in (select order_id from consumed_order A where  A.end_time >= $begin and A.end_time <= $end and(A.state=4 or A.state=5))");
+		$tech_type = $tech_self['type'];//1为技师，2为接待
         
         //该技师邀请的人
         $invited = \app\api\model\Inviteship::all(['inviter_job_number' => $job_number]);
@@ -358,51 +356,87 @@ class Technician extends Controller
 		$name = $tech_self['name'];
 		
         //来自邀请的人的收入
-        $come_frome_other = 0;
+        $yongjin = 0;
         //邀请自己的人将得到的钱，不从自己这里出，由店内承担支出
         $lost = 0;
         //业绩
         $yeji = 0;
 		
-		//应该从service_order表查询
-		//$service_orders = Db::query("select B.* from consumed_order A,service_order B where B.job_number='$job_number' and A.order_id= B.order_id and A.end_time >= $begin and A.end_time <= $end and(A.state=4 or A.state=5) group by A.order_id");		
-		$service_orders = Db::query("select * from service_order where job_number ='$job_number' and order_id in (select order_id from consumed_order A where  A.end_time >= $begin and A.end_time <= $end and(A.state=4 or A.state=5))");
-		for($i=0;$i<count($service_orders);$i++)
-		{
-            $yeji += $service_orders[$i]['price'];
-        }
 		
-
-        if ($so) 
+		 //应该从service_order表查询		 
+		if ($tech_type == 1)//技师
 		{
-            foreach ($so as $svod) 
+			$so = Db::query("select * from service_order where job_number ='$job_number' and order_id in (select order_id from consumed_order A where  A.end_time >= $begin and A.end_time <= $end and(A.state=4 or A.state=5))");
+			
+			if ($so) 
 			{
-                $order_id = $svod['order_id'];
-                $co =Db::query("select state from consumed_order where order_id='$order_id'");
-                //不存在的订单不计算
-                if(!$co)continue;
-                //订单状态未达到待评价或评价完成的不计算
-                if($co[0]['state'] != 4 && $co[0]['state'] != 5)continue;
-                //排钟
-                if($svod['clock_type']==1)
+				for($i=0;$i<count($so);$i++)
 				{
-                    $pai++;
-                    $pai_price += $svod['ticheng'];
-                }
-				else if($svod['clock_type']==2)
+					$yeji += $so[$i]['price'];//技师的业绩 服务费用
+				}
+				
+				foreach ($so as $svod) 
 				{
-                    $dian++;
-                    $dian_price += $svod['ticheng'];
-                }
-            }
-        }
+					if($svod['clock_type']==1)//排钟
+					{
+						$pai++;
+						$pai_price += $svod['ticheng'];
+					}
+					else if($svod['clock_type']==2)//点钟
+					{
+						$dian++;
+						$dian_price += $svod['ticheng'];
+					}
+				}
+			}
+		}
+		else if ($tech_type == 2)//接待
+		{
+			$so = Db::query("select * from service_order where jd_number ='$job_number' and order_id in (select order_id from consumed_order A where  A.end_time >= $begin and A.end_time <= $end and(A.state=4 or A.state=5))");
+			
+			if ($so) 
+			{
+				for($i=0;$i<count($so);$i++)
+				{
+					$yeji += $so[$i]['jd_ticheng'];//技师的业绩 服务费用（服务提成+充卡提成）
+				}
+				
+				foreach ($so as $svod) 
+				{
+					if($svod['clock_type']==1)//排钟
+					{
+						$pai++;
+						$pai_price += $svod['jd_ticheng'];
+					}
+					else if($svod['clock_type']==2)//点钟
+					{
+						$dian++;
+						$dian_price += $svod['jd_ticheng'];
+					}
+				}
+			}
+		}
+		
+		$recharge = 0;
+		$recharge_ticheng = 0;//充卡提成
+		$rcg = Db::query("select * from recharge_record where job_number='$job_number' and type = '1' and generated_time >= $begin and generated_time <= $end");		
+		if ($rcg)
+		{
+			for($i=0;$i<count($rcg);$i++)
+			{
+				$recharge += $rcg[0]['charge'];
+				$recharge_ticheng += $rcg[0]['ticheng'];
+			}
+		}
+		
+		$yeji += $recharge_ticheng;       
 		
         if ($invited) //佣金
 		{
             foreach ($invited as $inv) 
 			{
                 $data = self::get_lost($inv->freshman_job_number, $begin, $end);
-                $come_frome_other += $data;
+                $yongjin += $data;
             }
         }
 		
@@ -414,10 +448,12 @@ class Technician extends Controller
             'dian' => $dian,
             'pai_earn' => $pai_price/100,
             'dian_earn'=> $dian_price/100,
-            'come_from_other' => $come_frome_other/100,
+			'recharge'=> $recharge/100,
+			'recharge_ticheng'=> $recharge_ticheng/100,
+            'come_from_other' => $yongjin/100,
             'yeji' =>$yeji/100,
-            'lost' => $lost/100,
-            'final_salary' => ($pai_price + $dian_price + $come_frome_other)/100,
+            'lost' => 0,
+            'final_salary' => ($pai_price + $dian_price + $yongjin + $recharge_ticheng)/100,
         ];
     }
 
@@ -462,7 +498,8 @@ class Technician extends Controller
     {
         $data = [];
         $technicians = \app\api\model\Technician::all();
-        foreach ($technicians as $tech) {
+        foreach ($technicians as $tech) 
+		{
             array_push($data, self::get_yeji($tech->job_number, $begin, $end));
         }
         return $data;
@@ -538,13 +575,9 @@ class Technician extends Controller
         //获取所有技师
         $technicians = Db::query("select * from technician");
 
-
-        //数据库查找点钟前三名的技师应该获得的奖金数额
-        //暂时还没关联数据库
-        $dian_bonus = [400, 250, 100];
-
         $salarys = [];
-        foreach ($technicians as $tech) {
+        foreach ($technicians as $tech) 
+		{
             $salary = [];
             //获取上钟提成，点钟数量以及推荐人提成
             $yeji = self::get_yeji($tech['job_number'], $begin, $end);
@@ -611,23 +644,6 @@ class Technician extends Controller
                 }
             }
         }
-		
-        // for ($i = 0; $i < count($salarys); $i++) //点钟前3名可以获得奖金，先去掉
-		// {
-            ///////第一名赋予奖励
-            // if ($salarys[$i]['job_number'] == $job_numbers[0]) 
-			// {
-                // $salarys[$i]['dian_bonus'] = $dian_bonus[0];
-            // } 
-			// else if ($salarys[$i]['job_number'] == $job_numbers[1]) 
-			// {
-                // $salarys[$i]['dian_bonus'] = $dian_bonus[1];
-            // } 
-			// else if ($salarys[$i]['job_number'] == $job_numbers[2]) 
-			// {
-                // $salarys[$i]['dian_bonus'] = $dian_bonus[2];
-            // }
-        // }
 		
         //计算总工资
         for ($i = 0; $i < count($salarys); $i++) 

@@ -122,8 +122,11 @@ class Shop extends Controller
         $technicians = Db::query("select * from technician where type !=2");
         $service = Db::query("select ID,name,market_price from service_type");
         $room = Db::query("select ID,name from private_room");
+		
+		$jiedai = Db::query("select * from technician where type =2");
 
         $this->assign('technicians',$technicians);
+		$this->assign('jiedai',$jiedai);
         $this->assign('service',$service);
         $this->assign('room',$room);
         return $this->fetch('Shop/payatshop');

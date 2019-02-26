@@ -152,7 +152,12 @@
                                 //有新订单了
                                 load_sound(sound);
                                 alert("有新的订单");
+								
 								window.location.reload(); 
+								
+								//document.getElementById('iframe_box').contentWindow.location.reload(true);								
+								//document.getElementById('iframe_box').location.reload(true);								
+								//window.location ="__ROOT__/index.php/admin/Consumedorder/index/edit/1"
                             }
                             //console.log("无新订单");
                         })

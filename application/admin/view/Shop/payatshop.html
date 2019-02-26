@@ -277,6 +277,7 @@
 			var room = $('#room option:selected').val();
             room = room.split(',');
 			room_name = room[1];
+			room_id = room[0]; 
 			
 			var timestamp = (new Date()).getTime();
 			console.log("begin getRoomInfo" + timestamp);
@@ -366,7 +367,7 @@
 												'service_name':orderItems[i].name,
 												'service_id': '',
 												'price': orderItems[i].subtotal,
-												'room_number': room_name,
+												'room_number': room_id,
 												'clock': clock,
 											};
 										info.push(unit);											

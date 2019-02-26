@@ -267,7 +267,8 @@
                     $eachservice = Db::query("select * from service_type where ID='$service_id'");//service_type表根据service_id查询到价格
                     if($eachservice)
 					{
-                        $price = $eachservice[0]['price'];
+                        //$price = $eachservice[0]['price'];//这里改成市场价
+                        $price = $eachservice[0]['market_price'];//这里改成市场价
                     }
 					else
 					{
@@ -277,10 +278,24 @@
                     //包厢号不对，提成和佣金没有了
 
                     //提成从service表里取
+                    if ($it['clock'] == 2)//点钟
+                    {
+                        $ticheng = $eachservice[0]['commission'];
+                    }
+                    else if ($it['clock'] == 1)//排钟
+                    {
+                        $ticheng = $eachservice[0]['pai_commission'];
+                    }
 
+                    //佣金从service表里取
+                    $yongjin = $eachservice[0]['invite_income'];
+                    
                     $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
                     'item_id'=>$it['service_id'],'job_number'=>$it['job_number'],'price'=>$price,
-                    'private_room_number'=>$it['room_number'],'clock_type'=>$it['clock'],'appoint_time'=>$it['appoint_time']]);
+                    'private_room_number'=>$it['room_id'],'clock_type'=>$it['clock'],'appoint_time'=>$it['appoint_time'], 
+                    'ticheng'=>$ticheng,
+                    'yongjin'=>$yongjin
+                    ]);
                     
 					$sv_order->save();
                 }

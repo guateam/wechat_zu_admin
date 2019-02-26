@@ -177,6 +177,8 @@
                 var service_data = service.val();
                 var clock_data = clock.val();
                 var room_data = room.val();
+				
+				console.log("room=" + room);
 
                 service_data = service_data.split(',')
                 room_data = room_data.split(',')
@@ -185,7 +187,7 @@
                     'job_number': job_number,
                     'service_id': service_data[0],
                     'clock':clock_data,
-                    'room_number':room_data[0]
+                    'room_id':room_data[0]
                 }
 				console.log(data);
                 info.push(data);

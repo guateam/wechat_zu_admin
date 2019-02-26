@@ -236,12 +236,13 @@
 					$jd_ticheng = $service_type[0]['commission2'];
 				}
 				
-				$room_number = $it['room_number'];
-				$room = Db::query("select * from private_room where name='$room_number' ");
-				if($room)
-				{
-					$room_id = $room[0]['ID'];
-				}				
+				//$room_number = $it['room_number'];
+				$room_id = $it['room_number'];//网页传过来的就是 roomid
+				// $room = Db::query("select * from private_room where name='$room_number' ");
+				// if($room)
+				// {
+					// $room_id = $room[0]['ID'];
+				// }				
 
                 $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
                 'item_id'=>$item_id,'job_number'=>$it['job_number'],'price'=>$it['price']*100,

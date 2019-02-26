@@ -20,7 +20,13 @@ class Consumedorder extends Controller
             //时间戳显示为日期字符串
             $order[$index]['generated_time'] = date('Y-m-d H:i:s', $order[$index]['generated_time']);
             $order[$index]['appoint_time'] = date('Y-m-d H:i:s', intval($order[$index]['appoint_time']));
-            $info = $cs->get_customer($od['user_id']);
+            
+            $info = '';
+            if ($od['user_id'] != '')
+            {
+                $info = $cs->get_customer($od['user_id']);
+            }            
+            
             $info2 = $cs->get_customer($od['payment_user_id']);
             $so = \app\api\model\Serviceorder::all(['order_id'=>$od['order_id']]);
             $str = "";
@@ -53,7 +59,7 @@ class Consumedorder extends Controller
             }
             $str = substr($str,0,strlen($str)-1);
             array_push($tech,$str);
-            if($info)
+            if($info != null && $info != '')
 			{
                 array_push($user,$info->phone_number);
                 $order[$index]['username'] = $info->name;

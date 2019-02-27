@@ -141,7 +141,7 @@
             return json(['status'=>0]);
         }
 
-        public function create_order($info,$total_price,$phone,$method,$username,$jiedai,$note)
+        public function create_order($info,$total_price,$phone,$method,$username,$jiedai,$note,$should_price)
 		{
             if ($phone != '')
             {
@@ -182,13 +182,7 @@
             for($i=0;$i<10;$i++)
 			{
                 $order_id .= strval(rand(0,9));//订单号
-            }
-			
-            $order = new \app\api\model\Consumedorder(['order_id'=>$order_id,'user_id'=>$user_id,
-            'state'=>4,'payment_method'=>$method,'generated_time'=>$time,'appoint_time'=>$time,'contact_phone'=>$phone,
-            'pay_amount'=>$total_price*100,'user_num'=>1,'payment_user_id'=>$user_id,'note'=>$note,'source'=>1,'end_time'=>$time]);
-			
-            $order->save();
+            }		
             
 			foreach($info as $it)
 			{
@@ -251,6 +245,15 @@
 
                 $sv_order->save();
             }
+			
+			//-------------------------------------------
+			$order = new \app\api\model\Consumedorder(['order_id'=>$order_id,'user_id'=>$user_id,
+            'state'=>4,'payment_method'=>$method,'generated_time'=>$time,'appoint_time'=>$time,'contact_phone'=>$phone,
+            'pay_amount'=>$total_price*100,'user_num'=>1,'payment_user_id'=>$user_id,'note'=>$note,'source'=>1,'end_time'=>$time,'shouldpay_amount'=>$should_price*100]);
+			
+            $order->save();
+			//-------------------------------------------
+			
             return json(['status'=>1,'data'=>$order_id]);
         }
 

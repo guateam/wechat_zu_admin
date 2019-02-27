@@ -678,6 +678,7 @@
 			$('#loading-mask').show();
             $('#submit').addClass('disable');
 			
+			should_price = $('#shouldcash').val();	
             total_price = $('#cash').val();			
            
 		   /*
@@ -710,6 +711,7 @@
                 username: $('#username').val(),//用户名
 				jiedai: $('#jiedai').val(),//接待工号
                 note: $('#note').val(),//备注
+				should_price:should_price,//应付价格
             }).done((res) => {
 
                 if (res.status == 1) 

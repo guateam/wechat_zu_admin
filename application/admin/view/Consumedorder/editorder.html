@@ -75,18 +75,19 @@
         <input type="text" id="appoint_time" value="{$order['appoint_time']}" class="theinput" ><br>
 		<br>
 		
-		{volist name="$service_orders" id="it" key="j"}	<!--外层循环-->
+		
 		
 		<div style="width:90px ; display:inline-block">接待:</div>
-		 <select name="" >                
+		 <select class="theinput" name="" id="jiedai">                
                 {volist name="$jiedais" id="jd" key="k"}
-                <option value="{$jd.job_number}" {if condition="$it['jd_number']==$jd['job_number']"}selected{/if} >{$jd.job_number}</option>
+                <option value="{$jd.job_number}" {if condition="$service_orders[0]['jd_number']==$jd['job_number']"}selected{/if} >{$jd.job_number}</option>
                 {/volist}
         </select>
 		
 		<br>
 		<br>
 		
+		{volist name="$service_orders" id="it" key="j"}	<!--外层循环-->
         <div style="width:90px ; display:inline-block">服务情况:</div>        
         
 		<span>技师:</span>
@@ -111,7 +112,7 @@
         <select>
             {volist name="$room" id="rm" key='m'}
             <!--<option value="{$rm.ID},{$rm.name}">{$rm.name}</option>-->			
-			<option value="{$rm.ID},{$rm.name}" {if condition="$it['private_room_number']==$rm['name']"}selected{/if}>{$rm.name}</option>
+			<option value="{$rm.ID},{$rm.name}" {if condition="$it['private_room_number']==$rm['ID']"}selected{/if}>{$rm.name}</option>
             {/volist}
         </select>
         <br>
@@ -258,7 +259,8 @@
                 cash: $('#cash').val(),//支付金额
                 appoint_time: $('#appoint_time').val(),//预约时间
                 note:$('#note').val(),//备注
-                source:$('#source').val()//来自
+                source:$('#source').val(),//来自
+				jiedai:$('#jiedai').val(),//接待
             }).done((res) => {
                 if (res.status == 1) {
                     swal({

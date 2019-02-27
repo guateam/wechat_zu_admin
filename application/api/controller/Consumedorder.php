@@ -257,7 +257,7 @@
             return json(['status'=>1,'data'=>$order_id]);
         }
 
-        public function update_order($order_id,$info,$state,$pay_method,$cash,$appoint_time,$note,$source)
+        public function update_order($order_id,$info,$state,$pay_method,$cash,$appoint_time,$note,$source,$jiedai)
 		{
             $order = UserModel::get(['order_id'=>$order_id]);
             if(gettype($appoint_time) == "string")
@@ -312,7 +312,7 @@
                     //佣金从service表里取
                     $yongjin = $eachservice[0]['invite_income'];
                     
-					$jiedai = 0;//这里有问题，回头再改，修改订单，技师工号都会变成 0
+					//$jiedai = 0;//这里有问题，回头再改，修改订单，技师工号都会变成 0
 					
                     $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
                     'item_id'=>$it['service_id'],'job_number'=>$it['job_number'],'price'=>$price,

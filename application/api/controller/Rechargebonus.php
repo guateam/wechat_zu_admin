@@ -13,13 +13,13 @@ class Rechargebonus extends Controller
 	
     public function get($id)
 	{
-        $data = Db::query("select  * from Recharge_bonus where ID='$id'");
+        $data = Db::query("select  * from recharge_bonus where ID='$id'");
         return $data;
     }	
 	
     public function get_all()
 	{
-        $data = Db::query("select  * from Recharge_bonus order by ID");
+        $data = Db::query("select  * from recharge_bonus order by ID");
         return $data;
     }
 	

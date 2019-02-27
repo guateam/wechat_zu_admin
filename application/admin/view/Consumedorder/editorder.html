@@ -44,7 +44,7 @@
     </nav>
     <div id="step1" style="margin-top: 25px;margin-bottom: 5px;margin-left:30%;padding-left: 10px">
         <div style="width:90px ; display:inline-block">订单号:</div>
-        <input style="margin-bottom: 10px" type="text" id="order_id" class="theinput" value="{$order['order_id']}"><br>
+        <input style="margin-bottom: 10px" type="text" id="order_id" class="theinput" disabled="disable" value="{$order['order_id']}"><br>
         <div style="width:90px ; display:inline-block">订单状态:</div>
         <select class="theinput" name="" id="state">
                 <option value="0"{if condition="$order['state'] == 0"}selected{/if} >订单取消</option>
@@ -70,17 +70,33 @@
         </select><br>
         <div style="width:90px ; display:inline-block">支付金额(分):</div>
         <input style="margin-bottom: 10px" type="text" id="cash" class="theinput" value="{$order['pay_amount']}"><br>
-        <div style="width:90px ; display:inline-block">上钟时间:</div>
+        
+		<div style="width:90px ; display:inline-block">上钟时间:</div>
         <input type="text" id="appoint_time" value="{$order['appoint_time']}" class="theinput" ><br>
-        <div style="width:90px ; display:inline-block">服务情况:</div>
-        {volist name="$service_orders" id="it" key="j"}
-        <span>技师:</span>
-        <select name="" {if condition="$j==1"}id="positionZero"{/if} onchange="link(this)" >
+		<br>
+		
+		{volist name="$service_orders" id="it" key="j"}	<!--外层循环-->
+		
+		<div style="width:90px ; display:inline-block">接待:</div>
+		 <select name="" >                
+                {volist name="$jiedais" id="jd" key="k"}
+                <option value="{$jd.job_number}" {if condition="$it['jd_number']==$jd['job_number']"}selected{/if} >{$jd.job_number}</option>
+                {/volist}
+        </select>
+		
+		<br>
+		<br>
+		
+        <div style="width:90px ; display:inline-block">服务情况:</div>        
+        
+		<span>技师:</span>
+        <select class = "techselect" name="" {if condition="$j==1"}id="positionZero"{/if} " onchange="link(this)" >
                 <option value="{$it['job_number']}" selected>{$it['job_number']}</option>
                 {volist name="$technicians" id="tc" key="k"}
                 <option value="{$tc.job_number}">{$tc.job_number}</option>
                 {/volist}
         </select>
+		
         <span>服务:</span>
         <select name="" id="tech">
             {volist name="$it['skill']" id="sk" key="l"}
@@ -117,6 +133,31 @@
     <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
     <script type="text/javascript">
+	
+		/*
+		var previous;
+		
+		(function () {
+			
+			//一种情况，好几个技师，换其中某一个技师，点错了，要换A技师点成了换B技师，而B技师为繁忙，B点成C，再点回B，就回不来了，因为B是繁忙
+			//这种情况下的处理办法是，关掉弹出窗口，重新打开
+		 
+			$(".techselect").on('focus', function () {				
+				previous = this.value;
+			}).change(function() {
+				
+				//alert(previous);		 
+				//alert(this.value);
+				
+				if(this.value != previous)
+				{
+					alert("haha");
+				}
+			});				
+		})();
+		*/
+
+		
         function link(e)//修改技师 触发事件 获得相应的服务列表
 		{
             //e是技师下拉框，两个next后是服务下拉框
@@ -131,6 +172,7 @@
                if (res.status == 1)//技师忙
 			   {
 					$(service).empty();
+					alert("该技师繁忙，不能被修改到当前订单");
 					return;
 			   }
 			   else//技师不忙
@@ -149,6 +191,7 @@
 			   }
             })
         }
+		
 		
         function done() //点击修改订单按钮
 		{

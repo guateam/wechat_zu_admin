@@ -116,6 +116,7 @@ class Consumedorder extends Controller
         $order = Db::query("select * from consumed_order where order_id='$order_id'");
         $svod = Db::query("select * from service_order where order_id = '$order_id'");
         $room = Db::query("select ID,name from private_room");
+		
 
         $order[0]['appoint_time'] = date("Y-m-d H:i:s",$order[0]['appoint_time']);//显示Y-m-d H:i:s
         foreach($svod as $idx => $sv)
@@ -127,7 +128,10 @@ class Consumedorder extends Controller
                 $svod[$idx]['name'] = $name[0]['name'];//服务名称
             }
         }
-        $technicians = Db::query("select * from technician");
+		
+        $technicians = Db::query("select * from technician where type = 1");
+		$jiedais = Db::query("select * from technician where type = 2");
+		
         $service = Db::query("select ID,name,price from service_type");
         $room = Db::query("select ID,name from private_room");//又查了一次
         
@@ -177,8 +181,9 @@ class Consumedorder extends Controller
 
         //$this->assign('technicians',$spare_tech);//本意是获得空闲状态的技师，实际没有必要
         $this->assign('technicians',$technicians);
+		$this->assign('jiedais',$jiedais);
         $this->assign('order',$order[0]);
-        $this->assign('service_orders',$svod);
+        $this->assign('service_orders',$svod);//这里应该有接待
         $this->assign('service_num',count($svod));
         $this->assign('room',$room);//房间列表
 

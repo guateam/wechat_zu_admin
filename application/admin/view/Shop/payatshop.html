@@ -280,7 +280,7 @@
 			room_id = room[0]; 
 			
 			var timestamp = (new Date()).getTime();
-			console.log("begin getRoomInfo" + timestamp);
+			console.log("begin getRoomInfo " + timestamp);
 			
 			$.post("__ROOT__/index.php/api/Customer/getRoomInfo",{
 				roomname:room_name
@@ -289,7 +289,7 @@
 				res = JSON.parse(res);
 				
 				timestamp = (new Date()).getTime();
-				console.log("end getRoomInfo" + timestamp);
+				console.log("end getRoomInfo " + timestamp);
 			
 				if (res.success == true) 
 				{
@@ -303,14 +303,14 @@
 						//调用另一个接口						
 						
 						timestamp = (new Date()).getTime();
-						console.log("begin getPayInfo" + timestamp);
+						console.log("begin getPayInfo " + timestamp);
 				
 						$.post("__ROOT__/index.php/api/Customer/getPayInfo",{
 								checkInId:res.checkInId
 							}).done((res)=>{
 							
 								timestamp = (new Date()).getTime();
-								console.log("end getPayInfo" + timestamp);
+								console.log("end getPayInfo " + timestamp);
 								
 								$('#loading').css('display', 'none');
 								$('#payinfoarea').css('display', '');
@@ -341,7 +341,7 @@
 									
 									for (var i = 0; i < orderItems.length; i++) 
 									{  
-										console.log(i,orderItems[i]); 
+										//console.log(i,orderItems[i]); 
 										
 										 
 										if (orderItems[i].productType == "ServItem")
@@ -448,6 +448,7 @@
 				}
 
 				$("#cash").val(shouldpay);	
+				//-------------------------------------------------------------------
 			}			
 		}
 
@@ -573,10 +574,6 @@
 			itemcount = itemcount + 1;
 
             //$('#confirm_service').append("<p style='display:inline-block'>技师: " + tech + "\t服务:" + service[1] + "\t包厢:" + room[0] + "\t上钟类型:" + (clock == 1 ? '排钟' : '点钟') + "</p><br>")
-				
-            //总价通过服务价格自动计算，暂时改成手动输入
-            //total_price += parseInt(service[2]) / 100;
-            //$('#cash').val(total_price);
 			
 			servicename = $('#service option:selected').text();			
 			price =  service[2] / 100;
@@ -593,6 +590,28 @@
 			$("#paytable").append("<tr class='text-c'><td>"+itemcount+"</td><td>服务</td><td>"+servicename+"</td><td >"+price+"</td><td>1</td><td>0</td><td>100</td><td>"+price+"</td><td>"+tech+"</td><td>"+arrange+"</td><td><a href='#' onclick=delRow(this) >删除</a></td><tr>");
 			
             info.push(unit);
+			
+			//-------------------------------------------------------------------
+			var shouldpay = 0;
+            
+			var tb = document.getElementById('paytable');    // table 的 id
+			var rows = tb.rows; // 获取表格所有行				
+			
+			for(var i = 1; i<rows.length; i++ )//从第1行开始
+			{
+			   for(var j = 0; j<rows[i].cells.length; j++ )// 遍历该行的 td
+			   {    
+					if (j == 7)
+					{
+						//alert("第"+(i+1)+"行，第"+(j+1)+"个td的值："+rows[i].cells[j].innerHTML+"。");           // 输出每个td的内容
+						
+						shouldpay = shouldpay + parseInt(rows[i].cells[j].innerHTML);
+				   }
+			   }				  
+			}
+
+			$("#cash").val(shouldpay);	
+			//-------------------------------------------------------------------
         }
 
 		//--------------------------------------------------------------

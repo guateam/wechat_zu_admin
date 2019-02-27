@@ -168,11 +168,13 @@
                 ]
             });
         });
+		
         function change_busy(job_number){
             $.post("__ROOT__/index.php/api/Technician/change_busy",{
                 job_number:job_number
             })
         }
+		
         function change_injob(job_number) {
             swal({
                 title: '确认修改吗？',

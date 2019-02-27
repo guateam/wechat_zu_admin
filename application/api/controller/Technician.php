@@ -479,7 +479,8 @@ class Technician extends Controller
 
     }
 
-    public function change_busy($job_number){
+    public function change_busy($job_number)
+	{
         $user = UserModel::get(['job_number'=>$job_number]);
         if($user->busy == 1)
         {
@@ -489,6 +490,20 @@ class Technician extends Controller
             $user->busy = 1;
         }
         $user->save();
+    }
+	
+	public function check_busy($job_number)
+	{
+        $user = UserModel::get(['job_number'=>$job_number]);        
+		
+		if($user->busy == 1)
+        {
+            return json(['status'=>1]);
+        }
+        else
+		{
+            return json(['status'=>0]);
+        }
     }
 
     /**

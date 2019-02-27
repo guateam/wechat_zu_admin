@@ -117,21 +117,36 @@
     <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
     <script type="text/javascript">
-        function link(e)//修改技师获得相应的服务列表
+        function link(e)//修改技师 触发事件 获得相应的服务列表
 		{
             //e是技师下拉框，两个next后是服务下拉框
             service = $(e).next().next();
             $("#modify").attr('disabled', true);
-            var choosen = $(e).val();
-            $.post('__ROOT__/index.php/api/Skill/get_skill', {
+            var choosen = $(e).val();//获得了技师工号			
+			
+			 $.post('__ROOT__/index.php/api/Technician/check_busy', {
                 job_number: choosen
-            }).done((res) => {
-                $(service).empty()
-                for (var i = 0; i < res.length; i++) {
-                    $(service).append("<option value ='" + res[i]['service_id'] + ',' + res[i]['name'] + ',' +
-                        res[i]['price'] + "'>" + res[i]['name'] + "</option>")
-                }
-                $("#modify").attr('disabled', false);
+            }).done((res) => 
+			{
+               if (res.status == 1)//技师忙
+			   {
+					$(service).empty();
+					return;
+			   }
+			   else//技师不忙
+			   {					
+					$.post('__ROOT__/index.php/api/Skill/get_skill', {
+						job_number: choosen
+					}).done((res) => 
+					{
+						$(service).empty()
+						for (var i = 0; i < res.length; i++) 
+						{
+							$(service).append("<option value ='" + res[i]['service_id'] + ',' + res[i]['name'] + ',' + res[i]['price'] + "'>" + res[i]['name'] + "</option>")
+						}
+						$("#modify").attr('disabled', false);
+					})
+			   }
             })
         }
 		
@@ -167,7 +182,7 @@
             }			
            
             tech = $('#positionZero');
-            for(i=0;i<{$service_num};i++)
+            for(i=0;i<{$service_num};i++)//循环，把所有技师及服务信息，放到info中
 			{
                 var service = tech.next().next();
                 var clock = service.next().next();
@@ -177,11 +192,9 @@
                 var service_data = service.val();
                 var clock_data = clock.val();
                 var room_data = room.val();
-				
-				//console.log("room=" + room);
 
-                service_data = service_data.split(',')
-                room_data = room_data.split(',')
+                service_data = service_data.split(',');
+                room_data = room_data.split(',');
 
                 data = {
                     'job_number': job_number,

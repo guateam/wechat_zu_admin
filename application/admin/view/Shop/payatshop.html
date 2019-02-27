@@ -425,11 +425,29 @@
 			var res = confirm("确定要删除么？");
 			if(res)
 			{
-				var value = $(".price_1")[0].innerHTML;
-				console.log(value);
+				var shouldpay = 0;				
 				
 				//删除界面元素，当前行
-				//$(obj).parents("tr").remove();
+				$(obj).parents("tr").remove();
+				
+				//-------------------------------------------------------------------
+				var tb = document.getElementById('paytable');    // table 的 id
+				var rows = tb.rows; // 获取表格所有行				
+				
+				for(var i = 1; i<rows.length; i++ )//从第1行开始
+				{
+				   for(var j = 0; j<rows[i].cells.length; j++ )// 遍历该行的 td
+				   {    
+						if (j == 7)
+						{
+							//alert("第"+(i+1)+"行，第"+(j+1)+"个td的值："+rows[i].cells[j].innerHTML+"。");           // 输出每个td的内容
+							
+							shouldpay = shouldpay + parseInt(rows[i].cells[j].innerHTML);
+					   }
+				   }				  
+				}
+
+				$("#cash").val(shouldpay);	
 			}			
 		}
 
@@ -572,7 +590,7 @@
 				arrange = "点钟";				
 			}
 			
-			$("#paytable").append("<tr class='text-c'><td>"+itemcount+"</td><td>服务</td><td>"+servicename+"</td><td >"+price+"</td><td>1</td><td>0</td><td>100</td><td class='price_"+itemcount+"'>"+price+"</td><td>"+tech+"</td><td>"+arrange+"</td><td><a href='#' onclick=delRow(this) >删除</a></td><tr>");
+			$("#paytable").append("<tr class='text-c'><td>"+itemcount+"</td><td>服务</td><td>"+servicename+"</td><td >"+price+"</td><td>1</td><td>0</td><td>100</td><td>"+price+"</td><td>"+tech+"</td><td>"+arrange+"</td><td><a href='#' onclick=delRow(this) >删除</a></td><tr>");
 			
             info.push(unit);
         }

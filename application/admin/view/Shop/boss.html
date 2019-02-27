@@ -54,9 +54,10 @@
                 <thead>
                     <tr class="text-c">
                         <th width="100">编号</th>
-                        <th width="60">技师工号</th>
-                        <th width="140">时间</th>
-                        <th width="80">收入</th>
+                        <th width="100">技师工号</th>
+                        <th width="100">时间</th>
+						<th width="80">应收</th>
+                        <th width="80">实收</th>
                         <th width="80">备注</th>
                         <th width="80">来自</th>
                         <th width="80">支付方式</th>
@@ -69,6 +70,9 @@
                         <td>{$it.job_number}</td>
                         <td>
                             {$it.generated_time}
+                        </td>
+						<td>
+                            ￥{$it.should_charge/100}
                         </td>
                         <td>
                             ￥{$it.charge/100}

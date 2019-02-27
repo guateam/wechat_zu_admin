@@ -124,6 +124,7 @@
             <option value="{$it.job_number}">{$it.job_number}</option>
             {/volist}
         </select><br>
+		<br>
 
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>服务:</div>
         <select name="" id="service" class="theinput">
@@ -131,6 +132,7 @@
             <option value="{$it.ID}">{$it.name}</option>
             {/volist}
         </select><br>
+		<br>
 		
         <div style="width:90px ; display:inline-block"><span style="color:red">*</span>上钟类型:</div>
         <select class="theinput" name="" id="clock">
@@ -145,7 +147,12 @@
 		
 		<br><br>
 		
-		<div style="width:90px ; display:inline-block"><span style="color:red">*</span>支付金额:</div>
+		<div style="width:90px ; display:inline-block"><span style="color:red">*</span>应付金额:</div>
+        <input type="text" id="shouldcash" class="theinput" style="color:red;" disabled="disabled">(元)
+		
+		<br><br>
+		
+		<div style="width:90px ; display:inline-block"><span style="color:red">*</span>实付金额:</div>
         <input type="text" id="cash" class="theinput" style="color:red;">(元)
 		
 		<br><br>
@@ -218,6 +225,7 @@
 				
 		$("#phone").val("");
 		$("#username").val("");		
+		$("#shouldcash").val("");
 		$("#cash").val("");
 	
         var info = [];
@@ -269,6 +277,7 @@
 			
 			$('#paytable').empty(); //清空所有子标签(元素)
 		
+			$("#shouldcash").val("");
 			$("#cash").val("");
 			$("#roomwarning").html("");
 			$('#loading').css('display', '');
@@ -373,6 +382,7 @@
 										info.push(unit);											
 									}
 
+									$("#shouldcash").val(orderdata2.countinfo.receivable);		
 									$("#cash").val(orderdata2.countinfo.receivable);									
 								}
 						})
@@ -447,6 +457,7 @@
 				   }				  
 				}
 
+				$("#shouldcash").val(shouldpay);	
 				$("#cash").val(shouldpay);	
 				//-------------------------------------------------------------------
 			}			
@@ -610,6 +621,7 @@
 			   }				  
 			}
 
+			$("#shouldcash").val(shouldpay);	
 			$("#cash").val(shouldpay);	
 			//-------------------------------------------------------------------
         }

@@ -90,10 +90,9 @@
         <div style="width:90px ; display:inline-block">服务情况:</div>        
         
 		<span>技师:</span>
-        <select class = "techselect" name="" {if condition="$j==1"}id="positionZero"{/if} " onchange="link(this)" >
-                <option value="{$it['job_number']}" selected>{$it['job_number']}</option>
+        <select class = "techselect" name="" {if condition="$j==1"}id="positionZero"{/if} " onchange="link(this)" >               
                 {volist name="$technicians" id="tc" key="k"}
-                <option value="{$tc.job_number}">{$tc.job_number}</option>
+                <option value="{$tc.job_number}" {if condition="$it['job_number']==$tc['job_number']"}selected{/if} >{$tc.job_number}</option>
                 {/volist}
         </select>
 		

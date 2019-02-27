@@ -237,6 +237,12 @@
                 var room_data = room.val();
 
                 service_data = service_data.split(',');
+				
+				if (service_data == '')
+				{
+					alert("没选择服务，不能修改订单");
+					return;
+				}
                 room_data = room_data.split(',');
 
                 data = {

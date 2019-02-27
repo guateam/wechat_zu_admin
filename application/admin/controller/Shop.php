@@ -28,6 +28,7 @@ class Shop extends Controller
         return $this->fetch('Shop/shop_picture');
     }
 	
+	//-----------------------------------------------------
     public function promotion()
 	{
         $ctrl = new \app\api\controller\Promotion();
@@ -57,6 +58,39 @@ class Shop extends Controller
 	{
         return $this->fetch('Shop/promotion_add');
     }
+	//-----------------------------------------------------
+	
+	//-----------------------------------------------------
+    public function rechargebonus()
+	{
+        $ctrl = new \app\api\controller\Rechargebonus();
+        $rechargebonus = $ctrl->get_all();
+        $this->assign("rechargebonus",$rechargebonus);
+        $this->assign("count",count($rechargebonus));
+        return $this->fetch('Shop/rechargebonus');
+    }
+	
+    public function rechargebonus_edit($id)
+	{
+        $ctrl = new \app\api\controller\Rechargebonus();
+        $rechargebonus = $ctrl->get($id);
+        if($rechargebonus)
+		{
+            $rechargebonus = $rechargebonus[0];
+        }
+		else
+		{
+            $rechargebonus = new \app\api\model\Rechargebonus();
+        }
+        $this->assign("rechargebonus",$rechargebonus);
+        return $this->fetch('Shop/rechargebonus_edit');
+    }
+	
+    public function rechargebonus_add()
+	{
+        return $this->fetch('Shop/rechargebonus_add');
+    }
+	//-----------------------------------------------------
 
     public function account($edit)
 	{

@@ -1,0 +1,181 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="Bookmark" href="/favicon.ico">
+    <link rel="Shortcut Icon" href="/favicon.ico" />
+    <!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+    {include file="common/common_css"}
+    <!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+    <!--/meta 作为公共模版分离出去-->
+
+    <title>编辑充卡提成</title>
+</head>
+
+<body>
+    <article class="page-container">
+        <form action="" method="post" class="form form-horizontal" id="form-member-add">
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>充卡金额：</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="{$rechargebonus.recharge}" placeholder="" id="recharge" name="recharge">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>技师提成(单位：元)</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="{$rechargebonus.tech_bonus}" placeholder="" id="tech_bonus" name="tech_bonus">
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>接待提成(单位：元)</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="{$rechargebonus.jiedai_bonus}" placeholder="" id="jiedai_bonus" name="jiedai_bonus">
+                </div>
+            </div>   
+			<div class="row cl">
+                <label class="form-label col-xs-4 col-sm-3">
+                    <span class="c-red">*</span>收银提成(单位：元)</label>
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="{$rechargebonus.cashier_bonus}" placeholder="" id="cashier_bonus" name="cashier_bonus">
+                </div>
+            </div>   
+
+            <div class="row cl">
+                <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                    <input id="submit-btn" class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+                </div>
+            </div>
+        </form>
+    </article>
+
+    {include file="common/common_script"}
+
+    <!--请在下方写此页面业务相关的脚本-->
+    <script type="text/javascript" src="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+    <script type="text/javascript">
+        
+        function dateToString(date) {
+            if (date instanceof Date) {
+                var year = date.getFullYear();
+                var month = date.getMonth() + 1;
+                month = month < 10 ? '0' + month : month;
+                var day = date.getDate();
+                day = day < 10 ? '0' + day : day;
+                return year + month + day;
+            }
+            return '';
+        }
+
+        (function ($) {
+            $.getUrlParam = function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]);
+                return null;
+            }
+        })(jQuery);
+
+
+        $(function () {
+            $('.skin-minimal input').iCheck({
+                checkboxClass: 'icheckbox-blue',
+                radioClass: 'iradio-blue',
+                increaseArea: '20%'
+            });
+
+            $("#form-member-add").validate({
+                rules: {
+                    content: {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 100,
+                    },
+                    need: {
+                        required: true,
+                    },
+                    back: {
+                        required: true,
+                    },
+                    start: {
+                        required: true,
+                        isDate: true,
+                    },
+                    end: {
+                        required: true,
+                        isDate: true,
+                    },
+                },
+                onkeyup: false,
+                focusCleanup: true,
+                success: "valid",
+                submitHandler: function (form) {
+                    swal({
+                        title: '正在处理',
+                        text: '',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCloseButton: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    }).then((result) => {});
+
+                   
+                    var recharge = $("#recharge").val();
+                    var tech_bonus = $("#tech_bonus").val();
+                    var jiedai_bonus = $("#jiedai_bonus").val();
+					var cashier_bonus = $("#cashier_bonus").val();
+
+                    $(form).ajaxSubmit({
+                        type: 'post', // 提交方式 get/post
+                        url: '__ROOT__/index.php/api/Rechargebonus/update', // 需要提交的 url
+                        data: {
+                            id: '{$rechargebonus.ID}',
+                            recharge: recharge,
+                            tech_bonus: tech_bonus,
+                            jiedai_bonus: jiedai_bonus,
+                            cashier_bonus: cashier_bonus,
+                        },
+                        success: function (result) {
+                            if (result.status == 1) {
+                                swal("成功", "已修改充卡提成", "success", {
+                                    allowOutsideClick: false
+                                }).then((ok) => {
+                                    if (ok.value) {
+                                        parent.location.reload()
+                                        var index = parent.layer.getFrameIndex(window.name);
+                                        parent.layer.close(index);
+                                    }
+                                })
+                            } else {
+                                swal("失败", "", "error");
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <!--/请在上方写此页面业务相关的脚本-->
+</body>
+
+</html>

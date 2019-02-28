@@ -14,7 +14,8 @@ class Promotion extends Controller{
         return $data;
     }
     public function get_all(){
-        $data = Db::query("select ID,content,need,back,FROM_UNIXTIME(A.start,'%Y-%m-%d') as _start,FROM_UNIXTIME(A.end,'%Y-%m-%d') as _end from promotion A");
+        //$data = Db::query("select ID,content,need,back,FROM_UNIXTIME(A.start,'%Y-%m-%d') as _start,FROM_UNIXTIME(A.end,'%Y-%m-%d') as _end from promotion A");
+		$data = Db::query("select ID,content,need,back,FROM_UNIXTIME(A.start,'%Y-%m-%d') as _start,FROM_UNIXTIME(A.end,'%Y-%m-%d') as _end from promotion A order by need");
         return $data;
     }
     public function add($content,$need,$back,$start,$end){

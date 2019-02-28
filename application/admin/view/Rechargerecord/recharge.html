@@ -48,15 +48,15 @@
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
-                        <th width="130">充值单号</th>
+                        <th width="150">充值单号</th>
                         <th width="150">充值用户名</th>
-                        <th width="150">充值用户openid</th>
+                        <th width="200">充值用户openid</th>
                         <th width="100">充值额度</th>
                         <th width="100">支付方式</th>
                         <th width="100">备注</th>
                         <th width="120">技师工号</th>
-                        <th width="120">支付时间</th>
-                        <th width="150">操作</th>
+                        <th width="180">支付时间</th>
+                        <!--<th width="150">操作</th>-->
                     </tr>
                 </thead>
                 <tbody>
@@ -73,9 +73,10 @@
                         <td class="">{$it.job_number}</td>
                         <td>{$it.generated_time}</td>
 
-                        <td class="td-manage">
-                           
+						<!--
+                        <td class="td-manage">                           
                         </td>
+						-->
                     </tr>
                     {/volist}
 

@@ -56,4 +56,14 @@ class Rechargerecord extends Controller
         $this->assign('edit',$edit);
         return $this->fetch('Rechargerecord/bill');
     }
+	
+	public function shoprecharge()
+	{
+		$ctrl = new \app\api\controller\Technician();
+        $technicians = $ctrl->get_all_technician();
+        $count = $ctrl->count_all();
+        $this->assign("technicians",$technicians);
+		
+        return $this->fetch('Rechargerecord/shoprecharge');
+	}
 }

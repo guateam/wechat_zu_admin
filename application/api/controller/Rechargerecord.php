@@ -5,9 +5,11 @@
     use think\Db;
     class Rechargerecord extends Controller{
 
-        public function get_all(){
+        public function get_all()
+		{
             $all = Db::query("select * from recharge_record");//UserModel::all();
-            for($i=0;$i<count($all);$i++){
+            for($i=0;$i<count($all);$i++)
+			{
                 $openid = $all[$i]['user_id'];
                 $all[$i]['generated_time'] = date('Y-m-d H:i:s',$all[$i]['generated_time']);
                 $name = Db::query("select * from customer where openid = '$openid'");
@@ -20,10 +22,65 @@
             }
             return $all;
         }
-        public function get_all_by_user(){
+		
+		public function rechargeMoney($phone,$username,$cash,$paymethod,$tech)
+		{
+			//根据手机号码，查询 customer表，查到客户的openid
+			 $cus = Db::query("select openid from customer where phone_number = $phone");
+			 $openid = "";
+			 if ($cus)
+			 {
+				 $openid = $cus[0]['openid'];
+			 }
+			//根据promotion表 计算充多少送多少
+			$promotion = Db::query("select * from promotion order by need desc");
+			$cash = $cash * 100;
+
+            $back = 0;
+            for ($i=0;$i<count($promotion);$i++)
+            {
+                if ($cash >= $promotion[$i]['need'])
+                {
+                    $back =  $promotion[$i]['back'];
+                    break;
+                }                
+            }
+			
+			//-------------------------------------------------
+			$dict=['1','2','3','4','5','6','7','8','9','0'];
+			$rnd = "";
+			$rnd.=date("YmdHis");//年月日时分秒
+			
+			for($i=0;$i<2;$i++)
+			{
+				$rnd.=$dict[rand(0,count($dict)-1)];//6位随机整数
+			}
+			for($i=0;$i<4;$i++)
+			{
+				$rnd.=$dict[rand(0,count($dict)-1)];
+			}
+			//-------------------------------------------------
+            //插入数据库
+			$time = time();
+			Db::query("insert into recharge_record (`record_id`,`user_id`,`user_name`,`phone_number`,`charge`,`payment_method`,`job_number`,`generated_time`,`note`,`type`) 
+					values ('$rnd','$openid','$username','$phone','$cash','$paymethod','$tech','$time','充值','1')");
+
+            if ($back > 0)
+            {
+                $rnd = $rnd.'b';
+                Db::query("insert into recharge_record (`record_id`,`user_id`,`user_name`,`phone_number`,`charge`,`payment_method`,`job_number`,`generated_time`,`note`,`type`) 
+					values ('$rnd','$openid','$username','$phone','$back','$paymethod','$tech','$time','充值送钱','2')");
+            }
+
+            return json(['status'=>1]);
+		}
+		
+        public function get_all_by_user()
+		{
             $all_cus = Db::query("select * from customer group by openid");
             $records = [];
-            foreach($all_cus as $cus){
+            foreach($all_cus as $cus)
+			{
                 //没有openid的用户属于异常数据，不进行处理
                 $cus_openid = $cus['openid'];
                 if($cus_openid == "")continue;
@@ -38,7 +95,8 @@
             // $records = Db::query("select sum(A.charge)/100 as charge,A.user_id,B.phone_number,B.gender,B.level,B.openid,B.registration_date from recharge_record A,customer B where A.user_id=B.openid
             // group by B.openid");
             $cus = new \app\api\controller\Customer();
-            for($i=0;$i<count($records);$i++){
+            for($i=0;$i<count($records);$i++)
+			{
                 if($records[$i]['registration_date'] != "")
                     $records[$i]['registration_date'] = date("Y-m-d H:i:s", $records[$i]['registration_date']);
                 else{
@@ -55,7 +113,8 @@
          * 获取某个工号的技师一段时间内的充卡额，默认本月
          * 
          */
-        public function get_by_jobnumber($num,$start="",$end=""){
+        public function get_by_jobnumber($num,$start="",$end="")
+		{
             if($start == "")
                 $start=strtotime(date('Y-m-01', strtotime(date("Y-m-d"))));
             if($end == "")
@@ -73,13 +132,16 @@
             }
             return json(['status'=>0]);
         }
+		
         /**
          * 获取某个客户的充卡数额
          * 
          */
-        public function get_by_user($num){
+        public function get_by_user($num)
+		{
             $record = UserModel::all(['user_id'=>$num]);
-            if($record){
+            if($record)
+			{
                 $money = 0;
                 foreach($record as $rcd){
                     $time = $rcd->generated_time;

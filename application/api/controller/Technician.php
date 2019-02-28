@@ -580,11 +580,14 @@ class Technician extends Controller
     {
         //如果是字符串类型的日期，转换成时间戳
         $type = gettype($begin);
-        if ($type !== "integer") {
+        if ($type !== "integer") 
+		{
             $begin = strtotime($begin);
         }
-        $type = gettype($end);
-        if ($type !== "integer") {
+        
+		$type = gettype($end);
+        if ($type !== "integer") 
+		{
             $end = strtotime($end);
         }
         //获取所有技师
@@ -598,6 +601,7 @@ class Technician extends Controller
             $yeji = self::get_yeji($tech['job_number'], $begin, $end);
             $job_number = $tech['job_number'];
 
+			/*
             //要查的店铺id，用以获取该店的充值提成比例
             $shopid = 1;
             //获取两种充值提成标准
@@ -621,15 +625,20 @@ class Technician extends Controller
             } else {
                 $recharge = 0;
             }
+			*/
 
             //获取打赏金额
             $dashang = Db::query("select sum(salary)/100 as salary from tip where technician_id = '$job_number' and date >=$begin and date <= $end");
-            if($dashang){
+            if($dashang)
+			{
                 $dashang = (int)$dashang[0]['salary'];
-                if(is_null($dashang)){
+                if(is_null($dashang))
+				{
                     $dashang = 0;
                 }
-            }else{
+            }
+			else
+			{
                 $dashang = 0;
             }
         
@@ -639,17 +648,21 @@ class Technician extends Controller
             'recharge_amount'=>$recharge,'tip_income'=>$dashang,'recharge_income' => (int)($recharge_income)]);
             array_push($salarys, $salary);
         }
+		
         //根据点钟数量计算排行并赋予点钟奖励
         //前三名的点钟数量
         $first_three = [0, 0, 0];
         //前三名的工号
         $job_numbers = ["", "", ""];
-        for ($i = 0; $i < count($salarys); $i++) {
+        for ($i = 0; $i < count($salarys); $i++) 
+		{
             $j = 0;
-            for (; $j < count($first_three); $j++) {
-                if ($salarys[$i]['dian'] >= $first_three[$j] && $salarys[$i]['dian'] != 0) {
-
-                    for ($k = count($first_three) - 1; $k >= $j + 1; $k--) {
+            for (; $j < count($first_three); $j++) 
+			{
+                if ($salarys[$i]['dian'] >= $first_three[$j] && $salarys[$i]['dian'] != 0) 
+				{
+                    for ($k = count($first_three) - 1; $k >= $j + 1; $k--) 
+					{
                         $first_three[$k] = $first_three[$k - 1];
                         $job_numbers[$k] = $job_numbers[$k - 1];
                     }

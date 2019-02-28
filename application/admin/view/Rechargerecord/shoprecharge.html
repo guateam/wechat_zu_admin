@@ -15,6 +15,26 @@
 <script type="text/javascript" src="lib/respond.min.js"></script>
 <![endif]-->
 	{include file="common/common_css"}
+	
+	<style>
+        * {
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .theinput {
+            list-style: none;
+            outline: none;
+            border: 1px solid #eee;
+            width: 200px;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .thebut {
+        }
+    </style>
 	<!--[if IE 6]>
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
@@ -25,6 +45,28 @@
 </head>
 
 <body>
+
+		<div id="loading-mask" style="display:none;position: fixed;background-color: rgba(0,0,0,0.65);top:0;bottom: 0;left: 0;right: 0;z-index: 99">
+            <div class="loading-main" style="position: absolute;width: 480px;height: 300px;top: 0;right: 0;bottom: 0;left: 0;margin: auto;text-align: center;">
+                <div title="2">
+                    <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                         width="120px" height="120px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+  <path fill="#FF6700" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+    <animateTransform attributeType="xml"
+                      attributeName="transform"
+                      type="rotate"
+                      from="0 25 25"
+                      to="360 25 25"
+                      dur="0.6s"
+                      repeatCount="indefinite"/>
+    </path>
+  </svg>
+                </div>
+                <p style="color: #fff">正在加载请等待......</p>
+            </div>
+
+        </div>
+
 	<nav class="breadcrumb">
 		<i class="Hui-iconfont">&#xe67f;</i> 首页
 		<span class="c-gray en">&gt;</span> 服务管理
@@ -35,19 +77,52 @@
 		</a>
 	</nav>
 	<div id="step1" style="margin-top: 5px;margin-bottom: 5px;margin-left:25px;padding-left: 10px">
-        <div style="width:90px ; display:inline-block">顾客手机号:</div> 
+        <div style="width:90px ; display:inline-block"><span style="color:red">*</span>会员手机号:</div> 
 		<input type="text" id="phone" class="theinput">
 		<br><br>
 		
-        <div style="width:90px ; display:inline-block">&nbsp;&nbsp;顾客姓名:</div> 
+        <div style="width:90px ; display:inline-block">&nbsp;&nbsp;会员姓名:</div> 
 		<input type="text" id="username" class="theinput">
 		<br><br>
 			
-		<div style="width:90px ; display:inline-block">&nbsp;&nbsp;</span>订单备注:</div>
-        <input type="text" id="note" class="theinput">
-		<br><br>	
+		<div style="width:90px ; display:inline-block"><span style="color:red">*</span>充卡金额:</div>
+        <input type="text" id="cash" class="theinput">(元)
+		<br><br>
 		
-		 <button onclick="done()" class="btn btn-primary" style="margin-top: 6px;width: 90px" id = "submit">订单支付
+		<div style="width:90px ; display:inline-block"><span style="color:red">*</span>支付方式:</div>
+        <select class="theinput" name="" id="pay_method">
+            <option value="5">微信扫码支付</option>
+            <option value="2">支付宝</option>          
+            <option value="4">现金支付</option>
+            <option value="5">银行卡支付</option>
+            <option value="6">其它</option>
+        </select>
+		<br>
+		<br>
+
+		<!--
+		<div style="width:90px ; display:inline-block">&nbsp;&nbsp;</span>技师工号:</div>
+        <input type="text" id="note" class="theinput">
+		-->
+		
+		<div style="width:90px ; display:inline-block">技师:</div>
+			<select name="" id="tech" class="theinput">
+				<option value="" selected>请选择技师</option>
+				{volist name="$technicians" id="it" key="k"}
+				<option value="{$it.job_number}">{$it.job_number}</option>
+				{/volist}
+			</select>
+		<br>
+		<br>
+		
+		<!--
+		<div style="width:90px ; display:inline-block">&nbsp;&nbsp;</span>订单备注:</div>
+        <input type="text" id="note" class="theinput"><br>
+		<br>
+		-->
+			
+		
+		 <button onclick="done()" class="btn btn-primary" style="margin-top: 6px;width: 90px" id = "submit">确认充卡
         </button>
 	</div>
 	
@@ -63,78 +138,75 @@
 	<script type="text/javascript" src="__STATIC__/lib/ueditor/1.4.3/ueditor.all.min.js"></script>
 	<script type="text/javascript" src="__STATIC__/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 	<script type="text/javascript">
-		$(function () {
-			$('.skin-minimal input').iCheck({
-				checkboxClass: 'icheckbox-blue',
-				radioClass: 'iradio-blue',
-				increaseArea: '20%'
-			});
+		//--------------------------------------------------------------
+        function done() //订单支付
+		{
+			if($('#submit').hasClass('disable'))
+			{
+				return;
+			}
+			
+			phone = $('#phone').val()
+			if (phone == "") 
+			{
+				swal({
+					title: "",
+					text: "会员充卡，手机号不能为空"
+				})
+				return;
+			}
+			
+			price = $('#cash').val();
+            if ($("#cash").val() == "") 
+			{
+                swal({
+                    title: "",
+                    text: "金额不能为空"
+                })
+                return;
+            }
+			
+			paymethod = $('#pay_method option:selected').val();
+			tech = $('#tech option:selected').val();
+			username = $('#username').val();
+			
+			$('#loading-mask').show();
+            $('#submit').addClass('disable');			
+			
+            $.post("__ROOT__/index.php/api/Rechargerecord/rechargeMoney", {                
+                phone: phone,//手机号码
+				username: username,//用户名
+				cash: price,//充卡金额
+                paymethod: paymethod,//支付方式
+				tech:tech,//技师工号
+            }).done((res) => {
 
-			//表单验证
-			$("#form-article-add").validate({
-				rules: {
-					articletitle: {
-						required: true,
-					},
-					articletitle2: {
-						required: true,
-					},
-					articlecolumn: {
-						required: true,
-					},
-					articletype: {
-						required: true,
-					},
-					articlesort: {
-						required: true,
-					},
-					keywords: {
-						required: true,
-					},
-					abstract: {
-						required: true,
-					},
-					author: {
-						required: true,
-					},
-					sources: {
-						required: true,
-					},
-					allowcomments: {
-						required: true,
-					},
-					commentdatemin: {
-						required: true,
-					},
-					commentdatemax: {
-						required: true,
-					},
-
-				},
-				onkeyup: false,
-				focusCleanup: true,
-				success: "valid",
-				submitHandler: function (form) {
-					title = $("#articletitle").val();
-					text = $("#text").val();
-					$(form).ajaxSubmit({
-						type: 'post', // 提交方式 get/post
-						url: '__ROOT__/index.php/api/Notice/add_notice', // 需要提交的 url
-						data: {
-							title: title,
-							text: text,
-						},
-						success: function (result) {
-							if (result.status == 1) {
-								parent.location.reload()
-								var index = parent.layer.getFrameIndex(window.name);
-								parent.layer.close(index);
-							}
-						}
-					});
-				}
-			});
-		});
+                if (res.status == 1) 
+				{
+					$('#submit').removeClass('disable');
+                    $('#loading-mask').hide();
+					
+                    swal({
+                        title: "充卡成功",
+                        text: "充卡单号为" + res.data,
+                        type: "success"
+                    })
+                    location.reload();
+                } 
+				else 
+				{
+					$('#submit').removeClass('disable');
+                    $('#loading-mask').hide();
+					
+                    swal({
+                        title: "充卡失败",
+                        text: res.msg,
+                        type: "error"
+                    })
+                }
+            })
+        }
+		//--------------------------------------------------------------
 	</script>
 	<!--/请在上方写此页面业务相关的脚本-->
 </body>

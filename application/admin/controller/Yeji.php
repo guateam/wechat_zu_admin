@@ -5,26 +5,34 @@ use think\Controller;
 
 class Yeji extends Controller
 {
-
     public function index($edit,$first_day=null,$last_day=null)
     {
+        date_default_timezone_set('PRC');
+
         $ctrl = new \app\api\controller\Technician();
 
         //本月第一天
-        if(is_null($first_day)){
+        if(is_null($first_day))
+        {
             $first_day = strtotime(date("Y-m-01"));
             $this->assign("begin",date("Y-m-01"));
         }
-        else{
+        else
+        {
             $this->assign("begin",$first_day);
             $first_day = strtotime($first_day);
         }
         //本月最后一天
-        if(is_null($last_day)){
-            $last_day = strtotime(date("Y-m-t"));
-            $this->assign("end",date("Y-m-t"));
+        if(is_null($last_day))
+        {
+            $BeginDate = date('Y-m-01', strtotime(date("Y-m-d")));
+            $EndDate = date('Y-m-d', strtotime("$BeginDate +1 month"));
+
+            $last_day = strtotime($EndDate );
+            $this->assign("end",$EndDate);
         }
-        else{
+        else
+        {
             $this->assign("end",$last_day);
             $last_day = strtotime($last_day);
         }

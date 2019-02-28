@@ -329,6 +329,13 @@ class Technician extends Controller
         return $lost;
     }
 
+    public static  function getMonthNum( $date1, $date2, $tags='-' )
+    {
+        $date1 = explode($tags,$date1);
+        $date2 = explode($tags,$date2);
+        return abs($date1[0] - $date2[0]) * 12 - $date2[1] + abs($date1[1]);
+    }
+
     /**
      * 获取技师的业绩
      */
@@ -417,19 +424,69 @@ class Technician extends Controller
 			}
 		}
 		
+        //-----------充卡提成重新计算-----------------------------------
+        //?有个问题，充卡提成是按照金额台阶计算的，而 技师上钟，接待上钟的提成和佣金，是不含台阶的
+        //台阶的实效是一个月
+        //所以时间段超过一个月后，就应该拆分月来计算 充卡提成
+
+        //$monthCount = ($end - $begin) / (3600*24*30);//时间段内的月份数量
+
+        //date('Y-m-d',$end);
+        $monthCount = Technician::getMonthNum( date('Y-m-d',$end), date('Y-m-d',$begin));
+
 		$recharge = 0;
 		$recharge_ticheng = 0;//充卡提成
-		$rcg = Db::query("select * from recharge_record where job_number='$job_number' and type = '1' and generated_time >= $begin and generated_time <= $end");		
-		if ($rcg)
+		$rcg = Db::query("select sum(charge) from recharge_record where job_number='$job_number' and generated_time >= $begin and generated_time <= $end");		
+		if ($rcg)//这里查到的是 某个技师 在时间段内的充卡金额
 		{
+            if ($rcg[0]['sum(charge)'])
+            {
+                $recharge = $rcg[0]['sum(charge)'];
+                //$tech_type  技师 接待 收银 technician 表type=1 技师 =2 接待 =3 收银
+                $bonus = Db::query("select * from recharge_bonus order by recharge desc");
+                if ($bonus)
+                {
+                    for($i =0 ; $i < count($bonus); $i++)
+                    {
+                        if ($tech_type == 1)//0
+                        {
+                            if($recharge >= ( $bonus[$i]['tech_bonus'] * 100 * $monthCount) ) 
+                            {
+                                $recharge_ticheng = $bonus[$i]['tech_bonus'] * 100 * $monthCount;
+                                break;
+                            }
+                        }
+                        else if ($tech_type == 2)
+                        {
+                            if($recharge >= ( $bonus[$i]['jiedai_bonus'] * 100 * $monthCount) ) 
+                            {
+                                $recharge_ticheng = $bonus[$i]['jiedai_bonus'] * 100 * $monthCount;
+                                break;
+                            }
+                        }
+                        else if ($tech_type == 3)
+                        {
+                            if($recharge >= ( $bonus[$i]['cashier_bonus'] * 100 * $monthCount) ) 
+                            {
+                                $recharge_ticheng = $bonus[$i]['cashier_bonus'] * 100 * $monthCount;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            /*
 			for($i=0;$i<count($rcg);$i++)
 			{
 				$recharge += $rcg[0]['charge'];
 				$recharge_ticheng += $rcg[0]['ticheng'];
 			}
+            */
 		}
+        //-------------------------------------------------------------
 		
-		$yeji += $recharge_ticheng;       
+		$yeji = $yeji + $recharge_ticheng;       
 		
         if ($invited) //佣金
 		{

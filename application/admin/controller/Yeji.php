@@ -36,6 +36,7 @@ class Yeji extends Controller
             $this->assign("end",$last_day);
             $last_day = strtotime($last_day);
         }
+        
         $yeji = $ctrl->get_all_yeji($first_day,$last_day);
         $this->assign("yeji", $yeji);
         $this->assign("count", count($yeji));

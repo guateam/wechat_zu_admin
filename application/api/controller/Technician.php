@@ -432,7 +432,7 @@ class Technician extends Controller
         //$monthCount = ($end - $begin) / (3600*24*30);//时间段内的月份数量
 
         //date('Y-m-d',$end);
-        $monthCount = Technician::getMonthNum( date('Y-m-d',$end), date('Y-m-d',$begin));
+        $monthCount = Technician::getMonthNum( date('Y-m-d',$end), date('Y-m-d',$begin)) + 1;
 
 		$recharge = 0;
 		$recharge_ticheng = 0;//充卡提成

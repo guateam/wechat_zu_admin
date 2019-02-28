@@ -23,20 +23,23 @@ class Yeji extends Controller
             $first_day = strtotime($first_day);
         }
         //本月最后一天
+
         if(is_null($last_day))
         {
-            $BeginDate = date('Y-m-01', strtotime(date("Y-m-d")));
-            $EndDate = date('Y-m-d', strtotime("$BeginDate +1 month"));
-
-            $last_day = strtotime($EndDate );
-            $this->assign("end",$EndDate);
+            // $BeginDate = date('Y-m-01', strtotime(date("Y-m-d")));
+            // $last_day = strtotime("$BeginDate +1 month") - 1;
+            // $EndDate = date('Y-m-d', $last_day);//减1秒            
+            // $this->assign("end",$EndDate);
+			
+			$last_day = strtotime(date("Y-m-t")) + 24 * 3600 - 1;//时间戳要改下
+            $this->assign("end",date("Y-m-t"));
         }
         else
         {
-            $this->assign("end",$last_day);
-            $last_day = strtotime($last_day);
+            $this->assign("end",$last_day);//日期不会错
+            $last_day = strtotime($last_day) + 24 * 3600 - 1;//时间戳要改下
         }
-        
+
         $yeji = $ctrl->get_all_yeji($first_day,$last_day);
         $this->assign("yeji", $yeji);
         $this->assign("count", count($yeji));

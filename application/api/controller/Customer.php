@@ -5,6 +5,8 @@
     use think\Db;
     class Customer extends Controller{
 
+		public static $API_URL = "http://103.239.247.197:8899/api?url=";
+		
         public function get_customer($id){
             $data = UserModel::get(['openid'=>$id]);
             if($data){
@@ -44,19 +46,73 @@
         public function get_cash_by_phone2($phone)
 		{
             $tech = Db::query("select * from customer where phone_number = $phone");
-            if($tech){
+            if($tech)
+			{
                 $money = self::get_cash($tech[0]['openid']);
                 return json(['cash'=>$money]);
-            }else{
+            }
+			else
+			{
                 return json(['cash'=>0]) ;
             }
         }
 		
+		public function priceSync()
+		{
+			$mt = time()."000";			
+			$ori_url = "http://www.dzbsaas.com/footmassage/servitem/getlist.do?sEcho=1&iColumns=13&sColumns=id%2Cname%2Cunit%2Cprice%2CunitRate%2CmaxRebate%2CservIsTimer%2CservLineUp%2CisMarketable%2Cmemo%2Corder%2CproductCategory.name%2Coption&iDisplayStart=0&iDisplayLength=100&mDataProp_0=id&sSearch_0=&bRegex_0=false&bSearchable_0=false&mDataProp_1=name&sSearch_1=&bRegex_1=false&bSearchable_1=false&mDataProp_2=unit&sSearch_2=&bRegex_2=false&bSearchable_2=false&mDataProp_3=price&sSearch_3=&bRegex_3=false&bSearchable_3=false&mDataProp_4=unitRate&sSearch_4=&bRegex_4=false&bSearchable_4=false&mDataProp_5=maxRebate&sSearch_5=&bRegex_5=false&bSearchable_5=false&mDataProp_6=servIsTimer&sSearch_6=&bRegex_6=false&bSearchable_6=false&mDataProp_7=servLineUp&sSearch_7=&bRegex_7=false&bSearchable_7=false&mDataProp_8=isMarketable&sSearch_8=&bRegex_8=false&bSearchable_8=false&mDataProp_9=memo&sSearch_9=&bRegex_9=false&bSearchable_9=false&mDataProp_10=order&sSearch_10=&bRegex_10=false&bSearchable_10=false&mDataProp_11=productCategory.name&sSearch_11=&bRegex_11=false&bSearchable_11=true&mDataProp_12=&sSearch_12=&bRegex_12=false&bSearchable_12=false&sSearch=&bRegex=false&_=".$mt;
+
+			$url = Customer::$API_URL.urlencode($ori_url);
+			
+			$content = file_get_contents($url);	
+			$obj = json_decode($content);
+			if ($obj->success == false)
+			{
+				echo $content;//success:false;msg:token is Invalid
+				return;
+			}
+			$ret1 = $obj->data;	
+			//var_dump($ret1);
+			
+			$ServRet = json_decode($ret1);
+			$Services = $ServRet->data;
+			$num = 0;
+
+			try
+			{
+				foreach($Services as $eachservice)
+				{
+					$servicename = $eachservice->name;
+					$serviceprice = ($eachservice->price) * 100;
+
+					$myservice = Db::query("select * from service_type where name = '$servicename'");
+					if ($myservice)
+					{
+						Db::query("update service_type set price = '$serviceprice' where name = '$servicename'");
+						$num = $num + 1;						
+					}           	
+				}
+				echo json_encode([
+								'success'=>true,
+								'msg'=>'',
+								'num'=>$num,
+				]);
+				return;
+			}
+			catch(Exception $e)
+			{
+				echo json_encode([
+						'success'=>false,
+						'msg'=>'sync fail'
+				]);
+				return;
+			}
+			return;
+		}
+		
 		public function getRoomInfo($roomname)
 		{
-			$API_URL = "http://103.239.247.197:8899";
-			
-			$url = $API_URL."/api?url=http://www.dzbsaas.com/footmassage/receptiondesk/listroom.do";			
+			$url = Customer::$API_URL."http://www.dzbsaas.com/footmassage/receptiondesk/listroom.do";			
 			$content = file_get_contents($url);	
 			$obj = json_decode($content);
 			if ($obj->success == false)
@@ -110,9 +166,8 @@
 		
 		public function getPayInfo($checkInId)
 		{
-			$API_URL = "http://103.239.247.197:8899";
 			$mt = time()."000";
-			$url2 = $API_URL."/api?url=http://www.dzbsaas.com/footmassage/receptiondesk/getpayinfo.do?checkInId=".$checkInId."&_=".$mt;
+			$url2 = Customer::$API_URL."http://www.dzbsaas.com/footmassage/receptiondesk/getpayinfo.do?checkInId=".$checkInId."&_=".$mt;
 			$content2 = file_get_contents($url2);
 			echo $content2;//直接返回获取到的json
 			return;
@@ -120,12 +175,10 @@
 		
 		public function getPayInfo2($roomname)
 		{
-			$API_URL = "http://103.239.247.197:8899";
-			
 			//$roomname = $_GET["roomname"];
 			//$roomname = $_POST["roomname"];
 			
-			$url = $API_URL."/api?url=http://www.dzbsaas.com/footmassage/receptiondesk/listroom.do";			
+			$url = Customer::$API_URL."http://www.dzbsaas.com/footmassage/receptiondesk/listroom.do";			
 			$content = file_get_contents($url);	
 			$obj = json_decode($content);
 			if ($obj->success == false)
@@ -154,7 +207,7 @@
 							//$mt = app\api\controller\getMillisecond();
 							$mt = time()."000";
 							
-							$url2 = $API_URL."/api?url=http://www.dzbsaas.com/footmassage/receptiondesk/getpayinfo.do?checkInId=".$checkInId."&_=".$mt;
+							$url2 = Customer::$API_URL."/api?url=http://www.dzbsaas.com/footmassage/receptiondesk/getpayinfo.do?checkInId=".$checkInId."&_=".$mt;
 
 							$content2 = file_get_contents($url2);
 
@@ -196,7 +249,6 @@
 				return $msectimes = substr($msectime,0,13);
 			}
 		}
-		
 		
 
         public function get_cash_by_phone($phone){

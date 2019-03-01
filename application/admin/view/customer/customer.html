@@ -249,7 +249,7 @@
                     }).done(function (result) {
                         if (result.status == 1) {
                             $(obj).parents("tr").remove();
-                            swal("完成", "已删除项目", "success").then((ok) => {
+                            swal("完成", "已删除客户", "success").then((ok) => {
                                 if (ok.value) location.reload();
                             })
                         }

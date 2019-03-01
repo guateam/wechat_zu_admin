@@ -2,6 +2,8 @@
     namespace app\api\controller;
     use think\Controller;
     use \app\api\model\Serviceorder as UserModel;
+    use think\Db;
+
     class Serviceorder extends Controller{
         /**
          * 获取所有订单-服务信息
@@ -45,15 +47,17 @@
 			{
                 foreach($data as $order)
 				{
-                    if(is_null($order->price))
+                    if(is_null($order->price))//付款为空
 					{
                         //店内服务
                         if($order->service_type==1)
 						{
                             $ctrl = new  \app\api\controller\Servicetype();
                             $price = $ctrl->getserviceprice($order->item_id);
-                            $price/=100;
-                            $order->price=$price;                        
+                            $price /= 100;
+                            $order->price = $price;  
+
+							
                         }
 						else if($order->service_type==3)//酒水饮料
 						{
@@ -66,17 +70,32 @@
 
                         }
                     }
+
+                    $room_id = $order->private_room_number;
+							
+                    $room = Db::query("select * from private_room where ID =$room_id");
+                    if ($room)
+                    {
+                        $order->private_room_number = $room[0]['name'];
+                    }
+                    else
+                    {
+                        $order->private_room_number = '';
+                    }
                 }
                 return $data;
             }
             else return 0;
         }
 
-        public function get_order_by_job_number($job_number){
+        public function get_order_by_job_number($job_number)
+		{
             $data = UserModel::all(["job_number"=>$job_number]);
             $job = [];
-            if($data){
-                foreach($data as $dt){
+            if($data)
+			{
+                foreach($data as $dt)
+				{
                     array_push($job,[$dt->order_id,$dt->service_type,$dt->item_id]);
                 }
                 return $job;

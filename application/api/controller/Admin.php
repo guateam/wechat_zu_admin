@@ -127,8 +127,9 @@
             return json(['status'=>1]);
         }
 
-        public function delete($id){
-            Db::query("delete from admin where `ID`='$id'");
+        public function delete($id)
+		{
+            Db::query("delete from admin where `ID`='$id'");//删除管理员账号
             return json(['status'=>1]);
         }
 

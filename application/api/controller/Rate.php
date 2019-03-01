@@ -39,8 +39,9 @@
             else return null;
         }
 
-        public function delete($id){
-            Db::query("delete from rate where `ID`='$id'");
+        public function delete($id)
+		{
+            Db::query("delete from rate where `ID`='$id'");//删除评价
             return json(['status'=>0]);
         }
         

@@ -33,9 +33,11 @@
             return false;
         }
 
-        public function delete($ids){
-            foreach( $ids as $id){
-                Db::query("delete from item_type where `ID` = '$id' ");
+        public function delete($ids)
+		{
+            foreach( $ids as $id)
+			{
+                Db::query("delete from item_type where `ID` = '$id' ");//删除商品
             }
             return json(['status'=>1]);
         }

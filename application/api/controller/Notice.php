@@ -91,15 +91,20 @@
         /**
          * 
          */
-        public function delete_technotice($id){
+        public function delete_technotice($id)
+		{
             $ids = [];
-            if(gettype($id) != "array"){
+            if(gettype($id) != "array")
+			{
                 $ids.push($id);
-            }else{
+            }
+			else
+			{
                 $ids = $id;
             }
-            foreach($ids as $i){
-                Db::query("delete from tech_notice where ID = '$i'");
+            foreach($ids as $i)
+			{
+                Db::query("delete from tech_notice where ID = '$i'");//删除技师公告
             }
             return json(['status'=>1]);
         }

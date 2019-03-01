@@ -184,6 +184,7 @@
                 $order_id .= strval(rand(0,9));//订单号
             }		
             
+			$item_id = "";
 			foreach($info as $it)
 			{
                 if ($it['service_id'] =='')
@@ -195,6 +196,10 @@
                     {
                         $item_id = $item[0]['ID'];
                     }
+					else
+					{
+						//数据库里如果根据服务名称，找不到该项目，则 $item_id = "";
+					}
                 }
                 else 
                 {
@@ -209,8 +214,10 @@
                 $service_type = Db::query("select * from service_type where ID='$item_id' ");
                 $technician = Db::query("select * from technician where job_number='$job_number'");
 
-                $yongjin = $service_type[0]['invite_income'];
-               
+				if ($service_type)
+				{
+					$yongjin = $service_type[0]['invite_income'];
+				}
                  
 				if($it['clock'] == 1)//排钟
 				{

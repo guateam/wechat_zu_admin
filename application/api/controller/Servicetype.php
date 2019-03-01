@@ -278,6 +278,7 @@
          */
         public static function add_service($name,$duration,$price,$commission,$commission2,$info,$invite_income,$image){
 
+			$name = trim($name);
             $data = new Service(['name'=>$name,'duration'=>$duration,'price'=>$price,'market_price'=>$price,
                                     'invite_income'=>$invite_income,'commission'=>((int)$commission),
                                     'commission2'=>((int)$commission2),
@@ -334,7 +335,7 @@
                     $data->image = $sv;
                 }
 
-                $data->name = $name;
+                $data->name = trim($name);
                 $data->procedure = $procedure;
                 $data->attention = $attention;
                 $data->benefit = $benefit;

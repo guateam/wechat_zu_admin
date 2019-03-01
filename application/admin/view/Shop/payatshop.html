@@ -336,56 +336,81 @@
 									
 									$('#manualAdd').css('display', '');//手动录入框显示									
 									$('#loading').css('display', 'none');//loading 不显示
-									$('#payinfoarea').css('display', '');//订单表头显示出来
-									
-									$('#paytable').append("<thead><tr class='text-c'><th width='40'>No</th> <th width='80'>类型</th><th width='80'>名称</th><th width='80'>单价</th><th width='60'>数量</th><th width='60'>退单量</th><th width='80'>折扣</th><th width='80'>金额</th><th width='80'>技师</th><th width='80'>安排</th><th>操作</th></tr></thead><tbody></tbody>");
+									$('#payinfoarea').css('display', '');//订单表头显示出来									
 								}
 								else
 								{
 									var orderdata = res.data;
 									
-									orderdata2 = JSON.parse(orderdata);
-									
-									orderItems = orderdata2.orderitems;
-									
-									info = [];
-									
-									for (var i = 0; i < orderItems.length; i++) 
-									{  
-										//console.log(i,orderItems[i]); 
+									try
+									{
+										orderdata2 = JSON.parse(orderdata);
 										
-										 
-										if (orderItems[i].productType == "ServItem")
-										{
-											productType = "服务";
-										}
+										orderItems = orderdata2.orderitems;
+											
+										info = [];
 										
-										if (orderItems[i].arrangeType == "Specify")
-										{
-											arrangeType = "点钟";
-											clock = 2;
-										}
-										else if (orderItems[i].arrangeType == "Arrangements")
-										{
-											arrangeType = "排钟";
-											clock = 1;
-										}
-										
-										$("#paytable").append("<tr class='text-c'><td>"+(i+1)+"</td><td>"+productType+"</td><td>"+orderItems[i].name+"</td><td>"+orderItems[i].price+"</td><td>"+orderItems[i].quantity+"</td><td>"+orderItems[i].returnQuantity+"</td><td>"+orderItems[i].scale+"</td><td>"+orderItems[i].subtotal+"</td><td>"+orderItems[i].servicePersonal+"</td><td>"+arrangeType+"</td><td><a href='#' onclick=delRow(this) >删除</a></td><tr>");
-										
-										var unit = {
-												'job_number': orderItems[i].servicePersonal,
-												'service_name':orderItems[i].name,
-												'service_id': '',
-												'price': orderItems[i].subtotal,
-												'room_number': room_id,
-												'clock': clock,
-											};
-										info.push(unit);											
-									}
+										if (orderdata2 && orderItems.length > 0)
+										{											
+											for (var i = 0; i < orderItems.length; i++) 
+											{  
+												//console.log(i,orderItems[i]); 											
+												 
+												if (orderItems[i].productType == "ServItem")
+												{
+													productType = "服务";
+												}
+												
+												if (orderItems[i].arrangeType == "Specify")
+												{
+													arrangeType = "点钟";
+													clock = 2;
+												}
+												else if (orderItems[i].arrangeType == "Arrangements")
+												{
+													arrangeType = "排钟";
+													clock = 1;
+												}
+												
+												$("#paytable").append("<tr class='text-c'><td>"+(i+1)+"</td><td>"+productType+"</td><td>"+orderItems[i].name+"</td><td>"+orderItems[i].price+"</td><td>"+orderItems[i].quantity+"</td><td>"+orderItems[i].returnQuantity+"</td><td>"+orderItems[i].scale+"</td><td>"+orderItems[i].subtotal+"</td><td>"+orderItems[i].servicePersonal+"</td><td>"+arrangeType+"</td><td><a href='#' onclick=delRow(this) >删除</a></td><tr>");
+												
+												var unit = {
+														'job_number': orderItems[i].servicePersonal,
+														'service_name':orderItems[i].name,
+														'service_id': '',
+														'price': orderItems[i].subtotal,
+														'room_number': room_id,
+														'clock': clock,
+													};
+												info.push(unit);	
 
-									$("#shouldcash").val(orderdata2.countinfo.receivable);		
-									$("#cash").val(orderdata2.countinfo.receivable);									
+												$("#shouldcash").val(orderdata2.countinfo.receivable);		
+												$("#cash").val(orderdata2.countinfo.receivable);
+											}
+										}
+										else //没有获取到数据
+										{
+											alert("同步失败，重新登陆点钟宝后台，重启监控。或者手动录入订单信息");
+						
+											//alert("获取信息失败，需要手动录入订单");									
+											$('#manualAdd').css('display', '');//手动录入框显示									
+											$('#loading').css('display', 'none');//loading 不显示
+											$('#payinfoarea').css('display', '');//订单表头显示出来
+										}
+									}
+									catch (e) 
+									{
+										console.log(e);//异常
+										//throw new Errow('自定义的异常');
+										
+										alert("同步失败，重新登陆点钟宝后台，重启监控。或者手动录入订单信息");
+						
+										//alert("获取信息失败，需要手动录入订单");									
+										$('#manualAdd').css('display', '');//手动录入框显示									
+										$('#loading').css('display', 'none');//loading 不显示
+										$('#payinfoarea').css('display', '');//订单表头显示出来
+									}
+									
 								}
 						})
 					}

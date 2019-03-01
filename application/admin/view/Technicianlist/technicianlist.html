@@ -45,6 +45,18 @@
                 <strong>{$count}</strong> 条</span>
         </div>
         <div class="mt-20">
+			 <div class="">
+                <label class="form-label col-xs-2 col-sm-1" style="padding-left: 15px;padding-right: 0">更改工号：</label>
+				
+				原工号 <input id="oldgonghao" type="text" name="old" /> 
+				新工号 <input id="newgonghao" type="text" name="new" />				
+				<a href="javascript:;" onclick="changeGongHao()" class="btn btn-primary radius">
+                    <i class="Hui-iconfont">&#xe6e2;</i>
+                    更改
+                </a>
+				
+            </div>
+			
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
@@ -164,7 +176,50 @@
                     } // 制定列不参与排序
                 ]
             });
-        });
+        })
+		
+		function changeGongHao()
+		{
+			var oldgonghao = $('#oldgonghao').val();
+			var newgonghao = $('#newgonghao').val();
+			//console.log(oldgonghao);
+			//console.log(newgonghao);
+			
+			 //$.post("/wechat_zu_admin/public/index.php/api/Technician/change_gonghao",{
+             //   oldgonghao:oldgonghao,
+			//	newgonghao:newgonghao,
+            //})
+			
+			 $.post("__ROOT__/index.php/api/Technician/change_gonghao", {
+                        oldgonghao:oldgonghao,
+						newgonghao:newgonghao,
+                    }).done((res) => {
+                        if (res.status == 1) 
+						{
+                            swal({
+                                title: '更换工号成功，正在刷新页面',
+                                text: '',
+                                allowOutsideClick: false,
+                                showConfirmButton: false,
+                                showCloseButton: false,
+                                onOpen: () => {
+                                    swal.showLoading()
+                                 }
+                            });
+                            location.reload();
+                        }
+						else
+						{
+                            swal({
+                                title:"更换工号失败",
+								text: res.msg,
+                            })
+                        }
+						
+						$('#oldgonghao').val("");
+						$('#newgonghao').val("");
+                    })
+		}
 		
         function change_busy(job_number){
             $.post("__ROOT__/index.php/api/Technician/change_busy",{

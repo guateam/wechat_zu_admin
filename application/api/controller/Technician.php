@@ -4,6 +4,7 @@ namespace app\api\controller;
 use think\Controller;
 use think\Db;
 use \app\api\model\Technician as UserModel;
+use Exception;
 
 class Technician extends Controller
 {
@@ -554,6 +555,133 @@ class Technician extends Controller
             $user->busy = 1;
         }
         $user->save();
+    }
+	
+	public function change_gonghao($oldgonghao,$newgonghao)
+	{
+        $old = Db::query("select * from technician where job_number='$oldgonghao'");
+		if ($old == null || count($old) == 0)
+		{
+			return json(['status'=>0,'msg'=>'原工号不存在']);
+		}
+		
+		$new = Db::query("select * from technician where job_number='$newgonghao'");
+		if ($new)
+		{
+			return json(['status'=>0,'msg'=>'新工号已存在，冲突']);
+		}
+
+        /*实例模型*/
+        //$model = new UsersModel();
+        /*获取Db对象*/
+        //$db = $model->db(false);
+        /*开启事务*/
+        //$db->startTrans();
+		
+        Db::startTrans();
+        try 
+        {
+            //这里写多个SQL语句
+
+           //technician (2处)
+           Db::query("update technician set job_number ='$newgonghao' where job_number='$oldgonghao'");
+           Db::query("update technician set inviter ='$newgonghao' where inviter='$oldgonghao'");
+
+           throw new Exception("error");
+
+           //inviteship (2处)
+           Db::query("update inviteship set inviter_job_number ='$newgonghao' where inviter_job_number='$oldgonghao'");
+           Db::query("update inviteship set freshman_job_number ='$newgonghao' where freshman_job_number='$oldgonghao'");
+
+           //skill
+           Db::query("update skill set job_number ='$newgonghao' where job_number='$oldgonghao'");
+
+           //service_order (2处)
+           Db::query("update service_order set job_number ='$newgonghao' where job_number='$oldgonghao'");
+           Db::query("update service_order set jd_number ='$newgonghao' where jd_number='$oldgonghao'");
+
+           //attendance 
+           Db::query("update attendance set job_number ='$newgonghao' where job_number='$oldgonghao'");
+
+           //recharge_record
+           Db::query("update recharge_record set job_number ='$newgonghao' where job_number='$oldgonghao'");
+
+           //tip
+           Db::query("update tip set technician_id ='$newgonghao' where technician_id='$oldgonghao'");
+
+           //friend_circle
+           Db::query("update friend_circle set job_number ='$newgonghao' where job_number='$oldgonghao'");
+
+           //technician_photo 
+           Db::query("update technician_photo set job_number ='$newgonghao' where job_number='$oldgonghao'");
+
+           //technician_video
+           Db::query("update technician_video set job_number ='$newgonghao' where job_number='$oldgonghao'");
+
+           //tech_tag
+           Db::query("update tech_tag set job_number ='$newgonghao' where job_number='$oldgonghao'");
+
+           //rate
+           Db::query("update rate set job_number ='$newgonghao' where job_number='$oldgonghao'");
+
+           
+        } 
+        catch (Exception $e) 
+        {
+            //$db->rollback();
+            Db::rollback();//没有回滚成功！
+            return json(['status'=>0,'msg'=>'出现异常，请重试']);
+        }
+		
+		/*
+		Db::transaction(function(){
+
+			//technician (2处)
+           Db::query("update technician set job_number ='$newgonghao' where job_number='$oldgonghao'");
+           Db::query("update technician set inviter ='$newgonghao' where inviter='$oldgonghao'");
+
+           throw new Exception("抛出异常");
+
+           //inviteship (2处)
+           Db::query("update inviteship set inviter_job_number ='$newgonghao' where inviter_job_number='$oldgonghao'");
+           Db::query("update inviteship set freshman_job_number ='$newgonghao' where freshman_job_number='$oldgonghao'");
+
+           //skill
+           Db::query("update skill set job_number ='$newgonghao' where job_number='$oldgonghao'");
+
+           //service_order (2处)
+           Db::query("update service_order set job_number ='$newgonghao' where job_number='$oldgonghao'");
+           Db::query("update service_order set jd_number ='$newgonghao' where jd_number='$oldgonghao'");
+
+           //attendance 
+           Db::query("update attendance set job_number ='$newgonghao' where job_number='$oldgonghao'");
+
+           //recharge_record
+           Db::query("update recharge_record set job_number ='$newgonghao' where job_number='$oldgonghao'");
+
+           //tip
+           Db::query("update tip set technician_id ='$newgonghao' where technician_id='$oldgonghao'");
+
+           //friend_circle
+           Db::query("update friend_circle set job_number ='$newgonghao' where job_number='$oldgonghao'");
+
+           //technician_photo 
+           Db::query("update technician_photo set job_number ='$newgonghao' where job_number='$oldgonghao'");
+
+           //technician_video
+           Db::query("update technician_video set job_number ='$newgonghao' where job_number='$oldgonghao'");
+
+           //tech_tag
+           Db::query("update tech_tag set job_number ='$newgonghao' where job_number='$oldgonghao'");
+
+           //rate
+           Db::query("update rate set job_number ='$newgonghao' where job_number='$oldgonghao'");
+
+		});
+        */
+
+		return json(['status'=>1,'msg'=>'更换工号成功']);	
+        
     }
 	
 	public function check_busy($job_number)

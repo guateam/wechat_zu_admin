@@ -2,6 +2,8 @@
 namespace app\admin\controller;
 use think\Controller;
 use \app\api\model\Technician as UserModel;
+use \app\api\model\Inviteship as Inviteship;
+use think\Db;
 
 class Technicianlist extends Controller
 {
@@ -25,13 +27,24 @@ class Technicianlist extends Controller
             //技能等级
             $level = $ctrl->get_skill($tc->job_number);
             $technicians[$idx]['level'] = $level;
-            $money = $recharge_ctrl->get_by_jobnumber($tc->job_number);
+            $money = $recharge_ctrl->get_by_jobnumber($tc->job_number);//充值记录表
             $money = $money->getdata();
-            if($money['status'] ==1)array_push($charge,$money['charge']);
+            if($money['status'] ==1)
+			{
+				array_push($charge,$money['charge']);
+			}
             else
 			{
                 array_push($charge,0);
             }
+			
+			//根据技师工号找到该技师的介绍人			
+			$job_number = $tc->job_number;
+			$inviteship = Db::query("select * from inviteship where freshman_job_number = $job_number");
+			if ($inviteship)
+			{
+				$tc->inviter = $inviteship[0]['inviter_job_number'];
+			}
         }
 
         foreach($technicians as $tc)

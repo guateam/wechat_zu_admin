@@ -8,22 +8,29 @@
         public function get_all()
         {
             $data = Ship::all();
-            if($data){
+            if($data)
+			{
                 return $data;
             }
         }
-        public function add($inviter,$newcome,$persentage){
+		
+        public function add($inviter,$newcome,$persentage)
+		{
             $ori = Ship::get(['freshman_job_number'=>$newcome]);
-            if($ori){
+            if($ori)
+			{
                 $ori->delete();
             }
             $data =new Ship(['inviter_job_number'=>$inviter,'freshman_job_number'=>$newcome,'persentage'=>$persentage]);
             $data->save();
             return json(['status'=>1]);
         }
-        public function update($newcome,$persentage){
+		
+		public function update($newcome,$persentage)
+		{
             $data = Ship::get(['freshman_job_number'=>$newcome]);
-            if($data){
+            if($data)
+			{
                 $data->persentage = $persentage;
                 $data->save();
                 return json(['status'=>1]);

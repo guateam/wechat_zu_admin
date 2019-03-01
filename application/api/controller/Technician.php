@@ -272,17 +272,21 @@ class Technician extends Controller
     public function set_inviter($job_number, $inviter_job_number)
     {
         $data = UserModel::get(["job_number" => $job_number]);
-        if ($data) {
+        if ($data) 
+		{
             $data->inviter = $inviter_job_number;
             $old_data = \app\api\model\Inviteship::get(['freshman_job_number' => $job_number]);
-            if (!$old_data) {
+            if (!$old_data) 
+			{
                 $new_data = new \app\api\model\Inviteship();
                 $new_data->data([
                     'inviter_job_number' => $inviter_job_number,
                     'freshman_job_number' => $job_number,
                 ]);
                 $new_data->save();
-            } else {
+            } 
+			else 
+			{
                 $old_data->inviter_job_number = $inviter_job_number;
                 $old_data->save();
             }
@@ -517,9 +521,12 @@ class Technician extends Controller
     public function get_inviter($job_number)
     {
         $inviter = Db::query("select inviter_job_number from inviteship where freshman_job_number='" . $job_number . "'");
-        if ($inviter) {
+        if ($inviter) 
+		{
             return $inviter[0]['inviter_job_number'];
-        } else {
+        } 
+		else 
+		{
             return "";
         }
 

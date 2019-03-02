@@ -564,6 +564,7 @@ class Query
     {
         return $this->value('AVG(' . $field . ') AS tp_avg', 0, true);
     }
+    
 
     /**
      * 设置记录的某个字段值

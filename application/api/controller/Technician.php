@@ -441,53 +441,37 @@ class Technician extends Controller
 
 		$recharge = 0;
 		$recharge_ticheng = 0;//充卡提成
-		$rcg = Db::query("select sum(charge) from recharge_record where job_number='$job_number' and generated_time >= $begin and generated_time <= $end");		
+		$rcg = Db::query("select * from recharge_record where job_number='$job_number' and type = 1 and generated_time >= $begin and generated_time <= $end");		
 		if ($rcg)//这里查到的是 某个技师 在时间段内的充卡金额
 		{
-            if ($rcg[0]['sum(charge)'])
-            {
-                $recharge = $rcg[0]['sum(charge)'];
-                //$tech_type  技师 接待 收银 technician 表type=1 技师 =2 接待 =3 收银
-                $bonus = Db::query("select * from recharge_bonus order by recharge desc");
-                if ($bonus)
-                {
-                    for($i =0 ; $i < count($bonus); $i++)
-                    {
-                        if ($tech_type == 1)//0
-                        {
-                            if($recharge >= ( $bonus[$i]['tech_bonus'] * 100 * $monthCount) ) 
-                            {
-                                $recharge_ticheng = $bonus[$i]['tech_bonus'] * 100 * $monthCount;
-                                break;
-                            }
-                        }
-                        else if ($tech_type == 2)
-                        {
-                            if($recharge >= ( $bonus[$i]['jiedai_bonus'] * 100 * $monthCount) ) 
-                            {
-                                $recharge_ticheng = $bonus[$i]['jiedai_bonus'] * 100 * $monthCount;
-                                break;
-                            }
-                        }
-                        else if ($tech_type == 3)
-                        {
-                            if($recharge >= ( $bonus[$i]['cashier_bonus'] * 100 * $monthCount) ) 
-                            {
-                                $recharge_ticheng = $bonus[$i]['cashier_bonus'] * 100 * $monthCount;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            
-            /*
-			for($i=0;$i<count($rcg);$i++)
+			$bonus = Db::query("select * from recharge_bonus order by recharge desc");
+			if ($bonus)
 			{
-				$recharge += $rcg[0]['charge'];
-				$recharge_ticheng += $rcg[0]['ticheng'];
+				foreach ($rcg as $eachrecharge)//对每一笔充值进行循环                    
+				{
+					$recharge = $recharge + $eachrecharge['charge'];
+					
+					for($i =0 ; $i < count($bonus); $i++)//对每一级别的充卡提成进行循环
+					{
+						if ($eachrecharge['charge'] >= $bonus[$i]['recharge'] * 100 * $monthCount)//倒排序
+						{
+							if ($tech_type == 1)
+							{
+								$recharge_ticheng += $bonus[$i]['tech_bonus'] * 100 * $monthCount;  
+							}
+							else if ($tech_type == 2)
+							{
+								$recharge_ticheng += $bonus[$i]['jiedai_bonus'] * 100 * $monthCount;   
+							}
+							else if ($tech_type == 3)
+							{
+								$recharge_ticheng = $bonus[$i]['cashier_bonus'] * 100 * $monthCount;
+							}
+							break; ////跳出 每一级别的充卡提成循环
+						}
+					}
+				}
 			}
-            */
 		}
         //-------------------------------------------------------------
 		

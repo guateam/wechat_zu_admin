@@ -21,7 +21,9 @@ class Technicianlist extends Controller
         $order = [];
         $aver_score = [];
         $charge = [];
-        $technicians = $ctrl->get_all_technician();
+		$refererlist = [];
+        
+		$technicians = $ctrl->get_all_technician();
         foreach($technicians as $idx => $tc)
 		{
             //技能等级
@@ -38,13 +40,26 @@ class Technicianlist extends Controller
                 array_push($charge,0);
             }
 			
-			//根据技师工号找到该技师的介绍人			
+			//-------------根据技师工号找到该技师的介绍人----------------			
 			$job_number = $tc->job_number;
-			$inviteship = Db::query("select * from inviteship where freshman_job_number = $job_number");
+			$inviteship = Db::query("select * from inviteship where freshman_job_number = '$job_number'");
 			if ($inviteship)
 			{
 				$tc->inviter = $inviteship[0]['inviter_job_number'];
 			}
+			
+			//-------------根据技师工号找到该技师的介绍来的人----------------	
+			$referer = "";
+			$job_number = $tc->job_number;
+			$refership = Db::query("select * from inviteship where inviter_job_number = '$job_number'");
+			if ($refership)
+			{				
+				for($i=0;$i<count($refership);$i++)
+				{
+					$referer = $referer.$refership[$i]['freshman_job_number'].",";
+				}				
+			}
+			array_push($refererlist,$referer);
         }
 
         foreach($technicians as $tc)
@@ -101,6 +116,7 @@ class Technicianlist extends Controller
         $this->assign("score",$aver_score);
         $this->assign("charge",$charge);
         $this->assign("edit",$edit);
+		$this->assign("refererlist",$refererlist);
         return $this->fetch('Technicianlist/technicianlist');
     }
     public function salary($first_day = "",$last_day = "")

@@ -68,12 +68,13 @@
                         <th width="40">类别</th>
                         <th width="40">性别</th>
                         <th width="70">工号</th>
-                        <th width="100">手机号</th>
+                        <th width="60">手机号</th>
                         <th width="100">技能</th>
                         <th width="30">评分</th>
                         <th width="60">充卡数额</th>
-                        <th width="50">介绍人工号</th>
-                        <th width="50">离职情况</th>
+                        <th width="50">谁介绍的</th>
+						<th width="50">介绍来的</th>
+                        <th width="50">在职情况</th>
                         <th width="80">繁忙情况</th>
                         <!-- <th width="70">指定介绍人</th> -->
                         <th width="70">等级</th>
@@ -103,7 +104,6 @@
                         </td>
                         <td>
                             {if condition="$it.gender=='1'"}男 {else /}女 {/if}
-
                         </td>
                         <td>{$it.job_number}</td>
                         <td>{$it.phone_number}</td>
@@ -113,6 +113,10 @@
                         <td class="text-l">{if condition="$score[$k-1]==0"}无{else /}{$score[$k-1]}{/if}</td>
                         <td>￥{$charge[$k-1]}</td>
                         <td>{if condition="is_null($it.inviter)"}无 {else /} {$it.inviter} {/if}
+							
+						</td>
+						<td>
+							{$refererlist[$k-1]}
                         </td>
                         <td>{if condition="$it.in_job==1"}在职{else /}离职{/if}
                             {if condition="$edit == 1"}

@@ -185,12 +185,10 @@
 			//console.log(oldgonghao);
 			//console.log(newgonghao);
 			
-			 //$.post("/wechat_zu_admin/public/index.php/api/Technician/change_gonghao",{
-             //   oldgonghao:oldgonghao,
-			//	newgonghao:newgonghao,
-            //})
-			
-			 $.post("__ROOT__/index.php/api/Technician/change_gonghao", {
+			var r = confirm("确定更改工号"+oldgonghao+"为"+newgonghao+"?");
+			if (r==true)
+			{			
+				$.post("__ROOT__/index.php/api/Technician/change_gonghao", {
                         oldgonghao:oldgonghao,
 						newgonghao:newgonghao,
                     }).done((res) => {
@@ -219,6 +217,10 @@
 						$('#oldgonghao').val("");
 						$('#newgonghao').val("");
                     })
+			}
+			else
+			{			
+			}
 		}
 		
         function change_busy(job_number){

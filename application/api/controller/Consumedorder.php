@@ -277,70 +277,102 @@
                 $info[$i]['appoint_time']=$service_orders[$i]['appoint_time'];
             }
             
-			//Db::query("delete from service_order where order_id='$order_id'");//把service_order表中与本订单相关内容先删除
-            //为什么需要先删除，service_order订单号相同的很多，技师也可以改，服务项目也可以改，找不到相应的去更新
-			
-			for($i=0;$i<count($service_orders);$i++)
+			Db::startTrans();
+			try
 			{
-				$order_id = $service_orders[$i]['order_id'];
-				$bak_order_id = $order_id."b";
-                Db::query("update service_order set order_id='$bak_order_id' where order_id='$order_id'");//不要删除记录，改成更新记录，把原记录换个order_id保存起来
-            }            
-			
-			if($order)
-			{
-                $order->state = $state;
-                $order->payment_method = $pay_method;
-                $order->pay_amount = $cash;
-                $order->appoint_time = $appoint_time;
-                $order->note = $note;
-                $order->source = $source;
-                $order->save();
-                foreach($info as $it)
+				for($i=0;$i<count($service_orders);$i++)
 				{
-                    $service_id = $it['service_id'];
-                    $eachservice = Db::query("select * from service_type where ID='$service_id'");//service_type表根据service_id查询到价格
-                    if($eachservice)
-					{
-                        //$price = $eachservice[0]['price'];//这是活动价
-                        $price = $eachservice[0]['market_price'];//这里改成门市价 算业绩需要
-                    }
-					else
-					{
-                        $price="服务不存在";
-                    }
-
-                    //提成从service表里取
-                    if ($it['clock'] == 2)//点钟
-                    {
-                        $ticheng = $eachservice[0]['commission'];
-						$jd_ticheng = $eachservice[0]['commission2'];
-                    }
-                    else if ($it['clock'] == 1)//排钟
-                    {
-                        $ticheng = $eachservice[0]['pai_commission'];
-						$jd_ticheng = $eachservice[0]['pai_commission2'];   
-                    }					
+					// $order_id = $service_orders[$i]['order_id'];
+					// $bak_order_id = $order_id."b";
+					// Db::query("insert service_order_bak set order_id='$bak_order_id' where order_id='$order_id'");//不要删除记录，改成更新记录，把原记录换个order_id保存起来
 					
-
-                    //佣金从service表里取
-                    $yongjin = $eachservice[0]['invite_income'];
-                    
-					//$jiedai = 0;//这里有问题，回头再改，修改订单，技师工号都会变成 0
+					$so = $service_orders[$i];
 					
-                    $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
-                    'item_id'=>$it['service_id'],'job_number'=>$it['job_number'],'price'=>$price,
-                    'private_room_number'=>$it['room_id'],'clock_type'=>$it['clock'],'appoint_time'=>$it['appoint_time'], 
-                    'ticheng'=>$ticheng,
-                    'yongjin'=>$yongjin,
-					'jd_number'=>$jiedai,
-					'jd_ticheng'=>$jd_ticheng
-                    ]);
-                    
-					$sv_order->save();
-                }
+					$order_id = $so['order_id'];
+					$service_type = $so['service_type'];
+					$item_id = $so['item_id'];
+					$job_number = $so['job_number'];
+					$private_room_number = $so['private_room_number'];
+					$price = $so['price'];
+					$clock_type = $so['clock_type'];
+					$show = $so['show'];
+					$appoint_time = $so['appoint_time'];
+					$ticheng = $so['ticheng'];
+					$yongjin = $so['yongjin'];
+					$jd_number = $so['jd_number'];
+					$jd_ticheng = $so['jd_ticheng'];
+					
+					//把数据插入另一张表
+					Db::query("insert into service_order_bak (`order_id`,`service_type`,`item_id`,`job_number`,`private_room_number`,`price`,`clock_type`,`show`,`appoint_time`,`ticheng`,`yongjin`,`jd_number`,`jd_ticheng`) values ('$order_id','$service_type','$item_id','$job_number','$private_room_number','$price','$clock_type','$show','$appoint_time','$ticheng','$yongjin','$jd_number','$jd_ticheng')");				
+				} 
+
+				Db::query("delete from service_order where order_id='$order_id'");//把service_order表中与本订单相关内容先删除
+				//为什么需要先删除，service_order订单号相同的很多，技师也可以改，服务项目也可以改，找不到相应的去更新
+				
+				if($order)
+				{
+					$order->state = $state;
+					$order->payment_method = $pay_method;
+					$order->pay_amount = $cash;
+					$order->appoint_time = $appoint_time;
+					$order->note = $note;
+					$order->source = $source;
+					$order->save();
+					foreach($info as $it)
+					{
+						$service_id = $it['service_id'];
+						$eachservice = Db::query("select * from service_type where ID='$service_id'");//service_type表根据service_id查询到价格
+						if($eachservice)
+						{
+							//$price = $eachservice[0]['price'];//这是活动价
+							$price = $eachservice[0]['market_price'];//这里改成门市价 算业绩需要
+						}
+						else
+						{
+							$price="服务不存在";
+						}
+
+						//提成从service表里取
+						if ($it['clock'] == 2)//点钟
+						{
+							$ticheng = $eachservice[0]['commission'];
+							$jd_ticheng = $eachservice[0]['commission2'];
+						}
+						else if ($it['clock'] == 1)//排钟
+						{
+							$ticheng = $eachservice[0]['pai_commission'];
+							$jd_ticheng = $eachservice[0]['pai_commission2'];   
+						}					
+						
+
+						//佣金从service表里取
+						$yongjin = $eachservice[0]['invite_income'];
+						
+						//$jiedai = 0;//这里有问题，回头再改，修改订单，技师工号都会变成 0
+						
+						$sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
+						'item_id'=>$it['service_id'],'job_number'=>$it['job_number'],'price'=>$price,
+						'private_room_number'=>$it['room_id'],'clock_type'=>$it['clock'],'appoint_time'=>$it['appoint_time'], 
+						'ticheng'=>$ticheng,
+						'yongjin'=>$yongjin,
+						'jd_number'=>$jiedai,
+						'jd_ticheng'=>$jd_ticheng
+						]);
+						
+						$sv_order->save();
+					}
+				}
+				
+				Db::commit(); 
                 return json(['status'=>1]);
             }
+			catch (Exception $e) 
+			{
+				//$db->rollback();
+				Db::rollback();//没有回滚成功！
+				return json(['status'=>0,'msg'=>'出现异常，请重试']);
+			}
+			
             return json(['status'=>0]);
         }
     }

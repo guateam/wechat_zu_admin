@@ -57,6 +57,7 @@
                         <th width="150">服务项目</th>
                         <th width="100">上钟类型</th>
                         <th width="120">包厢号</th>
+						<th width="120">技师类型</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,7 +67,8 @@
                         <td>{$endtimelist[$k-1]}</td>
 						<td>{$servicenamelist[$k-1]}</td>
 						<td>{if condition="$it.clock_type == 1"}排钟{elseif condition="$it.clock_type == 2"}点钟{/if}</td>
-						<td>{$roomnumberlist[$k-1]}</td>                        
+						<td>{$roomnumberlist[$k-1]}</td>            
+						<td>{if condition="$tech_type == 1"}技师{elseif condition="$tech_type == 2"}接待{/if}</td>
                     </tr>
                     {/volist}
 

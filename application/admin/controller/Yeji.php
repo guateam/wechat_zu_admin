@@ -77,10 +77,6 @@ class Yeji extends Controller
 	
 	public function yejidetail($edit,$job_number=null,$begin=null,$end=null)
 	{
-		// echo $job_number;
-		// echo $begin;
-		// echo $end;
-		
 		//该技师自己的信息
         $tech_self = Db::query("select * from technician where job_number='$job_number'");
         $tech_self = $tech_self[0];
@@ -121,8 +117,7 @@ class Yeji extends Controller
         $endtimelist = [];
 		
 		foreach($so as $srvod)
-		{
-			
+		{			
 			$order_id = $srvod['order_id'];
 			$co = Db::query("select * from consumed_order A, service_order B where A.order_id = B.order_id and B.job_number = '$job_number' and B.order_id = '$order_id'");
 			if ($co)
@@ -131,8 +126,7 @@ class Yeji extends Controller
 			}
 			
 			$endtime = date('Y-m-d H:i:s', $srvod['appoint_time']);
-            array_push($endtimelist,$endtime);
-			
+            array_push($endtimelist,$endtime);			
 			
 			$item_id = $srvod['item_id'];
 			$servicename = Db::query("select * from service_type where ID = '$item_id'");
@@ -156,6 +150,9 @@ class Yeji extends Controller
         $this->assign('servicenamelist',$servicenamelist);
 		$this->assign('roomnumberlist',$roomnumberlist);
         $this->assign('endtimelist',$endtimelist);
+		
+		$this->assign('tech_type',$tech_type);
+		
         return $this->fetch('Yeji/yejidetail');
 	}
 }

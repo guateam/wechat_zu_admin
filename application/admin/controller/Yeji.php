@@ -2,6 +2,7 @@
 namespace app\admin\controller;
 
 use think\Controller;
+use think\Db;
 
 class Yeji extends Controller
 {
@@ -47,7 +48,8 @@ class Yeji extends Controller
         return $this->fetch('Yeji/Yeji');
     }
 
-    public function detail($job_number,$first_day=null,$last_day=null){
+    public function detail($job_number,$first_day=null,$last_day=null)
+	{
         //本月第一天
         if(is_null($first_day)){
             $first_day = strtotime(date("Y-m-01"));
@@ -72,4 +74,88 @@ class Yeji extends Controller
         $this->assign("yeji",$yeji);
         return $this->fetch("Yeji/detail");
     }
+	
+	public function yejidetail($edit,$job_number=null,$begin=null,$end=null)
+	{
+		// echo $job_number;
+		// echo $begin;
+		// echo $end;
+		
+		//该技师自己的信息
+        $tech_self = Db::query("select * from technician where job_number='$job_number'");
+        $tech_self = $tech_self[0];
+		
+		$tech_type = $tech_self['type'];//1为技师，2为接待
+        
+		if($begin=='')
+		{
+            $begin = date("Y-m-01",time());
+        }
+		$this->assign('begin',$begin);
+        $begin.=" 00:00:00";
+        $begin = strtotime($begin);
+		
+		
+        if($end=='')
+		{
+            $end = date("Y-m-t",time());
+        }
+		$this->assign('end',$end);
+        $end.=" 23:59:59";
+        $end = strtotime($end);
+		
+		$this->assign('job_number',$job_number);
+		
+		 //应该从service_order表查询		 
+		if ($tech_type == 1)//技师
+		{
+			$so = Db::query("select * from service_order where job_number ='$job_number' and order_id in (select order_id from consumed_order A where  A.end_time >= $begin and A.end_time <= $end and(A.state=4 or A.state=5))");
+		}
+		else if ($tech_type == 2)//接待
+		{
+			$so = Db::query("select * from service_order where jd_number ='$job_number' and order_id in (select order_id from consumed_order A where  A.end_time >= $begin and A.end_time <= $end and(A.state=4 or A.state=5))");
+		}
+		
+        $servicenamelist = [];
+		$roomnumberlist = [];
+        $endtimelist = [];
+		
+		foreach($so as $srvod)
+		{
+			
+			$order_id = $srvod['order_id'];
+			$co = Db::query("select * from consumed_order A, service_order B where A.order_id = B.order_id and B.job_number = '$job_number' and B.order_id = '$order_id'");
+			if ($co)
+			{
+				$srvod['appoint_time'] = $co[0]['end_time'];//下钟时间				
+			}
+			
+			$endtime = date('Y-m-d H:i:s', $srvod['appoint_time']);
+            array_push($endtimelist,$endtime);
+			
+			
+			$item_id = $srvod['item_id'];
+			$servicename = Db::query("select * from service_type where ID = '$item_id'");
+			if($servicename)
+            {
+				$eachservicename = $servicename[0]['name'];
+                array_push($servicenamelist,$eachservicename);
+			}
+			
+			$room_number = $srvod['private_room_number'];
+			$rn = Db::query("select * from private_room where ID = '$room_number'");
+			if($rn)
+            {
+				$roomnumber = $rn[0]['name'];
+                array_push($roomnumberlist,$roomnumber);
+			}
+		}
+		
+		$this->assign('count',count($so));
+        $this->assign('so',$so);
+        $this->assign('servicenamelist',$servicenamelist);
+		$this->assign('roomnumberlist',$roomnumberlist);
+        $this->assign('endtimelist',$endtimelist);
+        return $this->fetch('Yeji/yejidetail');
+	}
 }

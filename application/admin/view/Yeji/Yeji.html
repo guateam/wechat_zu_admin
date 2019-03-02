@@ -94,7 +94,12 @@
 						
                         <td>￥{$it.final_salary}</td>
                         <td>
-                            <button type="btn btn-primary" onclick="detail('{$it.job_number}','{begin}','{end}')">明细</button>
+                            <!--<button type="btn btn-primary" onclick="detail('{$it.job_number}','{begin}','{end}')">明细</button>-->
+							
+							<button type="button" class="btn btn-success radius" id="search" name="" onclick="showdetail('{$it.job_number}','{$begin}','{$end}')">
+								<i class="Hui-iconfont">&#xe665;</i> 明细
+							</button>							
+							
                         </td>
                     </tr>
                     {/volist}
@@ -134,9 +139,17 @@
         function zhidingren(title, url, id, w, h) {
             layer_show(title, url, w, h);
         }
-        function detail(job_number,begin,end){
+        function showdetail(job_number,begin,end){
             
-            layer_show()
+			console.log(job_number);
+			console.log(begin);
+			console.log(end);
+			
+			url = "__ROOT__/index.php/admin/Yeji/yejidetail/edit/{$edit}/job_number/"+job_number+"/begin/"+begin+"/end/"+end
+            
+			layer_show("业绩详情", url, 1200, 600);
+			
+            //layer_show()
         }
         /*用户-编辑*/
         function member_edit(title, url, id, w, h) {

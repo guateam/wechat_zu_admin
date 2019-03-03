@@ -192,87 +192,101 @@
                 $order_id .= strval(rand(0,9));//订单号
             }		
             
-			$item_id = "";
-			foreach($info as $it)
+            Db::startTrans();
+			try
 			{
-                if ($it['service_id'] =='')
+                $item_id = "";
+                foreach($info as $it)
                 {
-                    $servicename = $it['service_name'];
-                    $item = Db::query("select * from service_type where name='$servicename'");
-
-                    if($item)
+                    if ($it['service_id'] =='')
                     {
-                        $item_id = $item[0]['ID'];
+                        $servicename = $it['service_name'];
+                        $item = Db::query("select * from service_type where name='$servicename'");
+
+                        if($item)
+                        {
+                            $item_id = $item[0]['ID'];
+                        }
+                        else
+                        {
+                            //数据库里如果根据服务名称，找不到该项目，则 $item_id = "";
+                        }
                     }
-					else
-					{
-						//数据库里如果根据服务名称，找不到该项目，则 $item_id = "";
-					}
+                    else 
+                    {
+                        $item_id = $it['service_id'];
+                    }
+
+                    $job_number = $it['job_number'];
+                    
+                    $ticheng = 0;
+                    $yongjin = 0;
+
+                    $service_type = Db::query("select * from service_type where ID='$item_id' ");
+                    $technician = Db::query("select * from technician where job_number='$job_number'");
+
+                    if ($service_type)
+                    {
+                        $yongjin = $service_type[0]['invite_income'];
+                    }
+                    
+                    if($it['clock'] == 1)//排钟
+                    {
+                        $ticheng = $service_type[0]['pai_commission'];                    
+                    }
+                    else if($it['clock'] == 2)//点钟
+                    {
+                        $ticheng = $service_type[0]['commission'];
+                    }
+                    
+                    if($it['clock'] == 1)//排钟
+                    {
+                        $jd_ticheng = $service_type[0]['pai_commission2'];              
+                    }
+                    else if($it['clock'] == 2)//点钟
+                    {
+                        $jd_ticheng = $service_type[0]['commission2'];
+                    }
+                    
+                    //$room_number = $it['room_number'];
+                    $room_id = $it['room_number'];//网页传过来的就是 roomid
+                    // $room = Db::query("select * from private_room where name='$room_number' ");
+                    // if($room)
+                    // {
+                        // $room_id = $room[0]['ID'];
+                    // }				
+
+                    $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
+                    'item_id'=>$item_id,'job_number'=>$it['job_number'],'price'=>$it['price']*100,
+                    'private_room_number'=>$room_id,'clock_type'=>$it['clock'],'appoint_time'=>$time,
+                    'ticheng'=>$ticheng,'yongjin'=>$yongjin,'jd_number'=>$jiedai,'jd_ticheng'=>$jd_ticheng]);
+
+                    $sv_order->save();
                 }
-                else 
-                {
-                    $item_id = $it['service_id'];
-                }
+                
+                //-------------------------------------------
+                $order = new \app\api\model\Consumedorder(['order_id'=>$order_id,'user_id'=>$user_id,
+                'state'=>4,'payment_method'=>$method,'generated_time'=>$time,'appoint_time'=>$time,'contact_phone'=>$phone,
+                'pay_amount'=>$total_price*100,'user_num'=>1,'payment_user_id'=>$user_id,'note'=>$note,'source'=>1,'end_time'=>$time,'shouldpay_amount'=>$should_price*100,'cardNo'=>$cardNo]);
+                
+                $order->save();
+                //-------------------------------------------
 
-                $job_number = $it['job_number'];
-				
-                $ticheng = 0;
-                $yongjin = 0;
-
-                $service_type = Db::query("select * from service_type where ID='$item_id' ");
-                $technician = Db::query("select * from technician where job_number='$job_number'");
-
-				if ($service_type)
-				{
-					$yongjin = $service_type[0]['invite_income'];
-				}
-                 
-				if($it['clock'] == 1)//排钟
-				{
-					$ticheng = $service_type[0]['pai_commission'];                    
-				}
-				else if($it['clock'] == 2)//点钟
-				{
-					$ticheng = $service_type[0]['commission'];
-				}
-				
-				if($it['clock'] == 1)//排钟
-				{
-					$jd_ticheng = $service_type[0]['pai_commission2'];              
-				}
-				else if($it['clock'] == 2)//点钟
-				{
-					$jd_ticheng = $service_type[0]['commission2'];
-				}
-				
-				//$room_number = $it['room_number'];
-				$room_id = $it['room_number'];//网页传过来的就是 roomid
-				// $room = Db::query("select * from private_room where name='$room_number' ");
-				// if($room)
-				// {
-					// $room_id = $room[0]['ID'];
-				// }				
-
-                $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
-                'item_id'=>$item_id,'job_number'=>$it['job_number'],'price'=>$it['price']*100,
-                'private_room_number'=>$room_id,'clock_type'=>$it['clock'],'appoint_time'=>$time,
-                'ticheng'=>$ticheng,'yongjin'=>$yongjin,'jd_number'=>$jiedai,'jd_ticheng'=>$jd_ticheng]);
-
-                $sv_order->save();
+                Db::commit(); 
+                return json(['status'=>1,'data'=>$order_id]);           
             }
+			catch (Exception $e) 
+			{
+				//$db->rollback();
+				Db::rollback();//回滚
+				return json(['status'=>0,'data'=>'出现异常，请重试']);
+			}
 			
-			//-------------------------------------------
-			$order = new \app\api\model\Consumedorder(['order_id'=>$order_id,'user_id'=>$user_id,
-            'state'=>4,'payment_method'=>$method,'generated_time'=>$time,'appoint_time'=>$time,'contact_phone'=>$phone,
-            'pay_amount'=>$total_price*100,'user_num'=>1,'payment_user_id'=>$user_id,'note'=>$note,'source'=>1,'end_time'=>$time,'shouldpay_amount'=>$should_price*100]);
-			
-            $order->save();
-			//-------------------------------------------
-			
-            return json(['status'=>1,'data'=>$order_id]);
+            return json(['status'=>0]);
+
         }
 
-        public function update_order($order_id,$info,$state,$pay_method,$cash,$appoint_time,$note,$source,$jiedai)
+        public function update_order($order_id,$info,$state,$pay_method,$cash,$appoint_time,$note,$source,$jiedai,$cardNo)
 		{
             $order = UserModel::get(['order_id'=>$order_id]);
             if(gettype($appoint_time) == "string")
@@ -377,7 +391,7 @@
 			catch (Exception $e) 
 			{
 				//$db->rollback();
-				Db::rollback();//没有回滚成功！
+				Db::rollback();//回滚！
 				return json(['status'=>0,'msg'=>'出现异常，请重试']);
 			}
 			

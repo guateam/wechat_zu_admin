@@ -118,7 +118,7 @@
             {/volist}
         </select>
         <br>
-        <div style="width:90px ; display:inline-block"></div>
+        <!--div style="width:90px ; display:inline-block"></div-->
         {/volist}
 
         <br>
@@ -269,6 +269,7 @@
                 note:$('#note').val(),//备注
                 source:$('#source').val(),//来自
 				jiedai:$('#jiedai').val(),//接待
+				cardNo:"",
             }).done((res) => {
                 if (res.status == 1) {
                     swal({

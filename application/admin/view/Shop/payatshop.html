@@ -421,7 +421,7 @@
 						$('#loading').css('display', 'none');
 						$("#roomwarning").html("该房间空闲状态，不能结帐");
 						
-						/*
+						
 						alert("同步失败，重新登陆点钟宝后台，重启监控。或者手动录入订单信息");
 						////alert("获取信息失败，需要手动录入订单");									
 						
@@ -430,7 +430,7 @@
 						$('#payinfoarea').css('display', '');//订单表头显示出来
 						
 						$('#paytable').append("<thead><tr class='text-c'><th width='40'>No</th> <th width='80'>类型</th><th width='80'>名称</th><th width='80'>单价</th><th width='60'>数量</th><th width='60'>退单量</th><th width='80'>折扣</th><th width='80'>金额</th><th width='80'>技师</th><th width='80'>安排</th><th>操作</th></tr></thead><tbody></tbody>");
-						*/
+						
 						
 					}
 					else if (res.status == "Busy")
@@ -572,7 +572,7 @@
         }
 
 		//--------------------------------------------------------------
-        function addservice() //添加服务，并且添加到表格中
+        function addservice() //手动添加服务，并且添加到表格中
 		{
             var tech = $('#tech option:selected').val()
             if (tech == "") return;
@@ -606,7 +606,7 @@
             var unit = {
                 'job_number': tech,
                 'service_id': service[0],
-                'price': service[2],
+                'price': service[2] / 100,
                 'room_number': room[0],
                 'clock': clock
             }

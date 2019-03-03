@@ -63,6 +63,7 @@
         <select class="theinput" name="" id="pay_method">
                 <option value="1"{if condition="$order['payment_method'] == 1"}selected{/if}>微信网上支付</option>
                 <option value="2"{if condition="$order['payment_method'] == 2"}selected{/if}>支付宝</option>
+				<option value="3"{if condition="$order['payment_method'] == 3"}selected{/if}>会员卡支付</option>
                 <option value="4"{if condition="$order['payment_method'] == 4"}selected{/if}>现金支付</option>
                 <option value="5"{if condition="$order['payment_method'] == 5"}selected{/if}>银行卡支付</option>
                 <option value="6"{if condition="$order['payment_method'] == 6"}selected{/if}>其他</option>

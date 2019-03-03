@@ -105,10 +105,10 @@
                 </thead>
                 <tbody>
                     {volist name="$order" id="it" key="k"}
-                    <p hidden id="state{$k-1}">{if condition="$it.payment_method==1"}微信支付{elseif
+                    <p hidden id="state{$k-1}">{if condition="$it.payment_method==1"}微信网上支付{elseif
                         condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif
                         condition="$it.payment_method==4"}现金 {elseif condition="$it.payment_method==5"}银行卡支付{elseif
-                        condition="$it.payment_method==6"}其他{elseif condition="$it.payment_method==7"}美团支付{elseif condition="$it.payment_method==8"}微信扫码支付{/if}</p>
+                        condition="$it.payment_method==6"}其他{elseif condition="$it.payment_method==7"}美团支付{elseif condition="$it.payment_method==8"}微信扫码支付{elseif condition="$it.payment_method==9"}赠送卡支付{/if}</p>
                     <tr class="text-c" id="row{$k-1}">
                         <td>{$it.order_id}</td>
                         <td id="time{$k-1}">{$it.generated_time}</td>
@@ -185,10 +185,10 @@
 						<!-- <td class="">{$it.payment_user_id}</td>
                         <td class="">{$phone2[$k-1]}</td> -->
                         
-						<td class="">{if condition="$it.payment_method==1"}微信支付{elseif
+						<td class="">{if condition="$it.payment_method==1"}微信网上支付{elseif
                             condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif
                             condition="$it.payment_method==4"}现金 {elseif condition="$it.payment_method==5"}银行卡支付{elseif
-                            condition="$it.payment_method==6"}其他{elseif condition="$it.payment_method==7"}美团支付{elseif condition="$it.payment_method==8"}微信扫码支付{/if}</td>
+                            condition="$it.payment_method==6"}其他{elseif condition="$it.payment_method==7"}美团支付{elseif condition="$it.payment_method==8"}微信扫码支付{elseif condition="$it.payment_method==9"}赠送卡支付{/if}</td>
                         <td class="">￥{$it.pay_amount/100}</td>
                         <td class="td-manage">
                             {if condition="$it.state==1"}

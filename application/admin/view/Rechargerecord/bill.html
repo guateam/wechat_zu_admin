@@ -66,7 +66,7 @@
                         <td>
                             ￥{$it.money}
                         </td>
-                        <td id="total_state{$k-1}">{if condition="$it.payment_method==1"}微信支付{elseif condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif condition="$it.payment_method==4"}现金{elseif condition="$it.payment_method==5"}银行卡{elseif condition="$it.payment_method==6"}其它{elseif condition="$it.payment_method==7"}美团{elseif condition="$it.payment_method==8"}微信扫码{elseif condition="$it.payment_method==0"}未支付{else /}未知{/if}</td>
+                        <td id="total_state{$k-1}">{if condition="$it.payment_method==1"}微信网上支付{elseif condition="$it.payment_method==2"}支付宝 {elseif condition="$it.payment_method==3"}会员卡{elseif condition="$it.payment_method==4"}现金{elseif condition="$it.payment_method==5"}银行卡{elseif condition="$it.payment_method==6"}其它{elseif condition="$it.payment_method==7"}美团{elseif condition="$it.payment_method==8"}微信扫码支付{elseif condition="$it.payment_method==9"}赠送卡支付{elseif condition="$it.payment_method==0"}未支付{else /}未知{/if}</td>
                         <td>{$it.note}</td>
                         <td class="">{$it.job_number}</td>
                         <td>{$it.generated_time}</td>

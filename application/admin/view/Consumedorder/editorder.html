@@ -61,13 +61,14 @@
         </select><br>
         <div style="width:90px ; display:inline-block">支付方式:</div>
         <select class="theinput" name="" id="pay_method">
-                <option value="1"{if condition="$order['payment_method'] == 1"}selected{/if} >微信支付</option>
+                <option value="1"{if condition="$order['payment_method'] == 1"}selected{/if}>微信网上支付</option>
                 <option value="2"{if condition="$order['payment_method'] == 2"}selected{/if}>支付宝</option>
                 <option value="4"{if condition="$order['payment_method'] == 4"}selected{/if}>现金支付</option>
                 <option value="5"{if condition="$order['payment_method'] == 5"}selected{/if}>银行卡支付</option>
                 <option value="6"{if condition="$order['payment_method'] == 6"}selected{/if}>其他</option>
                 <option value="7"{if condition="$order['payment_method'] == 7"}selected{/if}>美团支付</option>
 				<option value="8"{if condition="$order['payment_method'] == 8"}selected{/if}>微信扫码支付</option>
+				<option value="9"{if condition="$order['payment_method'] == 9"}selected{/if}>赠送卡支付</option>
         </select><br>
         <div style="width:90px ; display:inline-block">支付金额(分):</div>
         <input style="margin-bottom: 10px" type="text" id="cash" class="theinput" value="{$order['pay_amount']}"><br>

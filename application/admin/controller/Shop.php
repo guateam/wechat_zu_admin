@@ -199,7 +199,7 @@ class Shop extends Controller
 		{
             if($consumed_order[$i]['payment_method'] == 1)
 			{
-                $consumed_order[$i]['payment_method'] = $consumed_order[$i]['source'] == 0?'微信支付':'微信扫码支付';
+                $consumed_order[$i]['payment_method'] = '微信支付';
             }
             elseif($consumed_order[$i]['payment_method'] == 2)$consumed_order[$i]['payment_method'] = "支付宝支付";
             elseif($consumed_order[$i]['payment_method'] == 3)$consumed_order[$i]['payment_method'] = "会员卡支付";
@@ -207,6 +207,7 @@ class Shop extends Controller
             elseif($consumed_order[$i]['payment_method'] == 5)$consumed_order[$i]['payment_method'] = "银行卡支付";
             elseif($consumed_order[$i]['payment_method'] == 6)$consumed_order[$i]['payment_method'] = "其他方式支付";
             elseif($consumed_order[$i]['payment_method'] == 7)$consumed_order[$i]['payment_method'] = "美团支付";
+			elseif($consumed_order[$i]['payment_method'] == 8)$consumed_order[$i]['payment_method'] = "微信扫码支付";
 
             $consumed_order[$i]['source'] = ($consumed_order[$i]['source'] == 0?'网络预约':'到店消费');
         }

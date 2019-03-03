@@ -1,0 +1,269 @@
+﻿<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+	<script type="text/javascript" src="lib/html5shiv.js"></script>
+	<script type="text/javascript" src="lib/respond.min.js"></script>
+	<![endif]-->
+    {include file="common/common_css"}
+    <!--[if IE 6]>
+	<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
+	<script>DD_belatedPNG.fix('*');</script>
+	<![endif]-->
+    <title>项目列表</title>
+</head>
+
+<body>
+    <nav class="breadcrumb">
+        <i class="Hui-iconfont">&#xe67f;</i> 首页
+        <span class="c-gray en">&gt;</span> 充卡管理
+        <span class="c-gray en">&gt;</span> 店内会员卡
+        <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);"
+            title="刷新">
+            <i class="Hui-iconfont">&#xe68f;</i>
+        </a>
+    </nav>
+    <div class="page-container">
+        <div class="cl pd-5 bg-1 bk-gray mt-20">
+            <span class="l">
+               
+				<a href="javascript:;" onclick="priceSync()" class="btn btn-warning radius">
+                    <i class="Hui-iconfont">&#xe6e2;</i>
+                    会员卡同步
+                </a>
+				
+            </span>
+            <span class="r">共有数据：<strong>{$count}</strong>条</span>
+        </div>
+        <div class="mt-20">
+            <table class="table table-border table-bordered table-hover table-bg table-sort">
+                <thead>
+                    <tr class="text-c">
+                        <!--<th width="25"><input type="checkbox" name="" value=""></th>-->
+                        <th width="80">会员名称</th>
+                        <th width="60">性别</th>
+                        <th width="60">手机</th>
+                        <th width="70">电话号码</th>
+                        <th width="40">出生日期</th>
+                        <th width="40">卡号</th>
+                        <th width="40">余额</th>
+                        <th width="40">积分</th>
+                        <th width="50">等级</th>
+						<th width="50">最后消费时间</th>
+						<th width="50">制卡时间</th>
+						<th width="50">会员卡类</th>
+						<th width="50">启用</th>
+						<th width="50">挂失</th>
+						<th width="50">通用</th>                      
+                    </tr>
+                </thead>
+                <tbody>
+                    {volist name="$vipcardlist" id="it"}
+                    <tr class="text-c">
+                        <!--<td><input type="checkbox" value="1" name=""></td>-->
+						
+                        <td>{$it.vipname}</td>
+                        <td>{$it.gender}</td>
+                        <td>{$it.phone_number}</td>
+                        <td>{$it.dianhua}</td>
+                        <td>{$it.birthday}</td>
+                        <td>{$it.card_number}</td>
+                        <td>{$it.balance}</td>
+                        <td>{$it.jifen}</td>
+						<td>{$it.grade}</td> 
+                        <td>{$it.last_time}</td>
+						<td>{$it.make_time}</td>
+                        <td>{$it.cardtype}</td>
+						<td>{$it.useable}</td>
+						<td></td>  
+						<td>{$it.general}</td> 
+                    </tr>
+                    {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {include file="common/common_script"}
+
+    <!--请在下方写此页面业务相关的脚本-->
+    <script type="text/javascript" src="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/lib/laypage/1.2/laypage.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('.table-sort').dataTable({
+                "aaSorting": [
+                    [1, "desc"]
+                ], //默认第几个排序
+                "bStateSave": false, //状态保存
+                "aoColumnDefs": [
+                    //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+                    {
+                        "orderable": false,
+                        "aTargets": [0, 1, 4]
+                    } // 制定列不参与排序
+                ]
+            });
+        });
+		
+		function priceSync()
+		{
+			$.post("__ROOT__/index.php/api/Customer/priceSync",{
+			}).done((res)=>{
+			
+				var ret = JSON.parse(res);
+				if (ret.success == true) 
+				{
+					alert("价格同步成功,同步了"+ret.num+"项");
+					location.replace(location.href);
+				}
+				else
+				{
+					alert("价格同步失败，请重试");
+				}
+			})
+		}
+
+        /*用户-添加*/
+        function member_add(title, url, w, h) {
+            layer_show(title, url, w, h);
+        }
+
+        function change(svid) {
+            swal({
+                title: '正在修改',
+                allowOutsideClick: false,
+                showCancelButton: false,
+                showConfirmButton: false,
+                onOpen: () => {
+                    swal.showLoading()
+                }
+            })
+            $.post("__ROOT__/index.php/api/Servicetype/update_have_level", {
+                id: svid
+            }).done((res) => {
+                if (res.status == 1) {
+                    swal.close();
+                    location.reload();
+                }
+            })
+        }
+
+        function show_swal(fun, id) {
+            swal({
+                title: "请输入要修改的" + fun,
+                input: 'text',
+                showCancelButton: true,
+                allowOutsideClick: false,
+            }).then((result) => {
+                var str = "";
+                var dict = {
+                    "价格": "update_price",
+                    "折扣": "update_discount",
+                    "时长": "update_duration",
+                    "提成": "update_commission",
+                    "链接": "update_dir",
+                }
+                str = dict[fun];
+                if (result.value) {
+                    swal({
+                        title: '正在执行',
+                        allowOutsideClick: false,
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    })
+                    var val = result.value;
+                    if (fun == "价格" || fun == "提成") val *= 100;
+                    $.post("__ROOT__/index.php/api/Servicetype/" + str, {
+                        id: id,
+                        value: val
+                    }).done((bk) => {
+                        if (bk.status == 1) {
+                            swal({
+                                title: "完成修改",
+                                type: "success"
+                            });
+                            location.reload();
+                        } else {
+                            swal({
+                                title: "该服务不存在",
+                                type: "error"
+                            });
+                        }
+                    })
+                }
+
+            })
+        }
+
+
+        /*用户-编辑*/
+        function member_edit(title, url, id, w, h) {
+            layer_show(title, url, w, h);
+        }
+
+        function change_state() {
+            swal({
+                title: '正在处理',
+                text: '',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                showCloseButton: false,
+                onOpen: () => {
+                    swal.showLoading()
+                }
+            })
+            $.post("__ROOT__/index.php/api/Shop/change_state").done((res) => {
+                swal.close();
+                location.reload();
+            })
+        }
+        /*用户-删除*/
+        function member_del(obj, id) {
+            swal({
+                title: '确认删除该项吗？',
+                text: '',
+                type: 'question',
+                allowOutsideClick: false,
+                showCancelButton: true,
+                confirmButtonColor: '#93c47d',
+                cancelButtonColor: '#ca5943',
+                confirmButtonText: "确认",
+                cancelButtonText: "取消"
+            }).then((result) => {
+                if (result.value) {
+                    swal({
+                        title: '正在处理',
+                        text: '',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCloseButton: false,
+                        onOpen: () => {
+                            swal.showLoading()
+                        }
+                    }).then((result) => {});
+                    $.post("__ROOT__/index.php/api/Servicetype/delete_service", {
+                        id: [id]
+                    }).done(function (result) {
+                        if (result.status == 1) {
+                            $(obj).parents("tr").remove();
+                            swal("完成", "已删除项目", "success").then((ok) => {})
+                        }
+                    })
+                }
+            })
+
+        }
+    </script>
+</body>
+
+</html>

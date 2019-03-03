@@ -363,6 +363,10 @@
 												{
 													productType = "服务";
 												}
+												else 
+												{
+													productType = "商品";
+												}
 												
 												if (orderItems[i].arrangeType == "Specify")
 												{
@@ -385,8 +389,6 @@
 													clock = 4;
 												}
 												
-												$("#paytable").append("<tr class='text-c'><td>"+(i+1)+"</td><td>"+productType+"</td><td>"+orderItems[i].name+"</td><td>"+orderItems[i].price+"</td><td>"+orderItems[i].quantity+"</td><td>"+orderItems[i].returnQuantity+"</td><td>"+orderItems[i].scale+"</td><td>"+orderItems[i].subtotal+"</td><td>"+orderItems[i].servicePersonal+"</td><td>"+arrangeType+"</td><td><a href='#' onclick=delRow(this,"+(i+1)+") >删除</a></td><tr>");
-												
 												var unit = {
 														'ID':(i+1),
 														'job_number': orderItems[i].servicePersonal,
@@ -397,6 +399,11 @@
 														'clock': clock,
 													};
 												info.push(unit);	
+												
+												//abc();//认为搞出异常
+												
+												//页面上显示有，info里肯定就有
+												$("#paytable").append("<tr class='text-c'><td>"+(i+1)+"</td><td>"+productType+"</td><td>"+orderItems[i].name+"</td><td>"+orderItems[i].price+"</td><td>"+orderItems[i].quantity+"</td><td>"+orderItems[i].returnQuantity+"</td><td>"+orderItems[i].scale+"</td><td>"+orderItems[i].subtotal+"</td><td>"+orderItems[i].servicePersonal+"</td><td>"+arrangeType+"</td><td><a href='#' onclick=delRow(this,"+(i+1)+") >删除</a></td><tr>");
 
 												$("#shouldcash").val(orderdata2.countinfo.receivable);		
 												$("#cash").val(orderdata2.countinfo.receivable);
@@ -419,6 +426,21 @@
 										console.log(e);//异常
 										//throw new Errow('自定义的异常');
 										
+										//----------------------------------------------------------
+										//出现异常，就把表格所有内容都删除
+										var table_body = document.getElementById("paytable");
+										if (table_body !== "undefined") 
+										{
+											while(table_body.hasChildNodes())
+											{
+												table_body.removeChild(table_body.lastChild)
+											}
+										}
+										//----------------------------------------------------------
+										
+										$("#roomwarning").html("");						
+										$('#paytable').append("<thead><tr class='text-c'><th width='40'>No</th> <th width='80'>类型</th><th width='80'>名称</th><th width='80'>单价</th><th width='60'>数量</th><th width='60'>退单量</th><th width='80'>折扣</th><th width='80'>金额</th><th width='80'>技师</th><th width='80'>安排</th><th>操作</th></tr></thead><tbody></tbody>");
+														
 										alert("同步失败，重新登陆点钟宝后台，重启监控。或者手动录入订单信息");
 						
 										//alert("获取信息失败，需要手动录入订单");									
@@ -644,6 +666,7 @@
 					'ID':id,//这里先要从localstorage里面取ID号
 					'job_number': tech,
 					'service_id': service[0],
+					'service_name':service[1],
 					'price': service[2] / 100,
 					'room_number': room[0],
 					'clock': clock
@@ -662,6 +685,7 @@
 					'ID':id,//这里先要从localstorage里面取ID号
 					'job_number': tech,
 					'service_id': service[0],
+					'service_name':service[1],
 					'price': service[2] / 100,
 					'room_number': room[0],
 					'clock': clock

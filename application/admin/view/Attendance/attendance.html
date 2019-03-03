@@ -46,18 +46,27 @@
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
+						<th width="150">技师工号</th>
+						<th width="150">签到时间</th>
+						<th width="150">签退时间</th>
+						<th width="500">离岗时间</th>
+						
+						<!--
                         <th width="130">考勤类型</th>
-                        <th width="130">考勤时间</th>
-                        <th width="150">技师工号</th>
-
+                        <th width="130">考勤时间</th>     
+						-->
                     </tr>
                 </thead>
                 <tbody>
                     {volist name="$attendance" id="it" key="k"}
                     <tr class="text-c" id="row{$k-1}">
-                        <td>{if condition="$it.sign_type==1"}签到{else /}签退{/if}</td>
-                        <td>{$it.check_time}</td>
-                        <td id="time{$k-1}">{$it.job_number}</td>
+						
+					
+						
+						<td>{$it.job_number}</td>
+						<td>{$it.check_in_time}</td>
+						<td>{$it.check_out_time}</td>
+						<td>{$it.check_leave_time}</td>
                     </tr>
                     {/volist}
                 </tbody>

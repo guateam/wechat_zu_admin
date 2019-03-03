@@ -372,6 +372,16 @@
 													arrangeType = "排钟";
 													clock = 1;
 												}
+												else if (orderItems[i].arrangeType == "Add")
+												{
+													arrangeType = "加钟";
+													clock = 3;
+												}
+												else 
+												{
+													arrangeType = "其它";
+													clock = 4;
+												}
 												
 												$("#paytable").append("<tr class='text-c'><td>"+(i+1)+"</td><td>"+productType+"</td><td>"+orderItems[i].name+"</td><td>"+orderItems[i].price+"</td><td>"+orderItems[i].quantity+"</td><td>"+orderItems[i].returnQuantity+"</td><td>"+orderItems[i].scale+"</td><td>"+orderItems[i].subtotal+"</td><td>"+orderItems[i].servicePersonal+"</td><td>"+arrangeType+"</td><td><a href='#' onclick=delRow(this) >删除</a></td><tr>");
 												

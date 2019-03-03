@@ -33,9 +33,9 @@
         <div class="cl pd-5 bg-1 bk-gray mt-20">
             <span class="l">
                
-				<a href="javascript:;" onclick="priceSync()" class="btn btn-warning radius">
+				<a href="javascript:;" onclick="vipSync()" class="btn btn-warning radius">
                     <i class="Hui-iconfont">&#xe6e2;</i>
-                    会员卡同步
+                    会员卡信息同步
                 </a>
 				
             </span>
@@ -49,18 +49,21 @@
                         <th width="80">会员名称</th>
                         <th width="60">性别</th>
                         <th width="60">手机</th>
+						<th width="40">卡号</th>
+                        <th width="40">余额</th>
                         <th width="70">电话号码</th>
                         <th width="40">出生日期</th>
-                        <th width="40">卡号</th>
-                        <th width="40">余额</th>
+                       
+						
+						<!--
                         <th width="40">积分</th>
-                        <th width="50">等级</th>
 						<th width="50">最后消费时间</th>
 						<th width="50">制卡时间</th>
 						<th width="50">会员卡类</th>
 						<th width="50">启用</th>
 						<th width="50">挂失</th>
-						<th width="50">通用</th>                      
+						<th width="50">通用</th>   
+						-->
                     </tr>
                 </thead>
                 <tbody>
@@ -68,21 +71,24 @@
                     <tr class="text-c">
                         <!--<td><input type="checkbox" value="1" name=""></td>-->
 						
-                        <td>{$it.vipname}</td>
-                        <td>{$it.gender}</td>
-                        <td>{$it.phone_number}</td>
-                        <td>{$it.dianhua}</td>
-                        <td>{$it.birthday}</td>
-                        <td>{$it.card_number}</td>
-                        <td>{$it.balance}</td>
-                        <td>{$it.jifen}</td>
-						<td>{$it.grade}</td> 
-                        <td>{$it.last_time}</td>
-						<td>{$it.make_time}</td>
-                        <td>{$it.cardtype}</td>
-						<td>{$it.useable}</td>
-						<td></td>  
-						<td>{$it.general}</td> 
+                        <td>{$it.name}</td>                        
+						<td>{if condition="$it.gender==1"}男{elseif condition="$it.gender==2"}女{else /}未知{/if}</td>
+                        <td>{$it.mobile}</td>
+						<td>{$it.cardNo}</td>
+                        <td>￥{$it.balance}</td>
+                        <td>{$it.phone}</td>
+                        <td>{$it.birth}</td>
+                        
+						
+						<!--
+                        <td>{$it.point}</td>
+                        <td>{$it.modifyDate}</td>
+						<td>{$it.createDate}</td>
+                        <td>{$it.cardType}</td>
+						<td>{$it.isEnabled}</td>
+						<td>{$it.isLost}</td>  
+						<td>{$it.chainStoreUse}</td> 
+						-->
                     </tr>
                     {/volist}
                 </tbody>
@@ -112,20 +118,20 @@
             });
         });
 		
-		function priceSync()
+		function vipSync()
 		{
-			$.post("__ROOT__/index.php/api/Customer/priceSync",{
+			$.post("__ROOT__/index.php/api/Vipcard/vipSync",{
 			}).done((res)=>{
 			
 				var ret = JSON.parse(res);
 				if (ret.success == true) 
 				{
-					alert("价格同步成功,同步了"+ret.num+"项");
+					alert("会员卡同步成功");
 					location.replace(location.href);
 				}
 				else
 				{
-					alert("价格同步失败，请重试");
+					alert("会员卡同步失败，请重试");
 				}
 			})
 		}

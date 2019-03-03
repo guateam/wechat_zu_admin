@@ -77,7 +77,11 @@
 		</a>
 	</nav>
 	<div id="step1" style="margin-top: 5px;margin-bottom: 5px;margin-left:25px;padding-left: 10px">
-        <div style="width:90px ; display:inline-block"><span style="color:red">*</span>会员手机号:</div> 
+		<div style="width:90px ; display:inline-block"><span style="color:red">*</span>会员卡号:</div> 
+		<input type="text" id="cardNo" class="theinput">
+		<br><br>
+		
+        <div style="width:90px ; display:inline-block">会员手机号:</div> 
 		<input type="text" id="phone" class="theinput">
 		<br><br>
 		
@@ -148,15 +152,17 @@
 				return;
 			}
 			
-			phone = $('#phone').val()
-			if (phone == "") 
+			cardNo = $('#cardNo').val()
+			if (cardNo == "") 
 			{
 				swal({
 					title: "",
-					text: "会员充卡，手机号不能为空"
+					text: "卡号不能为空"
 				})
 				return;
 			}
+			
+			phone = $('#phone').val()
 			
 			price = $('#cash').val();
             if ($("#cash").val() == "") 
@@ -175,7 +181,8 @@
 			$('#loading-mask').show();
             $('#submit').addClass('disable');			
 			
-            $.post("__ROOT__/index.php/api/Rechargerecord/rechargeMoney", {                
+            $.post("__ROOT__/index.php/api/Rechargerecord/rechargeMoney", {    
+				cardNo:cardNo,//卡号
                 phone: phone,//手机号码
 				username: username,//用户名
 				cash: price,//充卡金额
@@ -190,7 +197,7 @@
 					
                     swal({
                         title: "充卡成功",
-                        text: "充卡单号为" + res.data,
+                        text: "充卡单号为" + res.msg,
                         type: "success"
                     })
                     location.reload();

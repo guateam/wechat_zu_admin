@@ -7,24 +7,36 @@
 
         public function get_all()
 		{
-            $all = Db::query("select * from recharge_record");//UserModel::all();
+            $all = Db::query("select * from recharge_record where type = 1 order by generated_time");//UserModel::all();
             for($i=0;$i<count($all);$i++)
 			{
                 $openid = $all[$i]['user_id'];
                 $all[$i]['generated_time'] = date('Y-m-d H:i:s',$all[$i]['generated_time']);
-                $name = Db::query("select * from customer where openid = '$openid'");
-                if($name){
-                    $all[$i]['username'] =$name[0]['name'];
-                }else{
-                    $all[$i]['username'] ="用户不存在";
+
+                if ($openid != '')
+                {
+                    $name = Db::query("select * from customer where openid = '$openid'");
+                    if($name)
+                    {
+                        $all[$i]['username'] =$name[0]['name'];
+                    }
+                    else
+                    {
+                        $all[$i]['username'] ="用户名未知";
+                    }
+                }
+                else
+                {
+                    $all[$i]['username'] ="用户名未知";
                 }
 
             }
             return $all;
         }
 		
-		public function rechargeMoney($phone,$username,$cash,$paymethod,$tech)
+		public function rechargeMoney($cardNo,$phone,$username,$cash,$paymethod,$tech)
 		{
+			/*
 			//根据手机号码，查询 customer表，查到客户的openid
 			 $cus = Db::query("select openid from customer where phone_number = $phone");
 			 $openid = "";
@@ -32,6 +44,16 @@
 			 {
 				 $openid = $cus[0]['openid'];
 			 }
+			 */
+            
+            $openid = '';//到店充卡的时候 微信账号和会员卡不关联 
+
+			$card = Db::query("select * from vipcard where cardNo = '$cardNo'"); 
+			if (!$card)
+			{
+				return json(['status'=>0,'msg'=>'对不起，该卡号不存在']);
+			}
+			 
 			//根据promotion表 计算充多少送多少
 			$promotion = Db::query("select * from promotion order by need desc");
 			$cash = $cash * 100;
@@ -62,17 +84,19 @@
 			//-------------------------------------------------
             //插入数据库
 			$time = time();
-			Db::query("insert into recharge_record (`record_id`,`user_id`,`user_name`,`phone_number`,`charge`,`payment_method`,`job_number`,`generated_time`,`note`,`type`) 
-					values ('$rnd','$openid','$username','$phone','$cash','$paymethod','$tech','$time','充值','1')");
+			Db::query("insert into recharge_record (`record_id`,`user_id`,`user_name`,`phone_number`,`cardNo`,`charge`,`payment_method`,`job_number`,`generated_time`,`note`,`type`) 
+					values ('$rnd','$openid','$username','$phone','$cardNo','$cash','$paymethod','$tech','$time','充值','1')");
 
             if ($back > 0)
             {
-                $rnd = $rnd.'b';
-                Db::query("insert into recharge_record (`record_id`,`user_id`,`user_name`,`phone_number`,`charge`,`payment_method`,`job_number`,`generated_time`,`note`,`type`) 
-					values ('$rnd','$openid','$username','$phone','$back','$paymethod','$tech','$time','充值送钱','2')");
+                $rnd_b = $rnd.'b';
+                Db::query("insert into recharge_record (`record_id`,`user_id`,`user_name`,`phone_number`,`cardNo`,`charge`,`payment_method`,`job_number`,`generated_time`,`note`,`type`) 
+					values ('$rnd_b','$openid','$username','$phone','$cardNo','$back','$paymethod','$tech','$time','充值送钱','2')");
             }
+			
+			//vipcard表不要update，永远不要，vipcard表是同步过来的
 
-            return json(['status'=>1]);
+            return json(['status'=>1,'msg'=>$rnd]);
 		}
 		
         public function get_all_by_user()

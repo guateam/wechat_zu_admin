@@ -16,14 +16,14 @@
     <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js"></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
-    <title>充值列表</title>
+    <title>充卡列表</title>
 </head>
 
 <body>
     <nav class="breadcrumb">
         <i class="Hui-iconfont">&#xe67f;</i> 首页
-        <span class="c-gray en">&gt;</span> 充值管理
-        <span class="c-gray en">&gt;</span> 充值记录
+        <span class="c-gray en">&gt;</span> 充卡管理
+        <span class="c-gray en">&gt;</span> 充卡记录
         <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);"
             title="刷新">
             <i class="Hui-iconfont">&#xe68f;</i>
@@ -50,7 +50,8 @@
                     <tr class="text-c">
                         <th width="150">充值单号</th>
                         <th width="150">充值用户名</th>
-                        <th width="200">充值用户openid</th>
+                        <th width="150">用户openid</th>
+						<th width="100">卡号</th>
                         <th width="100">充值额度</th>
                         <th width="100">支付方式</th>
                         <th width="100">备注</th>
@@ -65,6 +66,7 @@
                         <td>{$it.record_id}</td>
                         <td id="">{$it.username}</td>
                         <td id="time{$k-1}">{$it.user_id}</td>
+						<td id="">{$it.cardNo}</td>
                         <td>
                             ￥{$it.charge/100}
                         </td>
@@ -93,7 +95,7 @@
     <script type="text/javascript">
         var table = $('.table-sort').DataTable({
             "aaSorting": [
-                [7, "desc"]
+                [8, "asc"]
             ], //默认第几个排序
             "bStateSave": false, //状态保存
             "aoColumnDefs": [

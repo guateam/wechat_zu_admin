@@ -190,7 +190,23 @@ class Shop extends Controller
         $consumed_order = Db::query("select A.generated_time as generated_time ,A.payment_method as payment_method, A.order_id as order_id, A.pay_amount as charge,A.shouldpay_amount as should_charge, note, A.source as source,GROUP_CONCAT(C.job_number) as job_number from consumed_order A ,service_order C where (A.state!=0 and A.state!=3) and A.payment_method!=3 and A.generated_time >=$begin and A.generated_time <= $end and C.order_id=A.order_id  GROUP BY A.order_id");//时间段内，非会员支付，状态非未支付非取消，把工号合并起来
 		
         //时间段内的充值记录
-        $recharge = Db::query("select record_id as order_id,charge,charge as should_charge,'会员充值' as note,job_number,generated_time,source,payment_method  from recharge_record where generated_time >=$begin and generated_time <= $end and type=1");
+        $recharge = Db::query("select record_id as order_id,charge,charge as should_charge,'' as note,job_number,generated_time,'会员充值' as source,payment_method  from recharge_record where generated_time >=$begin and generated_time <= $end and type=1");
+		
+		for($i=0;$i<count($recharge);$i++)
+		{
+            if($recharge[$i]['payment_method'] == 1)
+			{
+                $recharge[$i]['payment_method'] = '微信支付';
+            }
+            elseif($recharge[$i]['payment_method'] == 2)$recharge[$i]['payment_method'] = "支付宝支付";
+            elseif($recharge[$i]['payment_method'] == 3)$recharge[$i]['payment_method'] = "会员卡支付";
+            elseif($recharge[$i]['payment_method'] == 4)$recharge[$i]['payment_method'] = "现金支付";
+            elseif($recharge[$i]['payment_method'] == 5)$recharge[$i]['payment_method'] = "银行卡支付";
+            elseif($recharge[$i]['payment_method'] == 6)$recharge[$i]['payment_method'] = "其他方式支付";
+            elseif($recharge[$i]['payment_method'] == 7)$recharge[$i]['payment_method'] = "美团支付";
+			elseif($recharge[$i]['payment_method'] == 8)$recharge[$i]['payment_method'] = "微信扫码支付";
+			elseif($recharge[$i]['payment_method'] == 9)$recharge[$i]['payment_method'] = "赠送卡支付";
+        }
 		
         //时间段内的打赏
         $tip = Db::query("select '' as order_id,salary as charge,salary as should_charge,technician_id as job_number,date as generated_time,'打赏技师' as note,'网络打赏' as source,'微信支付' as payment_method from tip where date >=$begin and date <= $end");
@@ -208,6 +224,7 @@ class Shop extends Controller
             elseif($consumed_order[$i]['payment_method'] == 6)$consumed_order[$i]['payment_method'] = "其他方式支付";
             elseif($consumed_order[$i]['payment_method'] == 7)$consumed_order[$i]['payment_method'] = "美团支付";
 			elseif($consumed_order[$i]['payment_method'] == 8)$consumed_order[$i]['payment_method'] = "微信扫码支付";
+			elseif($consumed_order[$i]['payment_method'] == 9)$consumed_order[$i]['payment_method'] = "赠送卡支付";
 
             $consumed_order[$i]['source'] = ($consumed_order[$i]['source'] == 0?'网络预约':'到店消费');
         }

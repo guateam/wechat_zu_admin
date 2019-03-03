@@ -169,10 +169,13 @@
 			<option value="8">微信扫码支付</option>
 			<option value="9">赠送卡支付</option>
         </select><br>
-		
+		<br>
 		
         <div id="check_div" hidden>
 		
+			<div style="width:90px ; display:inline-block"><span style="color:red">*</span>卡号:</div>
+			<input type="text" id="cardNo" class="theinput" style="color:red;">
+			<br>
 			<!--
             <div style="width:90px ; display:inline-block"><span style="color:red;">*</span>验证码:</div>
             <input type="text" id="check_code" class="theinput">
@@ -247,27 +250,37 @@
 		//--------------------------------------------------------------
         $("#pay_method").change(()=>{ //改变支付方式，余额支付，获取客户余额
             choosen = $('#pay_method option:selected').val()
-            if(choosen == 3)
+            if(choosen == 3 || choosen == 9)
 			{
-				phone = $('#phone').val()
-				if (phone == "") 
+				/*
+				cardNo = $('#cardNo').val()
+				if (cardNo == "") 
 				{
-					$('#phone').focus();
+					$('#cardNo').focus();
 					swal({
 						title: "",
-						text: "选择会员卡余额支付，手机号不能为空"
+						text: "选择会员卡余额支付，卡号不能为空"
 					})
 					return;
 				}
 				else
 				{				
 					$("#check_div").attr('hidden',false);
-					$.post("__ROOT__/index.php/api/Customer/get_cash_by_phone2",{
-						phone:$('#phone').val()
+					$.post("__ROOT__/index.php/api/Customer/get_cash_by_card",{
+						cardNo:$('#cardNo').val()
 					}).done((res)=>{
-						$("#cus_cash").html('￥' + res.cash);
+						
+						if (res.success == true)
+						{
+							$("#cus_cash").html('￥' + res.msg);
+						}
+						else 
+						{
+							alert(res.msg);
+						}
 					})
-				}
+				}*/
+				$("#check_div").attr('hidden',false);
             }
 			else
 			{
@@ -459,7 +472,7 @@
 						$('#loading').css('display', 'none');
 						$("#roomwarning").html("该房间空闲状态，不能结帐");
 						
-						
+						/*
 						alert("同步失败，重新登陆点钟宝后台，重启监控。或者手动录入订单信息");
 						////alert("获取信息失败，需要手动录入订单");									
 						
@@ -468,7 +481,7 @@
 						$('#payinfoarea').css('display', '');//订单表头显示出来
 						
 						$('#paytable').append("<thead><tr class='text-c'><th width='40'>No</th> <th width='80'>类型</th><th width='80'>名称</th><th width='80'>单价</th><th width='60'>数量</th><th width='60'>退单量</th><th width='80'>折扣</th><th width='80'>金额</th><th width='80'>技师</th><th width='80'>安排</th><th>操作</th></tr></thead><tbody></tbody>");
-						
+						*/
 						
 					}
 					else if (res.status == "Busy")
@@ -557,7 +570,7 @@
 					$('#username').val(res.name);
 				})
 				
-				
+				/*
 				choosen = $('#pay_method option:selected').val()
 				if(choosen == 3)
 				{
@@ -568,6 +581,27 @@
 						$("#cus_cash").html('￥' + res.cash);
 					})
 				}
+				*/
+			}
+        })
+		
+		//--------------------------------------------------------------
+        $('#cardNo').blur(()=>{  //输入卡号码，自动获取余额
+		
+			if ($('#cardNo').val() != '')
+			{
+				$.post("__ROOT__/index.php/api/Customer/get_cash_by_card",{
+					cardNo:$('#cardNo').val()
+				}).done((res)=>{
+					if (res.success == true)
+					{
+						$("#cus_cash").html('￥' + res.msg);
+					}
+					else 
+					{
+						alert(res.msg);
+					}
+				})
 			}
         })
 
@@ -749,14 +783,14 @@
 			}
 			
 			paymethod = $('#pay_method option:selected').val();
-			if (paymethod == 3)
+			if (paymethod == 3 || paymethod == 9)
 			{
-				phone = $('#phone').val()
-				if (phone == "") 
+				cardNo = $('#cardNo').val()
+				if (cardNo == "") 
 				{
 					swal({
 						title: "",
-						text: "选择会员卡余额支付，手机号不能为空"
+						text: "选择会员卡余额支付，卡号不能为空"
 					})
 					return;
 				}
@@ -825,6 +859,7 @@
                 info: paydata,//订单的多个服务信息
                 total_price: total_price,//支付价格
                 phone: phone,//手机号码
+				cardNo:cardNo,//卡号
                 method: $('#pay_method option:selected').val(),//支付方式
                 username: $('#username').val(),//用户名
 				jiedai: $('#jiedai').val(),//接待工号

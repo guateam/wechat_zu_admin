@@ -141,7 +141,7 @@
             return json(['status'=>0]);
         }
 
-        public function create_order($info,$total_price,$phone,$method,$username,$jiedai,$note,$should_price)
+        public function create_order($info,$total_price,$phone,$cardNo,$method,$username,$jiedai,$note,$should_price)
 		{
             if ($phone != '')
             {
@@ -163,13 +163,21 @@
             }
 
             //若余额支付，判断余额是否足够
-            if($method == 3)
+            if($method == 3 || $method == 9)
 			{
-                $ctrl = new \app\api\controller\Customer();
-                $cash = $ctrl->get_cash_by_phone($phone);
-                if($cash === false)
+                //$ctrl = new \app\api\controller\Customer();
+                //$cash = $ctrl->get_cash_by_card($cardNo);
+
+                $vc = Db::query("select * from vipcard where cardNo='$cardNo'");
+                $cash = 0;
+                if ($vc)
+                {
+                    $cash = $vc[0]['balance'];
+                }
+                
+                if($cash == 0)
 				{
-                    return json(['status'=>0,'msg'=>"该手机号未注册会员"]);//创建订单失败
+                    return json(['status'=>0,'msg'=>"卡号出错，请重试"]);//创建订单失败
                 }
                 if($cash < $total_price)
 				{

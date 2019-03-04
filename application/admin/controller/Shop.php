@@ -206,6 +206,7 @@ class Shop extends Controller
             elseif($recharge[$i]['payment_method'] == 7)$recharge[$i]['payment_method'] = "美团支付";
 			elseif($recharge[$i]['payment_method'] == 8)$recharge[$i]['payment_method'] = "微信扫码支付";
 			elseif($recharge[$i]['payment_method'] == 9)$recharge[$i]['payment_method'] = "赠送卡支付";
+			elseif($recharge[$i]['payment_method'] == 10)$recharge[$i]['payment_method'] = "优惠券支付";
         }
 		
         //时间段内的打赏
@@ -225,6 +226,7 @@ class Shop extends Controller
             elseif($consumed_order[$i]['payment_method'] == 7)$consumed_order[$i]['payment_method'] = "美团支付";
 			elseif($consumed_order[$i]['payment_method'] == 8)$consumed_order[$i]['payment_method'] = "微信扫码支付";
 			elseif($consumed_order[$i]['payment_method'] == 9)$consumed_order[$i]['payment_method'] = "赠送卡支付";
+			elseif($consumed_order[$i]['payment_method'] == 10)$consumed_order[$i]['payment_method'] = "优惠券支付";
 
             $consumed_order[$i]['source'] = ($consumed_order[$i]['source'] == 0?'网络预约':'到店消费');
         }

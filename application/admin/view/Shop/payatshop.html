@@ -420,7 +420,7 @@
 													};
 												info.push(unit);	
 												
-												//abc();//认为搞出异常
+												//abc();//人为搞出异常
 												
 												//页面上显示有，info里肯定就有
 												$("#paytable").append("<tr class='text-c'><td>"+(i+1)+"</td><td>"+productType+"</td><td>"+orderItems[i].name+"</td><td>"+orderItems[i].price+"</td><td>"+orderItems[i].quantity+"</td><td>"+orderItems[i].returnQuantity+"</td><td>"+orderItems[i].scale+"</td><td>"+orderItems[i].subtotal+"</td><td>"+orderItems[i].servicePersonal+"</td><td>"+arrangeType+"</td><td><a href='#' onclick=delRow(this,"+(i+1)+") >删除</a></td><tr>");
@@ -456,6 +456,7 @@
 												table_body.removeChild(table_body.lastChild)
 											}
 										}
+										localStorage.removeItem("paylist");//同时删除 localstorage										
 										//----------------------------------------------------------
 										
 										$("#roomwarning").html("");						

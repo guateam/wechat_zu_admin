@@ -4,7 +4,6 @@ use think\Controller;
 use think\Db;
 use \app\api\model\Vipcard as UserModel;
 
-
 class Vipcard extends Controller
 {
 	public static $API_URL = "http://103.239.247.197:8899/api?url=";
@@ -15,6 +14,22 @@ class Vipcard extends Controller
         
         return $vipcardlist;
     }
+	
+	public function get_phone_by_card($cardNo)
+	{
+		$phone = "";
+
+		$phoneList = Db::query("select * from vipcard where cardNo = '$cardNo'");
+		if ($phoneList)
+		{
+			$phone = $phoneList[0]['phone'];
+		}
+		
+		return json_encode([
+				'success'=>true,
+				'msg'=>$phone,
+			]);
+	}
 	
 	public function vipSync()
 	{

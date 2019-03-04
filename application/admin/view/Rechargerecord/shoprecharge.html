@@ -81,7 +81,7 @@
 		<input type="text" id="cardNo" class="theinput">
 		<br><br>
 		
-        <div style="width:90px ; display:inline-block">会员手机号:</div> 
+        <div style="width:90px ; display:inline-block"><span style="color:red">*</span>会员手机号:</div> 
 		<input type="text" id="phone" class="theinput">
 		<br><br>
 		
@@ -144,6 +144,25 @@
 	<script type="text/javascript" src="__STATIC__/lib/ueditor/1.4.3/ueditor.all.min.js"></script>
 	<script type="text/javascript" src="__STATIC__/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 	<script type="text/javascript">
+	
+		//--------------------------------------------------------------
+        $('#cardNo').blur(()=>{  //输入卡号，自动获取手机号
+		
+			if ($('#cardNo').val() != '')
+			{
+				$.post("__ROOT__/index.php/api/Vipcard/get_phone_by_card",{
+					cardNo:$('#cardNo').val()
+				}).done((res)=>
+				{
+					res = JSON.parse(res);
+					if (res.success == true)
+					{
+						$('#phone').val(res.msg);
+					}
+				})
+			}
+        })
+		
 		//--------------------------------------------------------------
         function done() //订单支付
 		{
@@ -163,6 +182,14 @@
 			}
 			
 			phone = $('#phone').val()
+			if (phone == "") 
+			{
+				swal({
+					title: "",
+					text: "手机号不能为空"
+				})
+				return;
+			}
 			
 			price = $('#cash').val();
             if ($("#cash").val() == "") 

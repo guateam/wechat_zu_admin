@@ -17,5 +17,12 @@ class Vipcard extends Controller
 		
         return $this->fetch('Vipcard/vipcard');
     }
+	
+	public function cancelvipcard()
+	{
+		//输入openid（扫码），自动刷出手机号，或者输入手机号 ，点击绑定按钮
+		//绑定后，输入卡号，自动刷出卡内余额
+        return $this->fetch('Vipcard/cancelvipcard');
+	}
 
 }

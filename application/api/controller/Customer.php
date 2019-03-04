@@ -112,11 +112,18 @@
 							}
 							$mobile = $eachcard->mobile;
 							$phone = $eachcard->phone;
-							$birth = $eachcard->birth;
+							$birth = $eachcard->birthS;
 							$cardNo = $eachcard->cardNo;
 							$balance = $eachcard->balance;
 							$point = $eachcard->point;
-							$modifyDate = $eachcard->modifyDate;
+							if(property_exists($eachcard,'modifyDate'))
+							{
+								$modifyDate = $eachcard->modifyDate;
+							}
+							else
+							{
+								$modifyDate = "";
+							}
 							$createDate = $eachcard->createDate;
 							$cardType = $eachcard->cardType;
 							$isEnabled = $eachcard->isEnabled;

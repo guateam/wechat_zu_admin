@@ -1,0 +1,298 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+	<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+	{include file="common/common_css"}
+	
+	<style>
+        * {
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .theinput {
+            list-style: none;
+            outline: none;
+            border: 1px solid #eee;
+            width: 220px;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .thebut {
+        }
+    </style>
+	<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+	<!--/meta 作为公共模版分离出去-->
+
+	<title>注销卡转微信</title>
+</head>
+
+<body>
+
+		<div id="loading-mask" style="display:none;position: fixed;background-color: rgba(0,0,0,0.65);top:0;bottom: 0;left: 0;right: 0;z-index: 99">
+            <div class="loading-main" style="position: absolute;width: 480px;height: 300px;top: 0;right: 0;bottom: 0;left: 0;margin: auto;text-align: center;">
+                <div title="2">
+                    <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                         width="120px" height="120px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+  <path fill="#FF6700" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+    <animateTransform attributeType="xml"
+                      attributeName="transform"
+                      type="rotate"
+                      from="0 25 25"
+                      to="360 25 25"
+                      dur="0.6s"
+                      repeatCount="indefinite"/>
+    </path>
+  </svg>
+                </div>
+                <p style="color: #fff">正在加载请等待......</p>
+            </div>
+
+        </div>
+
+	<nav class="breadcrumb">
+		<i class="Hui-iconfont">&#xe67f;</i> 首页
+		<span class="c-gray en">&gt;</span> 充卡管理
+		<span class="c-gray en">&gt;</span> 注销卡转微信
+		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);"
+		 title="刷新">
+			<i class="Hui-iconfont">&#xe68f;</i>
+		</a>
+	</nav>
+	<div id="step1" style="margin-top: 5px;margin-bottom: 5px;margin-left:25px;padding-left: 10px">
+		
+		<div style="width:90px ; display:inline-block"><span style="color:red">*</span>会员openid:</div> 
+		<input type="text" id="openid" class="theinput">
+		<br><br>
+		
+		<div style="width:90px ; display:inline-block"><span style="color:red">*</span>会员手机号:</div> 
+		<input type="text" id="phone" class="theinput">
+		<span id="bindstatus" style="color:red">未绑定</span>
+		<button onclick="bind()" class="btn btn-success" style="margin-top: 6px;width: 100px" id = "bindbtn" >绑定
+        </button>		
+		<br>		
+		<br>
+		
+		<div style="width:90px ; display:inline-block"><span style="color:red">*</span>会员卡号:</div> 
+		<input type="text" id="cardNo" class="theinput">
+		<br><br>
+		
+			
+		<div style="width:90px ; display:inline-block">卡内余额:</div>
+        <input type="text" id="cash" class="theinput">(元)
+		<br><br>
+	
+		
+		 <button onclick="done()" class="btn btn-primary" style="margin-top: 6px;width: 150px" id = "submit">确认销卡转微信
+        </button>
+	</div>
+	
+	{include file="common/common_script"}
+
+	<!--请在下方写此页面业务相关的脚本-->
+	<script type="text/javascript" src="__STATIC__/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+	<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+	<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+	<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+	<script type="text/javascript" src="__STATIC__/lib/webuploader/0.1.5/webuploader.min.js"></script>
+	<script type="text/javascript" src="__STATIC__/lib/ueditor/1.4.3/ueditor.config.js"></script>
+	<script type="text/javascript" src="__STATIC__/lib/ueditor/1.4.3/ueditor.all.min.js"></script>
+	<script type="text/javascript" src="__STATIC__/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+	<script type="text/javascript">
+
+		$("#bindbtn").show();
+		//--------------------------------------------------------------
+        $('#openid').blur(()=>{  //输入openid，自动获取手机号
+		
+			if ($('#openid').val() != '')
+			{
+				$.post("__ROOT__/index.php/api/Vipcard/get_phone_by_openid",{
+					openid:$('#openid').val()
+				}).done((res)=>
+				{
+					res = JSON.parse(res);
+					if (res.success == true)
+					{
+						$('#phone').val(res.msg);						
+						$('#bindstatus').html("已绑定");							
+						$("#bindbtn").hide();
+					}
+					else
+					{
+						$('#bindstatus').html("未绑定");							
+						$("#bindbtn").show();
+					}
+				})
+			}
+        })		
+		//--------------------------------------------------------------
+		
+		//--------------------------------------------------------------
+        $('#cardNo').blur(()=>{  //输入卡号，自动获取余额
+		
+			if ($('#cardNo').val() != '')
+			{
+				$.post("__ROOT__/index.php/api/Customer/get_cash_by_card",{
+					cardNo:$('#cardNo').val()
+				}).done((res)=>{
+				//res = JSON.parse(res);
+				if (res.success == true)
+				{
+					$("#cash").val(res.msg);
+				}
+				else 
+				{
+					alert(res.msg);
+				}
+			})
+			}
+        })		
+		//--------------------------------------------------------------
+		
+		function bind() //绑定
+		{
+			$.post("__ROOT__/index.php/api/Vipcard/bindwechat", {    
+					openid:$('#openid').val(),//卡号
+					phone: $('#phone').val(),//手机号码					
+				}).done((res) => {
+					res = JSON.parse(res);
+					if (res.success == true) 
+					{
+						swal({
+							title: "绑定成功",
+							text: "绑定成功",
+							type: "success"
+						})
+						
+						$('#bindstatus').html("已绑定");							
+						$("#bindbtn").hide();
+					} 
+					else 
+					{
+						swal({
+							title: "绑定失败",
+							text: "绑定失败",
+							type: "error"
+						})
+						
+						$('#bindstatus').html("未绑定");							
+						$("#bindbtn").show();
+					}
+				})
+			
+		}
+       
+		
+		//--------------------------------------------------------------
+        function done() //确认销卡转微信
+		{
+			var res = confirm("确定要销卡并把余额转到该手机号绑定的微信吗？");
+			if(res)
+			{			
+				if($('#submit').hasClass('disable'))
+				{
+					return;
+				}
+				
+				openid = $('#openid').val()
+				if (openid == "") 
+				{
+					swal({
+						title: "",
+						text: "会员openid不能为空"
+					})
+					return;
+				}
+				
+				phone = $('#phone').val()
+				if (phone == "") 
+				{
+					swal({
+						title: "",
+						text: "手机号不能为空"
+					})
+					return;
+				}
+				
+				cardNo = $('#cardNo').val()
+				if (cardNo == "") 
+				{
+					swal({
+						title: "",
+						text: "卡号不能为空"
+					})
+					return;
+				}
+				
+				price = $('#cash').val();
+				if ($("#cash").val() == "") 
+				{
+					swal({
+						title: "",
+						text: "金额不能为空"
+					})
+					return;
+				}
+				
+				paymethod = $('#pay_method option:selected').val();
+				tech = $('#tech option:selected').val();
+				username = $('#username').val();
+				
+				$('#loading-mask').show();
+				$('#submit').addClass('disable');			
+				
+				$.post("__ROOT__/index.php/api/Vipcard/cancelcard", {    
+					openid:openid,//openid
+					cardNo:cardNo,//卡号
+					phone:phone,//手机号码
+					cash: price,//充卡金额
+				}).done((res) => {
+
+					if (res.status == 1) 
+					{
+						$('#submit').removeClass('disable');
+						$('#loading-mask').hide();
+						
+						swal({
+							title: "销卡成功",
+							text: "销卡成功",
+							type: "success"
+						})
+						location.reload();
+					} 
+					else 
+					{
+						$('#submit').removeClass('disable');
+						$('#loading-mask').hide();
+						
+						swal({
+							title: "销卡失败",
+							text: "销卡失败",
+							type: "error"
+						})
+					}
+				})
+			}
+        }
+		//--------------------------------------------------------------
+	</script>
+	<!--/请在上方写此页面业务相关的脚本-->
+</body>
+
+</html>

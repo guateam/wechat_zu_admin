@@ -31,6 +31,117 @@ class Vipcard extends Controller
 			]);
 	}
 	
+	public function get_phone_by_openid($openid)
+	{
+		$phone = "";
+
+		$phoneList = Db::query("select * from customer where openid = '$openid'");
+		if ($phoneList)
+		{
+			$phone = $phoneList[0]['phone_number'];
+			
+			if ($phone != "")
+			{
+				return json_encode([
+					'success'=>true,
+					'msg'=>$phone,
+				]);
+			}
+			else
+			{
+				return json_encode([
+					'success'=>false,
+					'msg'=>"failure",
+				]);
+			}
+		}
+		else
+		{
+			return json_encode([
+				'success'=>false,
+				'msg'=>"failure",
+			]);
+		}	
+		
+	}
+	
+	public function bindwechat($openid,$phone)
+	{
+		if ($phone != "")
+		{
+			 Db::query("update customer set phone_number = '$phone' where openid = '$openid'");
+			 
+			 return json_encode([
+				'success'=>true,
+			]);
+		}
+		else
+		{
+			return json_encode([
+				'success'=>false,
+			]);
+		}	
+		
+	}
+	
+	public function cancelcard($openid,$cardNo,$phone,$cash)
+	{
+		//分两笔，一笔是 卡号对应的 加一条负数的记录
+		//第二笔是 openid对应的，加一条充值记录 recharge_record
+		
+		//-------------------------------------------------
+		$dict=['1','2','3','4','5','6','7','8','9','0'];
+		$rnd = "";
+		$rnd.=date("YmdHis");//年月日时分秒
+		
+		for($i=0;$i<2;$i++)
+		{
+			$rnd.=$dict[rand(0,count($dict)-1)];//6位随机整数
+		}
+		for($i=0;$i<4;$i++)
+		{
+			$rnd.=$dict[rand(0,count($dict)-1)];
+		}
+		//-------------------------------------------------
+		
+		//-------------------------------------------------
+		$dict=['1','2','3','4','5','6','7','8','9','0'];
+		$rnd2 = "";
+		$rnd2.=date("YmdHis");//年月日时分秒
+		
+		for($i=0;$i<2;$i++)
+		{
+			$rnd2.=$dict[rand(0,count($dict)-1)];//6位随机整数
+		}
+		for($i=0;$i<4;$i++)
+		{
+			$rnd2.=$dict[rand(0,count($dict)-1)];
+		}
+		//-------------------------------------------------
+		
+		$cash = $cash * 100;
+		$time = time();	
+		$neg_cash = -1 * $cash;
+		Db::startTrans();
+		try
+		{
+			Db::query("insert into recharge_record (`record_id`,`phone_number`,`cardNo`,`charge`,`payment_method`,`generated_time`,`note`,`type`) 
+					values ('$rnd','$phone','$cardNo','$neg_cash','3','$time','销卡','1')");
+					
+			Db::query("insert into recharge_record (`record_id`,`user_id`,`phone_number`,`charge`,`payment_method`,`generated_time`,`note`,`type`) 
+					values ('$rnd2','$openid','$phone','$cash','3','$time','销卡转钱','1')");
+					
+			Db::commit(); 
+            return json(['status'=>1]);
+		 }
+		catch (Exception $e) 
+		{
+			//$db->rollback();
+			Db::rollback();//回滚
+			return json(['status'=>0,'data'=>'出现异常，请重试']);
+		}
+	}
+	
 	public function vipSync()
 	{
         $index = 0;

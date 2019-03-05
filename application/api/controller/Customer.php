@@ -31,15 +31,21 @@
             return ['status'=>1];
         }
 
-        public function get_cash($openid){
+		public function get_cash($openid)
+		{
             $records = Db::query("select sum(charge)/100 as charge from recharge_record where user_id='$openid' group by user_id");
             $charge =0;
-            if(count($records)>0)
-                $charge = intval($records[0]['charge']);
-            $pay = Db::query("select sum(pay_amount)/100 as pay from consumed_order where user_id='$openid' and (state!=3 and state !=0) and payment_method=3");
-            if(count($pay)>0)
-                $pay = intval($pay[0]['pay']);
-            $money = $charge - $pay;
+			if(count($records)>0)
+			{
+				$charge = intval($records[0]['charge']);//取整
+			}
+            //$pay = Db::query("select sum(pay_amount)/100 as pay from consumed_order where user_id='$openid' and (state!=3 and state !=0) and payment_method=3");
+			$pay = Db::query("select sum(pay_amount)/100 as pay from consumed_order where user_id='$openid' and (state!=3 and state !=0) and payment_method=11");
+			if(count($pay)>0)
+			{
+				$pay = intval($pay[0]['pay']);//取整
+			}
+            $money = $charge - $pay;//充卡的金额 - 消费的金额
             return $money;
         }
         
@@ -55,6 +61,14 @@
 			{
                 return json(['cash'=>0]) ;
             }
+		}
+		
+		public function get_cash_by_openid($openid)
+		{
+			$cus = new \app\api\controller\Customer();			
+			$money = $cus->get_cash($openid);     
+			
+			return json(['success'=>true,'msg'=>$money]);
         }
 		
 		public function get_cash_by_card($cardNo)

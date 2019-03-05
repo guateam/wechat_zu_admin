@@ -185,7 +185,7 @@ class Shop extends Controller
         $end.=" 23:59:59";
         $end = strtotime($end);
 
-        //时间段内的订单  payment_method =3 会员卡支付计算尽量  payment_method =9 赠送卡支付也显示出来
+        //时间段内的订单  payment_method =3 会员卡支付计算尽量  payment_method =9 赠送卡支付也显示出来 payment_method =11 微信会员卡支付
         $consumed_order = Db::query("select A.generated_time as generated_time ,A.payment_method as payment_method, A.order_id as order_id, A.pay_amount as charge,A.shouldpay_amount as should_charge, note, A.source as source,GROUP_CONCAT(C.job_number) as job_number from consumed_order A ,service_order C where (A.state!=0 and A.state!=3) and A.generated_time >=$begin and A.generated_time <= $end and (A.payment_method != 10)  and C.order_id=A.order_id  GROUP BY A.order_id");//时间段内，非会员支付，状态非未支付非取消，把工号合并起来
 		
         //时间段内的充值记录
@@ -206,6 +206,7 @@ class Shop extends Controller
 			elseif($recharge[$i]['payment_method'] == 8)$recharge[$i]['payment_method'] = "微信扫码支付";
 			elseif($recharge[$i]['payment_method'] == 9)$recharge[$i]['payment_method'] = "赠送卡支付";
 			elseif($recharge[$i]['payment_method'] == 10)$recharge[$i]['payment_method'] = "优惠券支付";
+			elseif($recharge[$i]['payment_method'] == 11)$recharge[$i]['payment_method'] = "微信会员卡支付";
         }
 		
         //时间段内的打赏
@@ -226,6 +227,7 @@ class Shop extends Controller
 			elseif($consumed_order[$i]['payment_method'] == 8)$consumed_order[$i]['payment_method'] = "微信扫码支付";
 			elseif($consumed_order[$i]['payment_method'] == 9)$consumed_order[$i]['payment_method'] = "赠送卡支付";
 			elseif($consumed_order[$i]['payment_method'] == 10)$consumed_order[$i]['payment_method'] = "优惠券支付";
+			elseif($consumed_order[$i]['payment_method'] == 11)$consumed_order[$i]['payment_method'] = "微信会员卡支付";
 
             $consumed_order[$i]['source'] = ($consumed_order[$i]['source'] == 0?'网络预约':'到店消费');
         }

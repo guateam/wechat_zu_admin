@@ -141,26 +141,29 @@
             return json(['status'=>0]);
         }
 
-        public function create_order($info,$total_price,$phone,$cardNo,$method,$username,$jiedai,$note,$should_price)
+        public function create_order($info,$total_price,$phone,$cardNo,$method,$username,$jiedai,$note,$should_price,$openid)
 		{
-            if ($phone != '')
-            {
-                $cus = Db::query("select * from customer where phone_number='$phone'");
-                if($cus)
-                {
-                    $user_id=$cus[0]['openid'];
-                }
-                else
-                {
-                    //若找不到该账号，则单子内的id自动填为用户名
-                    $user_id = $username;   
-                }
-            }
-            else//没有输入手机号码
-            {  
-                //若找不到该账号，则单子内的id自动填为用户名
-                $user_id = $username;          
-            }
+			if ($openid != "")
+			{
+				$user_id = $openid;   
+			}
+			else
+			{
+				if ($phone != '')//输入了手机号码
+				{
+					$cus = Db::query("select * from customer where phone_number='$phone'");
+					if($cus)
+					{
+						$user_id = $cus[0]['openid'];
+					}
+				}
+				else//没有输入手机号码
+				{  
+					//若找不到该账号，则单子内的id自动填为用户名
+					 $user_id = $username;   
+					                       
+				}
+			}	
 
             //若余额支付，判断余额是否足够
             if($method == 3 || $method == 9)

@@ -20,7 +20,7 @@
             list-style: none;
             outline: none;
             border: 1px solid #eee;
-            width: 200px;
+            width: 250px;
             height: 30px;
             line-height: 30px;
         }
@@ -159,7 +159,8 @@
 		
 		<div style="width:90px ; display:inline-block"><span style="color:red">*</span>支付方式:</div>
         <select class="theinput" name="" id="pay_method">
-            <option value="1">微信网上支付</option>
+            <!--<option value="1">微信网上支付</option>-->
+			<option value="11">微信会员卡支付</option>
             <option value="2">支付宝</option>
             <option value="3">会员卡支付</option>
             <option value="4">现金支付</option>
@@ -177,15 +178,23 @@
 			<div style="width:90px ; display:inline-block"><span style="color:red">*</span>卡号:</div>
 			<input type="text" id="cardNo" class="theinput" style="color:red;">
 			<br>
-			<!--
-            <div style="width:90px ; display:inline-block"><span style="color:red;">*</span>验证码:</div>
-            <input type="text" id="check_code" class="theinput">
-            <button class="btn btn-success" onclick="message()" id="check_button">获取验证码</button><br>
-			-->
-
-            <div style="width:90px ; display:inline-block"><span style="color:red;">*</span>余额剩余:</div>
+			<br>
+			
+            <div style="width:90px ; display:inline-block">余额剩余:</div>
             <span id="cus_cash">待查询...</span>
-        </div>		
+        </div>	
+		
+		<div id="check2_div" hidden>
+		
+			<div style="width:90px ; display:inline-block"><span style="color:red">*</span>会员openid:</div>
+			<input type="text" id="openid" class="theinput" style="color:red;">
+			<br>
+			<br>
+			
+            <div style="width:90px ; display:inline-block">余额剩余:</div>
+            <span id="wx_cash">待查询...</span>
+        </div>	
+		
         <br>  
 		
 		<div style="width:90px ; display:inline-block"><span style="color:red">*</span>选择接待:</div>
@@ -289,9 +298,14 @@
 				}
 				
             }
+			else if(choosen == 11)
+			{
+				$("#check2_div").attr('hidden',false);
+			}
 			else
 			{
                 $("#check_div").attr('hidden',true);
+				$("#check2_div").attr('hidden',true);
             }            
         })
 		
@@ -612,6 +626,26 @@
 				})
 			}
         })
+		
+		//--------------------------------------------------------------
+        $('#openid').blur(()=>{  //输入openid，自动获取余额
+		
+			if ($('#openid').val() != '')
+			{
+				$.post("__ROOT__/index.php/api/Customer/get_cash_by_openid",{
+					openid:$('#openid').val()
+				}).done((res)=>{
+					if (res.success == true)
+					{
+						$("#wx_cash").html('￥' + res.msg);
+					}
+					else 
+					{
+						alert(res.msg);
+					}
+				})
+			}
+        })
 
 		//--------------------------------------------------------------
         $('#tech').change(() => { //选择技师，获得该技师对应的技能
@@ -805,6 +839,20 @@
 				}
 			}
 			
+			var openid = "";
+			if (paymethod == 11)
+			{
+				openid = $('#openid').val()
+				if (openid == "") 
+				{
+					swal({
+						title: "",
+						text: "选择微信会员卡余额支付，用户openid不能为空"
+					})
+					return;
+				}
+			}
+			
 			if(localStorage.hasOwnProperty("paylist"))
 			{
 				paydata = JSON.parse(localStorage.getItem("paylist"));
@@ -874,6 +922,7 @@
 				jiedai: $('#jiedai').val(),//接待工号
                 note: $('#note').val(),//备注
 				should_price:should_price,//应付价格
+				openid:openid,
             }).done((res) => {
 
                 if (res.status == 1) 

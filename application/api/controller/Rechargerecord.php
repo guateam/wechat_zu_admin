@@ -27,7 +27,7 @@
                 }
                 else
                 {
-                    $all[$i]['username'] ="用户名未知";
+                    $all[$i]['username'] =$all[$i]['user_name'];
                 }
 
             }

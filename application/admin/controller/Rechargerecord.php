@@ -52,6 +52,7 @@ class Rechargerecord extends Controller
                 $tip[$i]['username'] = '顾客不存在';
             }
             $tip[$i]['generated_time'] = date("Y-m-d H:i:s",$tip[$i]['generated_time']);
+            $tip[$i]['payment_method'] = 1;
         }
         $total_record = array_merge($recharge_record,$pay_record,$tip);
 

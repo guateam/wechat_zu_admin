@@ -198,24 +198,23 @@
                 $item_id = "";
                 foreach($info as $it)
                 {
-                    if ($it['service_id'] =='')//没有 service_id
-                    {
-                        $servicename = $it['service_name'];
-                        $item = Db::query("select * from service_type where name='$servicename'");//从 service_type表根据 servicename 查询 item_id
-
-                        if($item)
-                        {
-                            $item_id = $item[0]['ID'];
-                        }
-                        else
-                        {
-                            //数据库里如果根据服务名称，找不到该项目，则 $item_id = 0;
-							$item_id = 0;//临时把商品的 $item_id = 0
-                        }
-                    }
+					$servicename = $it['service_name'];//先根据服务名称来查询 item_id
+                    $item = Db::query("select * from service_type where name='$servicename'");//从 service_type表根据 servicename 查询 item_id
+					
+					if ($item)//存在
+					{
+						$item_id = $item[0]['ID'];
+					}
                     else  //有 service_id
                     {
-                        $item_id = $it['service_id'];
+						if ($it['service_id'] !='')//有 service_id
+						{
+							$item_id = $it['service_id'];
+						}
+						else
+						{
+							$item_id = 0;//临时把商品的 $item_id = 0
+						}
                     }
 
                     $job_number = $it['job_number'];
@@ -224,7 +223,7 @@
                     $ticheng = 0;                    
 					$jd_ticheng = 0;
 
-					if ($item_id > 0)
+					if ($item_id > 0)//商品先不录入
 					{	
 						$service_type = Db::query("select * from service_type where ID='$item_id' ");
 						$technician = Db::query("select * from technician where job_number='$job_number'");
@@ -251,16 +250,16 @@
 						{
 							$jd_ticheng = $service_type[0]['commission2'];
 						}
+						
+						$room_id = $it['room_number'];//网页传过来的就是 roomid
+
+						$sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
+						'item_id'=>$item_id,'job_number'=>$it['job_number'],'price'=>$it['price']*100,
+						'private_room_number'=>$room_id,'clock_type'=>$it['clock'],'appoint_time'=>$time,
+						'ticheng'=>$ticheng,'yongjin'=>$yongjin,'jd_number'=>$jiedai,'jd_ticheng'=>$jd_ticheng]);
+
+						$sv_order->save();
 					}
-                    
-                    $room_id = $it['room_number'];//网页传过来的就是 roomid
-
-                    $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
-                    'item_id'=>$item_id,'job_number'=>$it['job_number'],'price'=>$it['price']*100,
-                    'private_room_number'=>$room_id,'clock_type'=>$it['clock'],'appoint_time'=>$time,
-                    'ticheng'=>$ticheng,'yongjin'=>$yongjin,'jd_number'=>$jiedai,'jd_ticheng'=>$jd_ticheng]);
-
-                    $sv_order->save();
                 }
                 
                 //-------------------------------------------

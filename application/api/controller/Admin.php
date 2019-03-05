@@ -104,9 +104,13 @@
         
         public function getpermission($name){
             $permission = Db::query("select permission from admin where `name`='$name'");
-            $permission = explode(",",$permission[0]['permission']);
-            for($i=0;$i<count($permission);$i++){
-                $permission[$i] = explode(':',$permission[$i]);
+            if ($permission)
+            {
+                $permission = explode(",",$permission[0]['permission']);
+                for($i=0;$i<count($permission);$i++)
+                {
+                    $permission[$i] = explode(':',$permission[$i]);
+                }
             }
             return $permission;
         }

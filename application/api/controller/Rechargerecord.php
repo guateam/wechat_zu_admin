@@ -7,7 +7,7 @@
 
         public function get_all()
 		{
-            $all = Db::query("select * from recharge_record where type = 1 order by generated_time");//UserModel::all();
+            $all = Db::query("select * from recharge_record order by generated_time");//UserModel::all();
             for($i=0;$i<count($all);$i++)
 			{
                 $openid = $all[$i]['user_id'];

@@ -193,7 +193,12 @@
             for($i=0;$i<10;$i++)
 			{
                 $order_id .= strval(rand(0,9));//订单号
-            }		
+            }	
+
+			if (count($info) == 0)
+			{
+				return json(['status'=>0,'msg'=>"系统错误，创建订单失败，请重试"]);//创建订单失败
+			}
             
             Db::startTrans();
 			try

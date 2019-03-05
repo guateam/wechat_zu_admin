@@ -818,7 +818,7 @@
 		//--------------------------------------------------------------
         function done() //订单支付
 		{
-			var paydata;
+			var paydata = "";
 			if($('#submit').hasClass('disable'))
 			{
 				return;
@@ -910,6 +910,15 @@
             }
 			*/
 			//余额支付，需要改成支付完发短信通知
+			
+			if (paydata == "")
+			{
+				swal({
+                    title: "",
+                    text: "没有录入订单，不能支付！"
+                })
+                return;
+			}
 			
 			phone = $('#phone').val();
             $.post("__ROOT__/index.php/api/Consumedorder/create_order", {

@@ -20,7 +20,7 @@ class Rechargerecord extends Controller
 	{
         $recharge_record = Db::query("select A.record_id as ID,A.user_id as openid,A.charge/100 as money,A.job_number as job_number,A.payment_method as payment_method,A.generated_time as generated_time,A.note as note,B.`name` as username from recharge_record A,customer B where A.user_id='$openid' and B.openid = A.user_id");
         $pay_record = Db::query("select A.order_id as ID,C.openid as openid,C.`name` as `username`,A.pay_amount/100 as money,'' as job_number,A.payment_method as payment_method,A.generated_time as generated_time,A.note as note from consumed_order A,customer C where A.user_id='$openid' and C.openid = A.user_id order by A.generated_time desc");
-        $tip = Db::query("select A.ID as ID, A.user_id as openid,A.salary/100 as money,'微信' as payment_method, '打赏技师' as note,technician_id as job_number,date as generated_time from tip A ");
+        $tip = Db::query("select A.ID as ID, A.user_id as openid,A.salary/100 as money,'微信' as payment_method, '打赏技师' as note,technician_id as job_number,date as generated_time from tip A where user_id = '$openid'");
 
         for($i=0;$i<count($pay_record);$i++)
 		{
@@ -43,11 +43,15 @@ class Rechargerecord extends Controller
 		{
             $openid = $tip[$i]['openid'];
             $name = Db::query("select name from customer where openid='$openid'");
-            if($name){
+            if($name)
+            {
                 $tip[$i]['username'] = $name[0]['name'];
-            }else{
+            }
+            else
+            {
                 $tip[$i]['username'] = '顾客不存在';
             }
+            $tip[$i]['generated_time'] = date("Y-m-d H:i:s",$tip[$i]['generated_time']);
         }
         $total_record = array_merge($recharge_record,$pay_record,$tip);
 

@@ -198,10 +198,10 @@
                 $item_id = "";
                 foreach($info as $it)
                 {
-                    if ($it['service_id'] =='')
+                    if ($it['service_id'] =='')//没有 service_id
                     {
                         $servicename = $it['service_name'];
-                        $item = Db::query("select * from service_type where name='$servicename'");
+                        $item = Db::query("select * from service_type where name='$servicename'");//从 service_type表根据 servicename 查询 item_id
 
                         if($item)
                         {
@@ -209,52 +209,51 @@
                         }
                         else
                         {
-                            //数据库里如果根据服务名称，找不到该项目，则 $item_id = "";
+                            //数据库里如果根据服务名称，找不到该项目，则 $item_id = 0;
+							$item_id = 0;//临时把商品的 $item_id = 0
                         }
                     }
-                    else 
+                    else  //有 service_id
                     {
                         $item_id = $it['service_id'];
                     }
 
                     $job_number = $it['job_number'];
                     
-                    $ticheng = 0;
-                    $yongjin = 0;
+					$yongjin = 0;
+                    $ticheng = 0;                    
+					$jd_ticheng = 0;
 
-                    $service_type = Db::query("select * from service_type where ID='$item_id' ");
-                    $technician = Db::query("select * from technician where job_number='$job_number'");
+					if ($item_id > 0)
+					{	
+						$service_type = Db::query("select * from service_type where ID='$item_id' ");
+						$technician = Db::query("select * from technician where job_number='$job_number'");
 
-                    if ($service_type)
-                    {
-                        $yongjin = $service_type[0]['invite_income'];
-                    }
+						if ($service_type)
+						{
+							$yongjin = $service_type[0]['invite_income'];
+						}
+						
+						if($it['clock'] == 1)//排钟
+						{
+							$ticheng = $service_type[0]['pai_commission'];                    
+						}
+						else if($it['clock'] == 2)//点钟
+						{
+							$ticheng = $service_type[0]['commission'];
+						}
+						
+						if($it['clock'] == 1)//排钟
+						{
+							$jd_ticheng = $service_type[0]['pai_commission2'];              
+						}
+						else if($it['clock'] == 2)//点钟
+						{
+							$jd_ticheng = $service_type[0]['commission2'];
+						}
+					}
                     
-                    if($it['clock'] == 1)//排钟
-                    {
-                        $ticheng = $service_type[0]['pai_commission'];                    
-                    }
-                    else if($it['clock'] == 2)//点钟
-                    {
-                        $ticheng = $service_type[0]['commission'];
-                    }
-                    
-                    if($it['clock'] == 1)//排钟
-                    {
-                        $jd_ticheng = $service_type[0]['pai_commission2'];              
-                    }
-                    else if($it['clock'] == 2)//点钟
-                    {
-                        $jd_ticheng = $service_type[0]['commission2'];
-                    }
-                    
-                    //$room_number = $it['room_number'];
                     $room_id = $it['room_number'];//网页传过来的就是 roomid
-                    // $room = Db::query("select * from private_room where name='$room_number' ");
-                    // if($room)
-                    // {
-                        // $room_id = $room[0]['ID'];
-                    // }				
 
                     $sv_order = new \app\api\model\Serviceorder(['order_id'=>$order_id,'service_type'=>1,
                     'item_id'=>$item_id,'job_number'=>$it['job_number'],'price'=>$it['price']*100,

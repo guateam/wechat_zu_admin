@@ -53,6 +53,8 @@ class Consumedorder extends Controller
             else 
             {
                 $order[$index]['clock_type'] = 3;
+				$order[$index]['jd_number'] = 0;
+				$order[$index]['room_number'] = '0';
             }
 
             foreach($so as  $s)

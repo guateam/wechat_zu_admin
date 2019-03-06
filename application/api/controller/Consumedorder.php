@@ -14,10 +14,13 @@
             $data = UserModel::all();
             return $data;
         }
-        public function get_all_origin(){
-            $data = Db::query("select * from consumed_order");
+        public function get_all_origin()
+		{
+            //$data = Db::query("select * from consumed_order");//
+			$data = Db::query("select * from consumed_order where (state != 0 and state != 3)");//把取消的和等待支付的订单，不显示在订单列表页面
             return $data;
         }
+		
         //订单数量
         public function pay_count(){
             $data = UserModel::all();

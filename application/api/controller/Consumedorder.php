@@ -14,10 +14,17 @@
             $data = UserModel::all();
             return $data;
         }
+		
         public function get_all_origin()
 		{
             //$data = Db::query("select * from consumed_order");//
 			$data = Db::query("select * from consumed_order where (state != 0 and state != 3)");//把取消的和等待支付的订单，不显示在订单列表页面
+            return $data;
+        }
+		
+		public function get_all_wechat()
+		{
+			$data = Db::query("select * from consumed_order where (state != 0 and state != 3) and source = 0");//把取消的和等待支付的订单，不显示在订单列表页面，只显示微信小程序订单
             return $data;
         }
 		

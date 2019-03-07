@@ -29,7 +29,8 @@
         </a>
     </nav>
     <div class="page-container">
-        <!-- <div class="text-c"> 日期范围：
+        <!--
+			<div class="text-c"> 日期范围：
             <input type="text" onfocus="WdatePicker({})" value="" id="datemin" class="input-text Wdate" style="width:120px;"> -
             <input type="text" onfocus="WdatePicker({})" value="" id="datemax" class="input-text Wdate" style="width:120px;">
             <button type="submit" class="btn btn-success radius" id="search" name="">
@@ -38,7 +39,8 @@
             <button type="button" onclick="location.reload()" class="btn btn-success radius" id="refresh" name="">
                      清空筛选条件
             </button>
-        </div> -->
+        </div>
+		-->
         <div class="cl pd-5 bg-1 bk-gray mt-20">
             <span class="r">共有数据：
                 <strong>{$count}</strong> 条
@@ -144,15 +146,38 @@
             }
         })
 		
-        $("#search").on("click", () => {
-            table.draw();
-        })
+        //$("#search").on("click", () => {
+        //    table.draw();
+        //})
 
         /*用户-编辑*/
         function member_edit(title, url, id, w, h) 
 		{
             layer_show(title, url, w, h);
         }
+		
+		$("#search").on("click", () => {
+            if ($("#datemin").val() == "" || $("#datemax").val() == "") {
+                swal({
+                    title: "请填写完整的时间段"
+                })
+                return;
+            }
+
+            begin = $("#datemin").val();
+            end = $("#datemax").val();
+            swal({
+                title: "搜索中...",
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                showCloseButton: false,
+                onOpen: () => {
+                    swal.showLoading()
+                },
+            })
+            window.location.href = "/wechat_zu_admin/public/index.php/admin/Yejidetail/index/edit/{$edit}/first_day/" +
+                begin + "/last_day/" + end
+        })
 
 
     </script>

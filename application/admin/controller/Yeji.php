@@ -90,6 +90,7 @@ class Yeji extends Controller
 		$this->assign('begin',$begin);
         $begin.=" 00:00:00";
         $begin = strtotime($begin);
+		$begin = $begin + 9 * 3600;
 		
 		
         if($end=='')
@@ -99,6 +100,7 @@ class Yeji extends Controller
 		$this->assign('end',$end);
         $end.=" 23:59:59";
         $end = strtotime($end);
+		$end = $end + 9 * 3600;
 		
 		$this->assign('job_number',$job_number);
 		
@@ -150,6 +152,8 @@ class Yeji extends Controller
         $this->assign('servicenamelist',$servicenamelist);
 		$this->assign('roomnumberlist',$roomnumberlist);
         $this->assign('endtimelist',$endtimelist);
+		
+		$this->assign("edit",$edit);
 		
 		$this->assign('tech_type',$tech_type);
 		

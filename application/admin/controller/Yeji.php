@@ -16,12 +16,14 @@ class Yeji extends Controller
         if(is_null($first_day))
         {
             $first_day = strtotime(date("Y-m-01"));
+			$first_day = $first_day + 9 * 3600;
             $this->assign("begin",date("Y-m-01"));
         }
         else
         {
             $this->assign("begin",$first_day);
             $first_day = strtotime($first_day);
+			$first_day = $first_day + 9 * 3600;
         }
         //本月最后一天
 
@@ -33,12 +35,14 @@ class Yeji extends Controller
             // $this->assign("end",$EndDate);
 			
 			$last_day = strtotime(date("Y-m-t")) + 24 * 3600 - 1;//时间戳要改下
+			$last_day = $last_day + 9 * 3600;
             $this->assign("end",date("Y-m-t"));
         }
         else
         {
             $this->assign("end",$last_day);//日期不会错
             $last_day = strtotime($last_day) + 24 * 3600 - 1;//时间戳要改下
+			$last_day = $last_day + 9 * 3600;
         }
 
         $yeji = $ctrl->get_all_yeji($first_day,$last_day);

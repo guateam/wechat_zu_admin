@@ -40,7 +40,8 @@
             <table class="table table-border table-bordered table-hover table-bg table-sort">
                 <thead>
                     <tr class="text-c">
-                        <th>用户名</th>
+						<th>openid</th>
+                        <!--<th>用户名</th>-->
                         <th>微信名</th>
                         <th>性别</th>
                         <th>手机</th>
@@ -57,7 +58,8 @@
                 <tbody>
                     {volist name="$customer" id="it" key="k"}
                     <tr class="text-c">
-                        <td>{$it.spoke_name}</td>
+						<td>{$it.user_id}</td>
+                        <!--<td>{$it.spoke_name}</td>-->
                         <td>{$it.name}</td>
                         <td>{if condition="$it.gender==1"}男{elseif condition="$it.gender==2"}女{else /}未知{/if}</td>
                         <td>{$it.phone_number}</td>

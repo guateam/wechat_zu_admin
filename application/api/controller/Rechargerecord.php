@@ -101,7 +101,7 @@
 		
         public function get_all_by_user()
 		{
-            $all_cus = Db::query("select * from customer group by openid");
+            $all_cus = Db::query("select * from customer order by openid");
             $records = [];
             foreach($all_cus as $cus)
 			{
@@ -114,6 +114,7 @@
                 {
                     if(is_null($record[0]['charge']) )$record[0]['charge'] = 0;
                     $record = array_merge($record[0],['spoke_name'=>$cus['spoke_name'],'phone_number'=>$cus['phone_number'],'name'=>$cus['name'],'user_id'=>$cus['openid'],'gender'=>$cus['gender'],'level'=>$cus['level'],'registration_date'=>$cus['registration_date']]);
+					
                     array_push($records,$record);
                 }
             }
@@ -132,6 +133,7 @@
                 }
 
                 $records[$i]['charge'] = intval($records[$i]['charge']);//充值金额
+                
                 $money = $cus->get_cash($records[$i]['user_id']);//余额
                 
                 $records[$i] = array_merge($records[$i],['cash'=>$money]);

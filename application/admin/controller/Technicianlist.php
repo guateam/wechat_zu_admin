@@ -9,7 +9,8 @@ class Technicianlist extends Controller
 {
     public function Technicianlist($edit)
 	{
-        $ctrl =new \app\api\controller\Technician();
+        $ctrl =new \app\api\controller\Technician();		
+		
         $sk = new \app\api\controller\Skill();
         $so = new \app\api\controller\Serviceorder();
         $rt = new \app\api\controller\Rate();
@@ -24,6 +25,7 @@ class Technicianlist extends Controller
 		$refererlist = [];
         
 		$technicians = $ctrl->get_all_technician();
+		//$technicians = Db::query("select * from technician order by job_number");
         foreach($technicians as $idx => $tc)
 		{
             //技能等级

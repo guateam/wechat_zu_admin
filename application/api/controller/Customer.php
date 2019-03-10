@@ -3,7 +3,8 @@
     use think\Controller;
     use \app\api\model\Customer as UserModel;
     use think\Db;
-    class Customer extends Controller{
+    class Customer extends Controller
+	{
 
 		public static $API_URL = "http://103.239.247.197:8899/api?url=";
 		

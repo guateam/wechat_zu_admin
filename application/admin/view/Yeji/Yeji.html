@@ -42,6 +42,12 @@
             </button>
         </div>
         <div class="cl pd-5 bg-1 bk-gray mt-20">
+			
+			<a href="javascript:;" onclick="yejiSync()" class="btn btn-warning radius">
+				<i class="Hui-iconfont">&#xe6e2;</i>
+				业绩同步
+			</a>
+			
             <span class="r">
                 共有数据：<strong>{$count}</strong>
                 条
@@ -129,6 +135,24 @@
                 ]
             });
         });
+		
+		function yejiSync()
+		{
+			$.post("__ROOT__/index.php/api/Technician/yejiSync",{
+			}).done((res)=>{
+			
+				var ret = JSON.parse(res);
+				if (ret.success == true) 
+				{
+					alert("价格同步成功,同步了"+ret.num+"项");
+					location.replace(location.href);
+				}
+				else
+				{
+					alert("价格同步失败，请重试");
+				}
+			})
+		}
 
         /*用户-添加*/
         function member_add(title, url, w, h) {

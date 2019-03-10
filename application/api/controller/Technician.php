@@ -8,6 +8,8 @@ use Exception;
 
 class Technician extends Controller
 {
+	public static $API_URL = "http://103.239.247.197:8899/api?url=";
+	
     /**
      * 获取技师列表
      * 2018-8-24    创建   袁宜照
@@ -16,6 +18,8 @@ class Technician extends Controller
     public function get_all_technician()
     {
         $data = UserModel::all();
+		
+		//$data = Db::query("select * from technician order by job_number");
         return $data;
     }
     /**
@@ -320,6 +324,7 @@ class Technician extends Controller
         }
         return json(['status' => 0]);
     }
+	
     public static function get_lost($job_number, $begin, $end)
     {
         //该技师在时间内自己做的所有完成的（4，5）订单
@@ -340,6 +345,371 @@ class Technician extends Controller
         $date2 = explode($tags,$date2);
         return abs($date1[0] - $date2[0]) * 12 - $date2[1] + abs($date1[1]);
     }
+    
+    public function yejiSync()
+    {		
+		$tech = Db::query("select * from technician where type = 1");//先轮询技师		
+		if($tech)
+		{
+			foreach($tech as $eachtech)
+			{
+				$job_number = $eachtech['job_number'];
+				self::eachJsYejiSync($job_number,1,2);
+			}
+		}
+		
+		$tech = Db::query("select * from technician where type = 2");//再轮询接待		
+		if($tech)
+		{
+			foreach($tech as $eachtech)
+			{
+				$job_number = $eachtech['job_number'];
+				self::eachJdYejiSync($job_number,1,2);
+			}
+		}		
+	}
+
+
+	public function eachJsYejiSync($job_number,$begin,$end)//工号，起始时间，结束时间
+	{
+		$ori_url = "http://www.dzbsaas.com/footmassage/piecewagereport/getdailydetailbyempl.do?emplCode=".$job_number."&dayName=2019/03/09&edayName=2019/03/09";
+
+		$url = Technician::$API_URL.urlencode($ori_url);
+		
+		$content = file_get_contents($url);	
+		$obj = json_decode($content);
+		if ($obj->success == false)
+		{
+			echo $content;//success:false;msg:token is Invalid
+			return;
+		}
+		$ret1 = $obj->data;	
+		
+		$Yejis = json_decode($ret1);
+
+		try
+		{
+			foreach($Yejis as $eachservice)//该技师的每个项目 循环 技师
+			{
+				$createDate = $eachservice->createDate;//时间
+                $modifyDate = $eachservice->modifyDate;//时间
+                $billSn = $eachservice->billSn;//系统单号
+                $itemType = $eachservice->itemType;//项目类型 ServItem_s：小项目 | ServItem：服务 | Recommend：接待推荐 | member 充卡                
+                $quantity = $eachservice->quantity;//项目数量
+                $wage = $eachservice->wage;//提成
+                $emplCode = $eachservice->emplCode;//工号
+				
+				//------------------------------------------------------
+                $service_type = 0;
+                $yongjin = 300;//暂定 3元
+                $modifyDate = intval($modifyDate / 1000);				
+				
+				//------------------------------------------------------
+				if ($itemType == "ServItem")//服务
+				{
+					$service_type = 1;//服务
+				}
+				else if ($itemType == "ServItem_s")//小项目
+				{
+					$service_type = 2;//小项目
+				}
+				else if ($itemType == "member")//小项目
+				{
+					$service_type = 3;//充卡
+                }
+                else if ($itemType == "Recommend")//接待
+				{
+					$service_type = 4;//接待
+				}
+				
+				//------------------------------------------------------
+
+				if ($service_type == 1 || $service_type == 2)//服务，小项目
+				{
+					$itemName = $eachservice->itemName;//项目名称
+					$memo = $eachservice->memo;//备注，就是房间号
+					$arrageType = $eachservice->arrageType;//点排  Arrangements：排钟 | Specify：点钟 | Add：加钟     
+					
+					//------------------------------------------------------
+					if ($arrageType == "Arrangements")
+					{
+						$clock_type = 1;//排钟
+					}
+					else if ($arrageType == "Specify"|| $arrageType == "Add")
+					{
+						$clock_type = 2;//点钟
+					}
+					//------------------------------------------------------
+					
+					$myservice = Db::query("select * from service_order where order_id = '$billSn' and job_number = '$emplCode'");
+					if ($myservice)//已存在
+					{
+						//do nothing
+					}
+					else
+					{
+						$serviceID = Db::query("select * from service_type where name = '$itemName'");
+						if ($serviceID)
+						{
+							$item_id = $serviceID[0]['ID'];
+							$price = $serviceID[0]['price'];
+
+							if ($service_type == 1)//服务
+							{
+								if ($clock_type == 1)
+								{
+									$ticheng = $serviceID[0]['pai_commission'];
+								}
+								else if ($clock_type == 2)
+								{
+									$ticheng = $serviceID[0]['commission'];
+								}
+							}
+							else if ($service_type == 2)//小项目
+							{
+								$ticheng = $serviceID[0]['pai_commission'];//小项目都拿排钟的提成
+							}
+						}
+
+						$room = Db::query("select * from private_room where name = '$memo'");
+						if ($room)
+						{
+							$private_room_number = $room[0]['ID'];
+						}
+					   
+						$sv_order = new \app\api\model\Serviceorder(['order_id'=>$billSn,'service_type'=>$service_type,
+							'item_id'=>$item_id,'job_number'=>$emplCode,'price'=>$price,
+							'private_room_number'=>$private_room_number,'clock_type'=>$clock_type,'appoint_time'=>$modifyDate,
+							'ticheng'=>$ticheng,'yongjin'=>$yongjin]);
+
+						$sv_order->save();
+					}
+					
+					$order = Db::query("select * from consumed_order where order_id = '$billSn'");
+					if ($order)//已存在
+					{
+						//do nothing
+					}
+					else
+					{
+						$order = new \app\api\model\Consumedorder(['order_id'=>$billSn,
+							'state'=>4,'generated_time'=>$modifyDate,'appoint_time'=>$modifyDate,
+							'end_time'=>$modifyDate,]);//只是有个订单，支付了多少钱，应该付多少，支付方式，见点钟宝
+						
+						$order->save();
+					}
+				}
+				else if ($service_type == 3)//充卡
+				{
+					//-------------------------------------------------					
+					$memo = $eachservice->memo;//备注，"卡号:0005776588"					
+					$memos = explode(':',$memo);					
+					if (count($memos) >= 2)
+					{
+						$cardNo = $memos[1];
+					}
+					//-------------------------------------------------
+					$itemName = $eachservice->itemName;//"充值1000送300"
+					$itemNames = explode('送',$itemName);					
+					if (count($itemNames) >= 2)
+					{
+						$cashStr = $itemNames[0];
+						$cashs = explode('值',$cashStr);
+						
+						if (count($cashs) >= 2)
+						{
+							$cash = $cashs[1];
+						}
+					}
+					//-------------------------------------------------
+					
+					$dict=['1','2','3','4','5','6','7','8','9','0'];
+					$rnd = "";
+					
+					//$rnd.=date("YmdHis");//年月日时分秒
+					$rnd.=date('YmdHis', $modifyDate);
+					
+					for($i=0;$i<2;$i++)
+					{
+						$rnd.=$dict[rand(0,count($dict)-1)];//6位随机整数
+					}
+					for($i=0;$i<4;$i++)
+					{
+						$rnd.=$dict[rand(0,count($dict)-1)];
+					}
+					//-------------------------------------------------
+			
+					$chongka = Db::query("select * from chongka_record where cardNo = '$cardNo' and generated_time = '$modifyDate'");
+					if ($chongka)//已存在
+					{
+						//do nothing
+					}
+					else
+					{
+						Db::query("insert into chongka_record (`record_id`,`cardNo`,`charge`,`job_number`,`generated_time`) values ('$rnd','$cardNo','$cash','$emplCode','$modifyDate')");
+					}
+				}
+			}
+			
+			echo json_encode([
+							'success'=>true,
+							'msg'=>'',
+			]);
+			return;
+		}
+		catch(Exception $e)
+		{
+			echo json_encode([
+					'success'=>false,
+					'msg'=>'sync fail'
+			]);
+			return;
+		}
+		return;
+	}
+	
+	
+	public function eachJdYejiSync($job_number,$begin,$end)//工号，起始时间，结束时间 接待
+	{
+		$ori_url = "http://www.dzbsaas.com/footmassage/piecewagereport/getdailydetailbyempl.do?emplCode=".$job_number."&dayName=2019/03/09&edayName=2019/03/09";
+
+		$url = Technician::$API_URL.urlencode($ori_url);
+		
+		$content = file_get_contents($url);	
+		$obj = json_decode($content);
+		if ($obj->success == false)
+		{
+			echo $content;//success:false;msg:token is Invalid
+			return;
+		}
+		$ret1 = $obj->data;	
+		
+		$Yejis = json_decode($ret1);
+
+		try
+		{
+			foreach($Yejis as $eachservice)//该接待的每个项目 循环
+			{
+				$createDate = $eachservice->createDate;//时间
+                $modifyDate = $eachservice->modifyDate;//时间
+                $billSn = $eachservice->billSn;//系统单号
+                $itemType = $eachservice->itemType;//项目类型 ServItem_s：小项目 | ServItem：服务 | Recommend：接待推荐                
+                $quantity = $eachservice->quantity;//项目数量
+                $wage = $eachservice->wage;//提成
+                $emplCode = $eachservice->emplCode;//工号
+                $modifyDate = intval($modifyDate / 1000);
+				
+				//------------------------------------------------------
+				if ($itemType == "ServItem")//服务
+				{
+					$service_type = 1;//服务
+				}
+				else if ($itemType == "ServItem_s")//小项目
+				{
+					$service_type = 2;//小项目
+				}
+				else if ($itemType == "member")//充卡
+				{
+					$service_type = 3;//充卡
+                }
+                else if ($itemType == "Recommend")//接待
+				{
+					$service_type = 4;//接待
+				}
+				//------------------------------------------------------
+				
+				if ($service_type == 4)//接待
+				{
+					$itemName = $eachservice->itemName;//项目名称
+					$memo = $eachservice->memo;//备注，就是房间号
+					$arrageType = $eachservice->arrageType;//点排  Arrangements：排钟 | Specify：点钟 | Add：加钟   
+				
+					$serviceID = Db::query("select * from service_type where name = '$itemName'");
+					if ($serviceID)
+					{
+						$item_id = $serviceID[0]['ID'];
+						
+						$ticheng = $serviceID[0]['pai_commission2'];
+					}
+
+					$myservice = Db::query("select * from service_order where order_id = '$billSn' and item_id = '$item_id' and jd_number = 0");	//接待好几个订单，相同的订单号			
+					if ($myservice)//已存在
+					{					
+						Db::query("update service_order set jd_number = '$emplCode',jd_ticheng='$ticheng' where order_id='$billSn' and item_id = '$item_id' and jd_number = 0");
+					}
+					else
+					{
+						//do nothing
+					}
+				}
+				else if ($service_type == 3)//充卡
+				{
+					//-------------------------------------------------					
+					$memo = $eachservice->memo;//备注，"卡号:0005776588"					
+					$memos = explode(':',$memo);					
+					if (count($memos) >= 2)
+					{
+						$cardNo = $memos[1];
+					}
+					//-------------------------------------------------
+					$itemName = $eachservice->itemName;//"充值1000送300"
+					$itemNames = explode('送',$itemName);					
+					if (count($itemNames) >= 2)
+					{
+						$cashStr = $itemNames[0];
+						$cashs = explode('值',$cashStr);
+						
+						if (count($cashs) >= 2)
+						{
+							$cash = $cashs[1];
+						}
+					}
+					//-------------------------------------------------
+					
+					$dict=['1','2','3','4','5','6','7','8','9','0'];
+					$rnd = "";
+					
+					//$rnd.=date("YmdHis");//年月日时分秒
+					$rnd.=date('YmdHis', $modifyDate);
+					
+					for($i=0;$i<2;$i++)
+					{
+						$rnd.=$dict[rand(0,count($dict)-1)];//6位随机整数
+					}
+					for($i=0;$i<4;$i++)
+					{
+						$rnd.=$dict[rand(0,count($dict)-1)];
+					}
+					//-------------------------------------------------
+			
+					$chongka = Db::query("select * from chongka_record where cardNo = '$cardNo' and generated_time = '$modifyDate'");
+					if ($chongka)//已存在
+					{
+						//do nothing
+					}
+					else
+					{
+						Db::query("insert into chongka_record (`record_id`,`cardNo`,`charge`,`job_number`,`generated_time`) values ('$rnd','$cardNo','$cash','$emplCode','$modifyDate')");
+					}
+				}
+			}
+			
+			echo json_encode([
+						'success'=>true,
+						'msg'=>'',
+				]);
+			return;
+		}
+		catch(Exception $e)
+		{
+			echo json_encode([
+					'success'=>false,
+					'msg'=>'sync fail'
+			]);
+			return;
+		}
+		return;
+	}
 
     /**
      * 获取技师的业绩

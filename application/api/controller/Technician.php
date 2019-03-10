@@ -10,6 +10,8 @@ class Technician extends Controller
 {
 	public static $API_URL = "http://103.239.247.197:8899/api?url=";
 	
+	//date_default_timezone_set('PRC');　　　　　　　　　 //设置中国时区 	
+	
     /**
      * 获取技师列表
      * 2018-8-24    创建   袁宜照
@@ -347,7 +349,12 @@ class Technician extends Controller
     }
     
     public function yejiSync()
-    {		
+    {
+        date_default_timezone_set('PRC');	
+        //$time = time();
+        $mytime = mktime(0,0,0,date('m'),date('d')-1,date('Y'));
+        $yesterday = date('Y/m/d',$mytime);
+
 		$tech = Db::query("select * from technician where type = 1");//先轮询技师		
 		if($tech)
 		{
@@ -355,7 +362,7 @@ class Technician extends Controller
 			{
                 $job_number = $eachtech['job_number'];
 				
-				self::eachJsYejiSync($job_number,1,2);
+				self::eachJsYejiSync($job_number,"2019/03/05",$yesterday);
 			}
 		}
 		
@@ -366,7 +373,7 @@ class Technician extends Controller
 			{
 				$job_number = $eachtech['job_number'];
 				
-				self::eachJdYejiSync($job_number,1,2);
+				self::eachJdYejiSync($job_number,"2019/03/05",$yesterday);
 			}
 		}	
 
@@ -380,7 +387,7 @@ class Technician extends Controller
 
 	public function eachJsYejiSync($job_number,$begin,$end)//工号，起始时间，结束时间
 	{
-		$ori_url = "http://www.dzbsaas.com/footmassage/piecewagereport/getdailydetailbyempl.do?emplCode=".$job_number."&dayName=2019/03/09&edayName=2019/03/09";
+		$ori_url = "http://www.dzbsaas.com/footmassage/piecewagereport/getdailydetailbyempl.do?emplCode=".$job_number."&dayName=".$begin."&edayName=".$end;
 
 		$url = Technician::$API_URL.urlencode($ori_url);
 		
@@ -406,6 +413,7 @@ class Technician extends Controller
                 $quantity = $eachservice->quantity;//项目数量
                 $wage = $eachservice->wage;//提成
                 $emplCode = $eachservice->emplCode;//工号
+				$uuid = $eachservice->id;//
 				
 				//------------------------------------------------------
                 $service_type = 0;
@@ -488,7 +496,8 @@ class Technician extends Controller
 					
 					//------------------------------------------------------
 					
-					$myservice = Db::query("select * from service_order where order_id = '$billSn' and job_number = '$emplCode' and item_id = '$item_id' and clock_type = '$clock_type'");
+					//$myservice = Db::query("select * from service_order where order_id = '$billSn' and job_number = '$emplCode' and item_id = '$item_id' and clock_type = '$clock_type'");
+					$myservice = Db::query("select * from service_order where uuid = '$uuid'");
 					if ($myservice)//已存在
 					{
 						//do nothing
@@ -500,7 +509,7 @@ class Technician extends Controller
 							$sv_order = new \app\api\model\Serviceorder(['order_id'=>$billSn,'service_type'=>$service_type,
 								'item_id'=>$item_id,'job_number'=>$emplCode,'price'=>$price,
 								'private_room_number'=>$private_room_number,'clock_type'=>$clock_type,'appoint_time'=>$modifyDate,
-								'ticheng'=>$ticheng,'yongjin'=>$yongjin]);
+								'ticheng'=>$ticheng,'yongjin'=>$yongjin, 'uuid'=>$uuid]);
 
 							$sv_order->save();
 						}
@@ -530,7 +539,7 @@ class Technician extends Controller
 						$cardNo = $memos[1];
 					}
 					//-------------------------------------------------
-					$itemName = $eachservice->itemName;//"充值1000送300"
+					$itemName = $eachservice->itemName;//"充值1000送300" 充2000送600
 					$itemNames = explode('送',$itemName);					
 					if (count($itemNames) >= 2)
 					{
@@ -540,6 +549,14 @@ class Technician extends Controller
 						if (count($cashs) >= 2)
 						{
 							$cash = $cashs[1];
+						}
+						else
+						{
+							$cashs_2 = explode('充',$cashStr);
+							if (count($cashs_2) >= 2)
+							{
+								$cash = $cashs_2[1];
+							}
 						}
 					}
 					//-------------------------------------------------
@@ -592,7 +609,8 @@ class Technician extends Controller
 	
 	public function eachJdYejiSync($job_number,$begin,$end)//工号，起始时间，结束时间 接待
 	{
-		$ori_url = "http://www.dzbsaas.com/footmassage/piecewagereport/getdailydetailbyempl.do?emplCode=".$job_number."&dayName=2019/03/09&edayName=2019/03/09";
+        //$ori_url = "http://www.dzbsaas.com/footmassage/piecewagereport/getdailydetailbyempl.do?emplCode=".$job_number."&dayName=2019/03/09&edayName=2019/03/09";
+        $ori_url = "http://www.dzbsaas.com/footmassage/piecewagereport/getdailydetailbyempl.do?emplCode=".$job_number."&dayName=".$begin."&edayName=".$end;
 
 		$url = Technician::$API_URL.urlencode($ori_url);
 		
@@ -674,8 +692,9 @@ class Technician extends Controller
 					{
 						$cardNo = $memos[1];
 					}
-					//-------------------------------------------------
-					$itemName = $eachservice->itemName;//"充值1000送300"
+                    //-------------------------------------------------
+                    $cash = 0;
+					$itemName = $eachservice->itemName;//"充值1000送300" 充2000送600
 					$itemNames = explode('送',$itemName);					
 					if (count($itemNames) >= 2)
 					{
@@ -685,6 +704,14 @@ class Technician extends Controller
 						if (count($cashs) >= 2)
 						{
 							$cash = $cashs[1];
+						}
+						else
+						{
+							$cashs_2 = explode('充',$cashStr);
+							if (count($cashs_2) >= 2)
+							{
+								$cash = $cashs_2[1];
+							}
 						}
 					}
 					//-------------------------------------------------

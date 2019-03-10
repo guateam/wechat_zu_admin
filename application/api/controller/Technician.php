@@ -353,7 +353,8 @@ class Technician extends Controller
 		{
 			foreach($tech as $eachtech)
 			{
-				$job_number = $eachtech['job_number'];
+                $job_number = $eachtech['job_number'];
+				
 				self::eachJsYejiSync($job_number,1,2);
 			}
 		}
@@ -364,9 +365,16 @@ class Technician extends Controller
 			foreach($tech as $eachtech)
 			{
 				$job_number = $eachtech['job_number'];
+				
 				self::eachJdYejiSync($job_number,1,2);
 			}
-		}		
+		}	
+
+		echo json_encode([
+				'success'=>true,
+				'msg'=>'',
+			]);
+		return;
 	}
 
 
@@ -380,7 +388,7 @@ class Technician extends Controller
 		$obj = json_decode($content);
 		if ($obj->success == false)
 		{
-			echo $content;//success:false;msg:token is Invalid
+			echo $content;//success:false;msg:token is Invalid //这里有可能是这个技师，今天没上钟
 			return;
 		}
 		$ret1 = $obj->data;	
@@ -427,6 +435,12 @@ class Technician extends Controller
 				if ($service_type == 1 || $service_type == 2)//服务，小项目
 				{
 					$itemName = $eachservice->itemName;//项目名称
+					
+					if ($itemName == "洗脸面膜")
+					{
+						echo "";
+					}
+					
 					$memo = $eachservice->memo;//备注，就是房间号
 					$arrageType = $eachservice->arrageType;//点排  Arrangements：排钟 | Specify：点钟 | Add：加钟     
 					
@@ -435,54 +449,66 @@ class Technician extends Controller
 					{
 						$clock_type = 1;//排钟
 					}
-					else if ($arrageType == "Specify"|| $arrageType == "Add")
+					else if ($arrageType == "Specify")
 					{
 						$clock_type = 2;//点钟
 					}
+					else if ($arrageType == "Add")
+					{
+						$clock_type = 3;//加钟
+					}
+					//------------------------------------------------------					
+					$serviceID = Db::query("select * from service_type where name = '$itemName'");
+					if ($serviceID)
+					{
+						$item_id = $serviceID[0]['ID'];
+						$price = $serviceID[0]['price'];
+
+						if ($service_type == 1)//服务
+						{
+							if ($clock_type == 1)//排钟
+							{
+								$ticheng = $serviceID[0]['pai_commission'];
+							}
+							else if ($clock_type == 2 || $clock_type == 3)//点钟或者加钟
+							{
+								$ticheng = $serviceID[0]['commission'];
+							}
+						}
+						else if ($service_type == 2)//小项目
+						{
+							$ticheng = $serviceID[0]['pai_commission'];//小项目都拿排钟的提成
+						}
+                    }
+                    else //查不到项目名称
+                    {                        
+                    }
+
+					//------------------------------------------------------
+					$room = Db::query("select * from private_room where name = '$memo'");
+					if ($room)
+					{
+						$private_room_number = $room[0]['ID'];
+					}
+					
 					//------------------------------------------------------
 					
-					$myservice = Db::query("select * from service_order where order_id = '$billSn' and job_number = '$emplCode'");
+					$myservice = Db::query("select * from service_order where order_id = '$billSn' and job_number = '$emplCode' and item_id = '$item_id' and clock_type = '$clock_type'");
 					if ($myservice)//已存在
 					{
 						//do nothing
 					}
 					else
 					{
-						$serviceID = Db::query("select * from service_type where name = '$itemName'");
-						if ($serviceID)
-						{
-							$item_id = $serviceID[0]['ID'];
-							$price = $serviceID[0]['price'];
+						for ($i = 0;$i < $quantity; $i++)
+						{ 
+							$sv_order = new \app\api\model\Serviceorder(['order_id'=>$billSn,'service_type'=>$service_type,
+								'item_id'=>$item_id,'job_number'=>$emplCode,'price'=>$price,
+								'private_room_number'=>$private_room_number,'clock_type'=>$clock_type,'appoint_time'=>$modifyDate,
+								'ticheng'=>$ticheng,'yongjin'=>$yongjin]);
 
-							if ($service_type == 1)//服务
-							{
-								if ($clock_type == 1)
-								{
-									$ticheng = $serviceID[0]['pai_commission'];
-								}
-								else if ($clock_type == 2)
-								{
-									$ticheng = $serviceID[0]['commission'];
-								}
-							}
-							else if ($service_type == 2)//小项目
-							{
-								$ticheng = $serviceID[0]['pai_commission'];//小项目都拿排钟的提成
-							}
+							$sv_order->save();
 						}
-
-						$room = Db::query("select * from private_room where name = '$memo'");
-						if ($room)
-						{
-							$private_room_number = $room[0]['ID'];
-						}
-					   
-						$sv_order = new \app\api\model\Serviceorder(['order_id'=>$billSn,'service_type'=>$service_type,
-							'item_id'=>$item_id,'job_number'=>$emplCode,'price'=>$price,
-							'private_room_number'=>$private_room_number,'clock_type'=>$clock_type,'appoint_time'=>$modifyDate,
-							'ticheng'=>$ticheng,'yongjin'=>$yongjin]);
-
-						$sv_order->save();
 					}
 					
 					$order = Db::query("select * from consumed_order where order_id = '$billSn'");
@@ -579,7 +605,7 @@ class Technician extends Controller
 		$obj = json_decode($content);
 		if ($obj->success == false)
 		{
-			echo $content;//success:false;msg:token is Invalid
+			echo $content;//success:false;msg:token is Invalid //这里有可能是这个接待，今天没上钟
 			return;
 		}
 		$ret1 = $obj->data;	
@@ -593,6 +619,8 @@ class Technician extends Controller
 				$createDate = $eachservice->createDate;//时间
                 $modifyDate = $eachservice->modifyDate;//时间
                 $billSn = $eachservice->billSn;//系统单号
+				
+				
                 $itemType = $eachservice->itemType;//项目类型 ServItem_s：小项目 | ServItem：服务 | Recommend：接待推荐                
                 $quantity = $eachservice->quantity;//项目数量
                 $wage = $eachservice->wage;//提成
@@ -630,12 +658,12 @@ class Technician extends Controller
 						$item_id = $serviceID[0]['ID'];
 						
 						$ticheng = $serviceID[0]['pai_commission2'];
-					}
+                    }
 
-					$myservice = Db::query("select * from service_order where order_id = '$billSn' and item_id = '$item_id' and jd_number = 0");	//接待好几个订单，相同的订单号			
+					$myservice = Db::query("select * from service_order where order_id = '$billSn' and item_id = '$item_id' and jd_number = -1");	//接待好几个订单，相同的订单号			
 					if ($myservice)//已存在
 					{					
-						Db::query("update service_order set jd_number = '$emplCode',jd_ticheng='$ticheng' where order_id='$billSn' and item_id = '$item_id' and jd_number = 0");
+						Db::query("update service_order set jd_number = '$emplCode',jd_ticheng='$ticheng' where order_id='$billSn' and item_id = '$item_id' and jd_number = -1");
 					}
 					else
 					{
@@ -769,6 +797,11 @@ class Technician extends Controller
 						$dian++;
 						$dian_price += $svod['ticheng'];
 					}
+					else if($svod['clock_type']==3)//加钟
+					{
+						$dian++;
+						$dian_price += $svod['ticheng'];
+					}
 				}
 			}
 		}
@@ -791,6 +824,11 @@ class Technician extends Controller
 						$pai_price += $svod['jd_ticheng'];
 					}
 					else if($svod['clock_type']==2)//点钟
+					{
+						$dian++;
+						$dian_price += $svod['jd_ticheng'];
+					}
+					else if($svod['clock_type']==3)//加钟
 					{
 						$dian++;
 						$dian_price += $svod['jd_ticheng'];

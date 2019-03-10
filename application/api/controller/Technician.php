@@ -436,11 +436,6 @@ class Technician extends Controller
 				{
 					$itemName = $eachservice->itemName;//项目名称
 					
-					if ($itemName == "洗脸面膜")
-					{
-						echo "";
-					}
-					
 					$memo = $eachservice->memo;//备注，就是房间号
 					$arrageType = $eachservice->arrageType;//点排  Arrangements：排钟 | Specify：点钟 | Add：加钟     
 					

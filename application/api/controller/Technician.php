@@ -362,7 +362,7 @@ class Technician extends Controller
 			{
                 $job_number = $eachtech['job_number'];
 				
-				self::eachJsYejiSync($job_number,"2019/03/05",$yesterday);
+				$ret = self::eachJsYejiSync($job_number,"2019/03/05",$yesterday);
 			}
 		}
 		
@@ -373,7 +373,7 @@ class Technician extends Controller
 			{
 				$job_number = $eachtech['job_number'];
 				
-				self::eachJdYejiSync($job_number,"2019/03/05",$yesterday);
+				$ret = self::eachJdYejiSync($job_number,"2019/03/05",$yesterday);
 			}
 		}	
 
@@ -395,8 +395,8 @@ class Technician extends Controller
 		$obj = json_decode($content);
 		if ($obj->success == false)
 		{
-			echo $content;//success:false;msg:token is Invalid //这里有可能是这个技师，今天没上钟
-			return;
+			//echo $content;//success:false;msg:token is Invalid //这里有可能是这个技师，今天没上钟
+			return false;
 		}
 		$ret1 = $obj->data;	
 		
@@ -589,21 +589,21 @@ class Technician extends Controller
 				}
 			}
 			
-			echo json_encode([
-							'success'=>true,
-							'msg'=>'',
-			]);
-			return;
+			//echo json_encode([
+			//				'success'=>true,
+			//				'msg'=>'',
+			//]);
+			return true;
 		}
 		catch(Exception $e)
 		{
-			echo json_encode([
-					'success'=>false,
-					'msg'=>'sync fail'
-			]);
-			return;
+			//echo json_encode([
+			//		'success'=>false,
+			//		'msg'=>'sync fail'
+			//]);
+			return false;
 		}
-		return;
+		return true;
 	}
 	
 	
@@ -618,8 +618,8 @@ class Technician extends Controller
 		$obj = json_decode($content);
 		if ($obj->success == false)
 		{
-			echo $content;//success:false;msg:token is Invalid //这里有可能是这个接待，今天没上钟
-			return;
+			//echo $content;//success:false;msg:token is Invalid //这里有可能是这个接待，今天没上钟
+			return false;
 		}
 		$ret1 = $obj->data;	
 		
@@ -744,21 +744,21 @@ class Technician extends Controller
 				}
 			}
 			
-			echo json_encode([
-						'success'=>true,
-						'msg'=>'',
-				]);
-			return;
+			//echo json_encode([
+			//			'success'=>true,
+			//			'msg'=>'',
+			//	]);
+			return true;
 		}
 		catch(Exception $e)
 		{
-			echo json_encode([
-					'success'=>false,
-					'msg'=>'sync fail'
-			]);
-			return;
+			//echo json_encode([
+			//		'success'=>false,
+			//		'msg'=>'sync fail'
+			//]);
+			return false;
 		}
-		return;
+		return true;
 	}
 
     /**

@@ -20,6 +20,27 @@
 </head>
 
 <body>
+		<div id="loading-mask" style="display:none;position: fixed;background-color: rgba(0,0,0,0.65);top:0;bottom: 0;left: 0;right: 0;z-index: 99">
+            <div class="loading-main" style="position: absolute;width: 480px;height: 300px;top: 0;right: 0;bottom: 0;left: 0;margin: auto;text-align: center;">
+                <div title="2">
+                    <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                         width="120px" height="120px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+  <path fill="#FF6700" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+    <animateTransform attributeType="xml"
+                      attributeName="transform"
+                      type="rotate"
+                      from="0 25 25"
+                      to="360 25 25"
+                      dur="0.6s"
+                      repeatCount="indefinite"/>
+    </path>
+  </svg>
+                </div>
+                <p style="color: #fff">正在加载请等待......</p>
+            </div>
+
+        </div>
+		
     <nav class="breadcrumb">
         <i class="Hui-iconfont">&#xe67f;</i> 首页
         <span class="c-gray en">&gt;</span> 技师管理
@@ -43,7 +64,7 @@
         </div>
         <div class="cl pd-5 bg-1 bk-gray mt-20">
 			
-			<a href="javascript:;" onclick="yejiSync()" class="btn btn-warning radius">
+			<a href="javascript:;" onclick="yejiSync()" class="btn btn-warning radius" id = "submit">
 				<i class="Hui-iconfont">&#xe6e2;</i>
 				业绩同步
 			</a>
@@ -138,18 +159,32 @@
 		
 		function yejiSync()
 		{
+			if($('#submit').hasClass('disable'))
+			{
+				return;
+			}
+			
+			$('#loading-mask').show();
+            $('#submit').addClass('disable');
+			
 			$.post("__ROOT__/index.php/api/Technician/yejiSync",{
 			}).done((res)=>{
 			
 				var ret = JSON.parse(res);
 				if (ret.success == true) 
 				{
-					alert("价格同步成功,同步了"+ret.num+"项");
+					$('#submit').removeClass('disable');
+                    $('#loading-mask').hide();
+					
+					alert("业绩同步同步成功！");
 					location.replace(location.href);
 				}
 				else
 				{
-					alert("价格同步失败，请重试");
+					$('#submit').removeClass('disable');
+                    $('#loading-mask').hide();
+					
+					alert("业绩同步失败，请重试");
 				}
 			})
 		}

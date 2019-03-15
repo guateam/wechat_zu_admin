@@ -915,7 +915,16 @@ class Technician extends Controller
                 $yongjin += $data;
             }
         }
-		
+
+        //-------------------------------------------------------------
+        //打赏
+        $tip = 0;
+        $tips = Db::query("select sum(salary) from tip where  technician_id='$job_number' and date >= $begin and date <= $end");
+        if($tips)
+        {
+            $tip = $tips[0]['sum(salary)'];
+        }
+        //-------------------------------------------------------------
         return [
             'name' => $name,
 			'job_number' => $job_number,
@@ -924,12 +933,14 @@ class Technician extends Controller
             'dian' => $dian,
             'pai_earn' => $pai_price/100,
             'dian_earn'=> $dian_price/100,
+            'total_ticheng'=>($pai_price + $dian_price)/100,
 			'recharge'=> $recharge/100,
 			'recharge_ticheng'=> $recharge_ticheng/100,
             'come_from_other' => $yongjin/100,
             'yeji' =>$yeji/100,
-            'lost' => 0,
-            'final_salary' => ($pai_price + $dian_price + $yongjin + $recharge_ticheng)/100,
+            'lost' => 0,     
+            'tip'=>$tip/100,       
+            'final_salary' => ($pai_price + $dian_price + $yongjin + $recharge_ticheng + $tip)/100,
         ];
     }
 

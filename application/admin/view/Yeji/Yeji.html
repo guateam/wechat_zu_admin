@@ -80,24 +80,24 @@
                 <thead>
                     <tr class="text-c">
 					
-						<th width="60">姓名</th>
-                        <th width="60">工号</th>
+						<th width="40">姓名</th>
+                        <th width="40">工号</th>
                         
-                        <th width="60">点钟数量</th>
-						<th width="60">点钟提成</th>
-						<th width="60">排钟数量</th>
-                        <th width="60">排钟提成</th>
+                        <th width="40">点钟数量</th>
+						<th width="40">点钟提成</th>
+						<th width="40">排钟数量</th>
+                        <th width="40">排钟提成</th>
+						<th width="60">上钟提成</th>
 						<th width="40">充卡</th>
-						<th width="40">充卡提成</th>
+						<th width="60">充卡提成</th>
                        
                         <th width="60">业绩</th>
                         <th width="60">佣金</th>
 						
-						
-						<th width="40">打赏</th>
+						<th width="60">打赏</th>
 						
                         <th width="60">总收入</th>
-                        <th width="60">明细</th>
+                        <th width="40">明细</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -110,14 +110,15 @@
 						<td>￥{$it.dian_earn}</td>
 						<td>{$it.pai}</td>
                         <td>￥{$it.pai_earn}</td>
-                        
+                        <td>￥{$it.total_ticheng}</td>
+						
 						<td>￥{$it.recharge}</td>
 						<td>￥{$it.recharge_ticheng}</td>
 						
                         <td>￥{$it.yeji}</td>
                         <td>￥{$it.come_from_other}</td>
 						
-						<td></td>
+						<td>￥{$it.tip}</td>
 						
                         <td>￥{$it.final_salary}</td>
                         <td>

@@ -1191,32 +1191,6 @@ class Technician extends Controller
             $yeji = self::get_yeji($tech['job_number'], $begin, $end);
             $job_number = $tech['job_number'];
 
-			/*
-            //要查的店铺id，用以获取该店的充值提成比例
-            $shopid = 1;
-            //获取两种充值提成标准
-            $recharge_ticheng = Db::query("select recharge_income,recharge_income_2 from shop where ID = '$shopid'");
-            $recharge_ticheng_2 = 0;
-            if ($recharge_ticheng) {
-                $recharge_ticheng_2 = (float) $recharge_ticheng[0]['recharge_income_2'];
-                $recharge_ticheng = (float) $recharge_ticheng[0]['recharge_income'];
-            } else {
-                $recharge_ticheng = 0;
-            }
-            //获取充值额,从数据库查出来的单位是分，转换成元
-            $recharge= Db::query("select sum(charge)/100 as salary,ticheng from recharge_record where generated_time >= $begin and generated_time <= $end and job_number = '$job_number'");
-            $recharge_income = 0;
-            if ($recharge) {
-                $recharge_income = $recharge[0]['ticheng'];
-                $recharge = (int) $recharge[0]['salary'];
-                if (is_null($recharge)) {
-                    $recharge = 0;
-                }
-            } else {
-                $recharge = 0;
-            }
-			*/
-
             //获取打赏金额
             $dashang = Db::query("select sum(salary)/100 as salary from tip where technician_id = '$job_number' and date >=$begin and date <= $end");
             if($dashang)

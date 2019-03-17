@@ -764,10 +764,7 @@ class Technician extends Controller
 		return true;
 	}
 
-    /**
-     * 获取技师的业绩
-     */
-    public static function get_yeji($job_number, $begin, $end)
+    public static function get_yeji($job_number, $begin, $end)//获取技师的业绩
     {
         //该技师自己的信息
         $tech_self = Db::query("select * from technician where job_number='$job_number'");
@@ -1046,7 +1043,6 @@ class Technician extends Controller
            //attendance 
            Db::query("update attendance set job_number ='$newgonghao' where job_number='$oldgonghao'");
 
-           //recharge_record
            Db::query("update recharge_record set job_number ='$newgonghao' where job_number='$oldgonghao'");
 
            //tip

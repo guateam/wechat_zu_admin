@@ -5,7 +5,7 @@
     use think\Db;
     class Rechargerecord extends Controller{
 
-        public function get_all()
+        public function get_all()//充卡记录
 		{
             $all = Db::query("select * from recharge_record order by generated_time");//UserModel::all();
             for($i=0;$i<count($all);$i++)
@@ -34,7 +34,7 @@
             return $all;
         }
 		
-		public function rechargeMoney($cardNo,$phone,$username,$cash,$paymethod,$tech)
+		public function rechargeMoney($cardNo,$phone,$username,$cash,$paymethod,$tech)// 确认充卡
 		{
 			/*
 			//根据手机号码，查询 customer表，查到客户的openid
@@ -99,7 +99,7 @@
             return json(['status'=>1,'msg'=>$rnd]);
 		}
 		
-        public function get_all_by_user()
+        public function get_all_by_user()//会员列表
 		{
             $all_cus = Db::query("select * from customer order by openid");
             $records = [];
@@ -118,8 +118,7 @@
                     array_push($records,$record);
                 }
             }
-            // $records = Db::query("select sum(A.charge)/100 as charge,A.user_id,B.phone_number,B.gender,B.level,B.openid,B.registration_date from recharge_record A,customer B where A.user_id=B.openid
-            // group by B.openid");
+           
             $cus = new \app\api\controller\Customer();
             for($i=0;$i<count($records);$i++)
 			{
@@ -141,11 +140,7 @@
             return $records;
         }
 
-        /**
-         * 获取某个工号的技师一段时间内的充卡额，默认本月
-         * 
-         */
-        public function get_by_jobnumber($num,$start="",$end="")
+        public function get_by_jobnumber($num,$start="",$end="")//获取某个工号的技师一段时间内的充卡额，默认本月
 		{
             if($start == "")
                 $start=strtotime(date('Y-m-01', strtotime(date("Y-m-d"))));

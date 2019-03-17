@@ -32,7 +32,7 @@
             return ['status'=>1];
         }
 
-		public function get_cash($openid)
+		public function get_cash($openid)//获取客户余额
 		{
             $records = Db::query("select sum(charge)/100 as charge from recharge_record where user_id='$openid' group by user_id");
             $charge =0;

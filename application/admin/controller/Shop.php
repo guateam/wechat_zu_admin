@@ -167,7 +167,7 @@ class Shop extends Controller
         return $this->fetch('Shop/payatshop');
     }
 
-    public function boss($begin = '',$end = '')
+    public function boss($begin = '',$end = '')//店内收入统计
 	{
         if($begin=='')
 		{

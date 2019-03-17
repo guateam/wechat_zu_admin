@@ -12,7 +12,7 @@ class Techniciandetail extends Controller
         $serve_ctrl = new \app\api\controller\Servicetype();
         $recharge_ctrl = new \app\api\controller\Rechargerecord();
 
-        $money = $recharge_ctrl->get_by_jobnumber($jbnb);
+        $money = $recharge_ctrl->get_by_jobnumber($jbnb);//获取某个工号的技师一段时间内的充卡额
         $money = $money->getdata();
         $charge = 0;
         if($money['status'] ==1)$charge = $money['charge'];

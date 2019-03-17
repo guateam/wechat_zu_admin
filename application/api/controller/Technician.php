@@ -149,17 +149,20 @@ class Technician extends Controller
         }
         return true;
     }
+	
     public function check_phone_number($num, $ori_number = "")
     {
         $repeat = UserModel::get(['phone_number' => $num]);
-        if ($repeat) {
-            if ($repeat->job_number != $ori_number) {
+        if ($repeat) 
+		{
+            if ($repeat->job_number != $ori_number) 
+			{
                 return false;
             }
-
         }
         return true;
     }
+	
     public function check_job_number($num, $ori_number = "")
     {
         $repeat = UserModel::get(['job_number' => $num]);
@@ -867,7 +870,7 @@ class Technician extends Controller
         //$monthCount = ($end - $begin) / (3600*24*30);//时间段内的月份数量
 
         //date('Y-m-d',$end);
-        $monthCount = Technician::getMonthNum( date('Y-m-d',$end), date('Y-m-d',$begin)) + 1;
+        $monthCount = Technician::getMonthNum( date('Y-m-d',$end), date('Y-m-d',$begin)) + 1;//月份数量
 
 		$recharge = 0;
 		$recharge_ticheng = 0;//充卡提成
@@ -879,21 +882,21 @@ class Technician extends Controller
 			{
 				foreach ($rcg as $eachrecharge)//对每一笔充值进行循环                    
 				{
-					$recharge = $recharge + $eachrecharge['charge'];
+					$recharge = $recharge + $eachrecharge['charge'];//一共充值了多少钱
 					
-					for($i =0 ; $i < count($bonus); $i++)//对每一级别的充卡提成进行循环
+					for($i = 0 ; $i < count($bonus); $i++)//对每一级别的充卡提成进行循环
 					{
 						if ($eachrecharge['charge'] >= $bonus[$i]['recharge'] * 100 * $monthCount)//倒排序
 						{
-							if ($tech_type == 1)
+							if ($tech_type == 1)//技师
 							{
 								$recharge_ticheng += $bonus[$i]['tech_bonus'] * 100 * $monthCount;  
 							}
-							else if ($tech_type == 2)
+							else if ($tech_type == 2)//接待
 							{
 								$recharge_ticheng += $bonus[$i]['jiedai_bonus'] * 100 * $monthCount;   
 							}
-							else if ($tech_type == 3)
+							else if ($tech_type == 3)//收银
 							{
 								$recharge_ticheng = $bonus[$i]['cashier_bonus'] * 100 * $monthCount;
 							}

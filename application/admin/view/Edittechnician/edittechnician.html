@@ -21,7 +21,7 @@
 <![endif]-->
 	<!--/meta 作为公共模版分离出去-->
 
-	<title>添加用户 - H-ui.admin v3.1</title>
+	<title>编辑技师 - H-ui.admin v3.1</title>
 </head>
 
 <body>
@@ -179,16 +179,20 @@
 	<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 	<script type="text/javascript">
 
-        if ('{$technician.type}' != 1) {
+        if ('{$technician.type}' != 1) 
+		{
             $("#div_servicetype").hide();
             $("#div_level").hide();
-        } else {
+        } 
+		else 
+		{
             $("#div_servicetype").show();
             $("#div_level").show();
         }
 
 
-		function testid(id) {
+		function testid(id) //身份证号 认证
+		{
 			// 1 "验证通过!", 0 //校验不通过 // id为身份证号码
 			var format =
 				/^(([1][1-5])|([2][1-3])|([3][1-7])|([4][1-6])|([5][0-4])|([6][1-5])|([7][1])|([8][1-2]))\d{4}(([1][9]\d{2})|([2]\d{3}))(([0][1-9])|([1][0-2]))(([0][1-9])|([1-2][0-9])|([3][0-1]))\d{3}[0-9xX]$/;

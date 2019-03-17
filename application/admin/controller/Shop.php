@@ -189,7 +189,9 @@ class Shop extends Controller
         $consumed_order = Db::query("select A.generated_time as generated_time ,A.payment_method as payment_method, A.order_id as order_id, A.pay_amount as charge,A.shouldpay_amount as should_charge, note, A.source as source,GROUP_CONCAT(C.job_number) as job_number from consumed_order A ,service_order C where (A.state!=0 and A.state!=3) and A.generated_time >=$begin and A.generated_time <= $end and (A.payment_method != 10)  and C.order_id=A.order_id  GROUP BY A.order_id");//时间段内，非会员支付，状态非未支付非取消，把工号合并起来
 		
         //时间段内的充值记录
-        $recharge = Db::query("select record_id as order_id,charge,charge as should_charge,'' as note,job_number,generated_time,'会员充值' as source,payment_method  from recharge_record where generated_time >=$begin and generated_time <= $end and type=1");
+        //$recharge = Db::query("select record_id as order_id,charge,charge as should_charge,'' as note,job_number,generated_time,'会员充值' as source,payment_method  from recharge_record where generated_time >=$begin and generated_time <= $end and type=1");
+		
+		$recharge = Db::query("select record_id as order_id,charge*100 as charge,charge*100 as should_charge,'' as note,job_number,generated_time,'会员充值' as source, 4 as payment_method  from chongka_record where generated_time >=$begin and generated_time <= $end");
 		
 		for($i=0;$i<count($recharge);$i++)
 		{

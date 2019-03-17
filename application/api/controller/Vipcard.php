@@ -84,7 +84,7 @@ class Vipcard extends Controller
 		
 	}
 	
-	public function cancelcard($openid,$cardNo,$phone,$cash)//销卡转微信
+	public function cancelcard($openid,$cardNo,$phone,$cash)//销卡转微信 会员卡注销，暂时不用这个功能 先不改成 chongka_record
 	{
 		//分两笔，一笔是 卡号对应的 加一条负数的记录
 		//第二笔是 openid对应的，加一条充值记录 recharge_record

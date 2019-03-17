@@ -5,7 +5,7 @@
     use think\Db;
     class Rechargerecord extends Controller{
 
-        public function get_all()//充卡记录
+        public function get_all()//充卡记录 先不改成 chongka_record
 		{
             $all = Db::query("select * from recharge_record order by generated_time");//UserModel::all();
             for($i=0;$i<count($all);$i++)
@@ -34,7 +34,7 @@
             return $all;
         }
 		
-		public function rechargeMoney($cardNo,$phone,$username,$cash,$paymethod,$tech)// 确认充卡
+		public function rechargeMoney($cardNo,$phone,$username,$cash,$paymethod,$tech)// 确认充卡 先不改成 chongka_record
 		{
 			/*
 			//根据手机号码，查询 customer表，查到客户的openid
@@ -99,7 +99,7 @@
             return json(['status'=>1,'msg'=>$rnd]);
 		}
 		
-        public function get_all_by_user()//会员列表
+        public function get_all_by_user()//会员列表 先不改成 chongka_record
 		{
             $all_cus = Db::query("select * from customer order by openid");
             $records = [];
@@ -152,8 +152,10 @@
                 $end = $start;
                 $start = $temp;
             }
-            $record = Db::query("select sum(A.charge) as charge from recharge_record A where `job_number`='$num'");
-            if($record){
+            //$record = Db::query("select sum(A.charge) as charge from recharge_record A where `job_number`='$num'");
+			$record = Db::query("select sum(A.charge) as charge from chongka_record A where `job_number`='$num'");
+            if($record)
+			{
                 $money = $record[0]['charge']/100;
                 return json(['status'=>1,'charge'=>$money]);
             }

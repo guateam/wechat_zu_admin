@@ -886,6 +886,7 @@ class Technician extends Controller
 					
 					for($i = 0 ; $i < count($bonus); $i++)//对每一级别的充卡提成进行循环
 					{
+                        /*
 						if ($eachrecharge['charge'] >= $bonus[$i]['recharge'] * 100 * $monthCount)//倒排序
 						{
 							if ($tech_type == 1)//技师
@@ -901,7 +902,25 @@ class Technician extends Controller
 								$recharge_ticheng = $bonus[$i]['cashier_bonus'] * 100 * $monthCount;
 							}
 							break; ////跳出 每一级别的充卡提成循环
-						}
+                        }
+                        */
+
+                        if ($eachrecharge['charge'] >= $bonus[$i]['recharge'] * 100)//倒排序
+						{
+							if ($tech_type == 1)//技师
+							{
+								$recharge_ticheng += $bonus[$i]['tech_bonus'] * 100;  
+							}
+							else if ($tech_type == 2)//接待
+							{
+								$recharge_ticheng += $bonus[$i]['jiedai_bonus'] * 100;   
+							}
+							else if ($tech_type == 3)//收银
+							{
+								$recharge_ticheng = $bonus[$i]['cashier_bonus'] * 100;
+							}
+							break; ////跳出 每一级别的充卡提成循环
+                        }
 					}
 				}
 			}

@@ -156,7 +156,11 @@
 			$record = Db::query("select sum(A.charge) as charge from chongka_record A where `job_number`='$num'");
             if($record)
 			{
-                $money = $record[0]['charge']/100;
+                $money = $record[0]['charge'];
+                if ($money == '')
+                {
+                    $money = 0;
+                }
                 return json(['status'=>1,'charge'=>$money]);
             }
             return json(['status'=>0]);

@@ -872,7 +872,7 @@ class Technician extends Controller
 		$recharge = 0;
 		$recharge_ticheng = 0;//充卡提成
 		//$rcg = Db::query("select * from recharge_record where job_number='$job_number' and type = 1 and generated_time >= $begin and generated_time <= $end");		
-		$rcg = Db::query("select * from chongka_record where job_number='$job_number' and type = 1 and generated_time >= $begin and generated_time <= $end");		
+		$rcg = Db::query("select * from chongka_record where job_number='$job_number' and generated_time >= $begin and generated_time <= $end");		
 		if ($rcg)//这里查到的是 某个技师 在时间段内的充卡金额
 		{
 			$bonus = Db::query("select * from recharge_bonus order by recharge desc");
@@ -880,7 +880,7 @@ class Technician extends Controller
 			{
 				foreach ($rcg as $eachrecharge)//对每一笔充值进行循环                    
 				{
-					$recharge = $recharge + $eachrecharge['charge'];//一共充值了多少钱
+					$recharge = $recharge + $eachrecharge['charge'] * 100;//一共充值了多少钱
 					
 					for($i = 0 ; $i < count($bonus); $i++)//对每一级别的充卡提成进行循环
 					{
@@ -903,7 +903,7 @@ class Technician extends Controller
                         }
                         */
 
-                        if ($eachrecharge['charge'] >= $bonus[$i]['recharge'] * 100)//倒排序
+                        if ($eachrecharge['charge'] * 100 >= $bonus[$i]['recharge'] * 100)//倒排序
 						{
 							if ($tech_type == 1)//技师
 							{

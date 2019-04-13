@@ -403,7 +403,12 @@ class Technician extends Controller
 		}
 		$ret1 = $obj->data;	
 		
-		$Yejis = json_decode($ret1);
+        $Yejis = json_decode($ret1);
+        
+        if ($Yejis == null)
+        {
+            return false;
+        }
 
 		try
 		{

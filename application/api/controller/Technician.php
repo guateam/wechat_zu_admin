@@ -376,8 +376,8 @@ class Technician extends Controller
 			{
                 $job_number = $eachtech['job_number'];
 				
-                //$ret = self::eachJsYejiSync($job_number,"2019/03/05",$yesterday);
-                $ret = self::eachJsYejiSync($job_number,$firstDayInMonth,$yesterday);
+                $ret = self::eachJsYejiSync($job_number,"2019/03/05",$yesterday);
+                //$ret = self::eachJsYejiSync($job_number,$firstDayInMonth,$yesterday);
                 
                 if ($ret == 1)
                 {
@@ -405,23 +405,10 @@ class Technician extends Controller
                 }
                 else if ($ret == 0)
                 {
-                    /*
-                    echo json_encode([
-                            'success'=>false,
-                            'msg'=>'技师'.$job_number.'业绩同步成功',
-                        ]);
-                    //return;
-                    */
                 }
 			}
         }
 
-        echo json_encode([
-            'success'=>true,
-            'msg'=>'所有技师业绩同步成功',
-        ]);
-
-		
 		$tech = Db::query("select * from technician where type = 2");//再轮询接待		
 		if($tech)
 		{
@@ -429,8 +416,8 @@ class Technician extends Controller
 			{
 				$job_number = $eachtech['job_number'];
 				
-                //$ret = self::eachJdYejiSync($job_number,"2019/03/05",$yesterday);
-                $ret = self::eachJsYejiSync($job_number,$firstDayInMonth,$yesterday);
+                $ret = self::eachJdYejiSync($job_number,"2019/03/05",$yesterday);
+                //$ret = self::eachJsYejiSync($job_number,$firstDayInMonth,$yesterday);
                 
                 if ($ret == 1)
                 {
@@ -458,13 +445,6 @@ class Technician extends Controller
                 }
                 else if ($ret == 0)
                 {
-                    /*
-                    echo json_encode([
-                            'success'=>false,
-                            'msg'=>'接待'.$job_number.'业绩同步失败，异常',
-                        ]);
-                    //return;
-                    */
                 }
 			}
 		}	
@@ -845,7 +825,7 @@ class Technician extends Controller
 			//			'success'=>true,
 			//			'msg'=>'',
 			//	]);
-			return true;
+			return 0;
 		}
 		catch(Exception $e)
 		{
@@ -853,9 +833,9 @@ class Technician extends Controller
 			//		'success'=>false,
 			//		'msg'=>'sync fail'
 			//]);
-			return false;
+			return 3;
 		}
-		return true;
+		return 0;
 	}
 
     public static function get_yeji($job_number, $begin, $end)//获取技师的业绩

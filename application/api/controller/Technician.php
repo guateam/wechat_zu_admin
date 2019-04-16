@@ -357,6 +357,9 @@ class Technician extends Controller
         //$time = time();
         $mytime = mktime(0,0,0,date('m'),date('d')-1,date('Y'));
         $yesterday = date('Y/m/d',$mytime);
+		
+		$mytime2 = mktime(0,0,0,date('m'),date('1'),date('Y'));
+		$firstDayInMonth = date('Y/m/d',$mytime2);
 
 		$tech = Db::query("select * from technician where type = 1");//先轮询技师		
 		if($tech)
@@ -365,7 +368,8 @@ class Technician extends Controller
 			{
                 $job_number = $eachtech['job_number'];
 				
-                $ret = self::eachJsYejiSync($job_number,"2019/03/05",$yesterday);
+                //$ret = self::eachJsYejiSync($job_number,"2019/03/05",$yesterday);
+                $ret = self::eachJsYejiSync($job_number,$firstDayInMonth,$yesterday);
                 
                 if ($ret == 1)
                 {
@@ -407,7 +411,8 @@ class Technician extends Controller
 			{
 				$job_number = $eachtech['job_number'];
 				
-                $ret = self::eachJdYejiSync($job_number,"2019/03/05",$yesterday);
+                //$ret = self::eachJdYejiSync($job_number,"2019/03/05",$yesterday);
+                $ret = self::eachJsYejiSync($job_number,$firstDayInMonth,$yesterday);
                 
                 if ($ret == 1)
                 {

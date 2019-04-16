@@ -365,9 +365,40 @@ class Technician extends Controller
 			{
                 $job_number = $eachtech['job_number'];
 				
-				$ret = self::eachJsYejiSync($job_number,"2019/03/05",$yesterday);
+                $ret = self::eachJsYejiSync($job_number,"2019/03/05",$yesterday);
+                
+                if ($ret == 1)
+                {
+                    echo json_encode([
+                            'success'=>false,
+                            'msg'=>'技师业绩同步失败，token is Invalid',
+                        ]);
+                    return;
+                }
+                else if ($ret == 2)
+                {
+                    echo json_encode([
+                            'success'=>false,
+                            'msg'=>'技师业绩同步失败，解析错误',
+                        ]);
+                    return;
+                }
+                else if ($ret == 3)
+                {
+                    echo json_encode([
+                            'success'=>false,
+                            'msg'=>'技师业绩同步失败，异常',
+                        ]);
+                    return;
+                }
 			}
-		}
+        }
+
+        echo json_encode([
+            'success'=>true,
+            'msg'=>'技师业绩同步成功',
+        ]);
+
 		
 		$tech = Db::query("select * from technician where type = 2");//再轮询接待		
 		if($tech)
@@ -376,13 +407,38 @@ class Technician extends Controller
 			{
 				$job_number = $eachtech['job_number'];
 				
-				$ret = self::eachJdYejiSync($job_number,"2019/03/05",$yesterday);
+                $ret = self::eachJdYejiSync($job_number,"2019/03/05",$yesterday);
+                
+                if ($ret == 1)
+                {
+                    echo json_encode([
+                            'success'=>false,
+                            'msg'=>'接待业绩同步失败，token is Invalid',
+                        ]);
+                    return;
+                }
+                else if ($ret == 2)
+                {
+                    echo json_encode([
+                            'success'=>false,
+                            'msg'=>'接待业绩同步失败，解析错误',
+                        ]);
+                    return;
+                }
+                else if ($ret == 3)
+                {
+                    echo json_encode([
+                            'success'=>false,
+                            'msg'=>'接待业绩同步失败，异常',
+                        ]);
+                    return;
+                }
 			}
 		}	
 
 		echo json_encode([
 				'success'=>true,
-				'msg'=>'',
+				'msg'=>'接待业绩同步成功',
 			]);
 		return;
 	}
@@ -390,7 +446,7 @@ class Technician extends Controller
 
 	public function eachJsYejiSync($job_number,$begin,$end)//工号，起始时间，结束时间
 	{
-		$ori_url = "http://www.dzbsaas.com/footmassage/piecewagereport/getdailydetailbyempl.do?emplCode=".$job_number."&dayName=".$begin."&edayName=".$end;
+        $ori_url = "http://www.dzbsaas.com/footmassage/piecewagereport/getdailydetailbyempl.do?emplCode=".$job_number."&dayName=".$begin."&edayName=".$end;
 
 		$url = Technician::$API_URL.urlencode($ori_url);
 		
@@ -399,7 +455,7 @@ class Technician extends Controller
 		if ($obj->success == false)
 		{
 			//echo $content;//success:false;msg:token is Invalid //这里有可能是这个技师，今天没上钟
-			return false;
+			return 1;
 		}
 		$ret1 = $obj->data;	
 		
@@ -407,7 +463,7 @@ class Technician extends Controller
         
         if ($Yejis == null)
         {
-            return false;
+            return 2;
         }
 
 		try
@@ -609,9 +665,9 @@ class Technician extends Controller
 			//		'success'=>false,
 			//		'msg'=>'sync fail'
 			//]);
-			return false;
+			return 3;
 		}
-		return true;
+		return 0;
 	}
 	
 	

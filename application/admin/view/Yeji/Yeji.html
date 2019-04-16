@@ -177,7 +177,9 @@
 					$('#submit').removeClass('disable');
                     $('#loading-mask').hide();
 					
-					alert("业绩同步同步成功！");
+					//alert("业绩同步同步成功！");
+					
+					alert(ret.msg);
 					location.replace(location.href);
 				}
 				else
@@ -185,7 +187,8 @@
 					$('#submit').removeClass('disable');
                     $('#loading-mask').hide();
 					
-					alert("业绩同步失败，请重试");
+					//alert("业绩同步失败，请重试");
+					alert(ret.msg);
 				}
 			})
 		}

@@ -358,8 +358,16 @@ class Technician extends Controller
         $mytime = mktime(0,0,0,date('m'),date('d')-1,date('Y'));
         $yesterday = date('Y/m/d',$mytime);
 		
-		$mytime2 = mktime(0,0,0,date('m'),date('1'),date('Y'));
-		$firstDayInMonth = date('Y/m/d',$mytime2);
+        if (date('d') >= 2)
+        {
+            $mytime2 = mktime(0,0,0,date('m'),date('1'),date('Y'));//从本月的1号开始同步
+            $firstDayInMonth = date('Y/m/d',$mytime2);
+        }
+        else if (date('d') == 1)//每月1号
+        {
+            $mytime2 = mktime(0,0,0,date('m')-1,date('1'),date('Y'));//从上个月的1号开始同步
+            $firstDayInMonth = date('Y/m/d',$mytime2);
+        }
 
 		$tech = Db::query("select * from technician where type = 1");//先轮询技师		
 		if($tech)

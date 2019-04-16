@@ -383,7 +383,7 @@ class Technician extends Controller
                 {
                     echo json_encode([
                             'success'=>false,
-                            'msg'=>'技师业绩同步失败，token is Invalid',
+                            'msg'=>'技师'.$job_number.'业绩同步失败，token is Invalid',
                         ]);
                     return;
                 }
@@ -391,7 +391,7 @@ class Technician extends Controller
                 {
                     echo json_encode([
                             'success'=>false,
-                            'msg'=>'技师业绩同步失败，解析错误',
+                            'msg'=>'技师'.$job_number.'业绩同步失败，解析错误',
                         ]);
                     return;
                 }
@@ -399,16 +399,26 @@ class Technician extends Controller
                 {
                     echo json_encode([
                             'success'=>false,
-                            'msg'=>'技师业绩同步失败，异常',
+                            'msg'=>'技师'.$job_number.'业绩同步失败，发生异常',
                         ]);
                     return;
+                }
+                else if ($ret == 0)
+                {
+                    /*
+                    echo json_encode([
+                            'success'=>false,
+                            'msg'=>'技师'.$job_number.'业绩同步成功',
+                        ]);
+                    //return;
+                    */
                 }
 			}
         }
 
         echo json_encode([
             'success'=>true,
-            'msg'=>'技师业绩同步成功',
+            'msg'=>'所有技师业绩同步成功',
         ]);
 
 		
@@ -426,7 +436,7 @@ class Technician extends Controller
                 {
                     echo json_encode([
                             'success'=>false,
-                            'msg'=>'接待业绩同步失败，token is Invalid',
+                            'msg'=>'接待'.$job_number.'业绩同步失败，token is Invalid',
                         ]);
                     return;
                 }
@@ -434,7 +444,7 @@ class Technician extends Controller
                 {
                     echo json_encode([
                             'success'=>false,
-                            'msg'=>'接待业绩同步失败，解析错误',
+                            'msg'=>'接待'.$job_number.'业绩同步失败，解析错误',
                         ]);
                     return;
                 }
@@ -442,16 +452,26 @@ class Technician extends Controller
                 {
                     echo json_encode([
                             'success'=>false,
-                            'msg'=>'接待业绩同步失败，异常',
+                            'msg'=>'接待'.$job_number.'业绩同步失败，异常',
                         ]);
                     return;
+                }
+                else if ($ret == 0)
+                {
+                    /*
+                    echo json_encode([
+                            'success'=>false,
+                            'msg'=>'接待'.$job_number.'业绩同步失败，异常',
+                        ]);
+                    //return;
+                    */
                 }
 			}
 		}	
 
 		echo json_encode([
 				'success'=>true,
-				'msg'=>'接待业绩同步成功',
+				'msg'=>'所有技师和接待业绩同步成功',
 			]);
 		return;
 	}
@@ -670,7 +690,7 @@ class Technician extends Controller
 			//				'success'=>true,
 			//				'msg'=>'',
 			//]);
-			return true;
+			return 0;
 		}
 		catch(Exception $e)
 		{

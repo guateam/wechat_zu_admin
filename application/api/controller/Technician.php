@@ -409,6 +409,7 @@ class Technician extends Controller
 			}
         }
 
+        /*
 		$tech = Db::query("select * from technician where type = 2");//再轮询接待		
 		if($tech)
 		{
@@ -447,7 +448,8 @@ class Technician extends Controller
                 {
                 }
 			}
-		}	
+        }	
+        */
 
 		echo json_encode([
 				'success'=>true,

@@ -406,7 +406,9 @@ class Technician extends Controller
                 else if ($ret == 0)
                 {
                 }
-			}
+            }
+            
+            sleep(1);
         }
 
         /*

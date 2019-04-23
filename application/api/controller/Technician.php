@@ -369,7 +369,7 @@ class Technician extends Controller
             $firstDayInMonth = date('Y/m/d',$mytime2);
         }
 
-		$tech = Db::query("select * from technician where type = 1");//先轮询技师		
+		$tech = Db::query("select * from technician where type = 1 and sync = 0");//先轮询技师		
 		if($tech)
 		{
 			foreach($tech as $eachtech)
@@ -452,6 +452,18 @@ class Technician extends Controller
 			}
         }	
         */
+
+        
+        $tech = Db::query("select * from technician where type = 1");//轮询技师	全部同步成功后，统一把 sync 改成 0	
+		if($tech)
+		{
+            foreach($tech as $eachtech)
+            {
+                $job_number = $eachtech['job_number'];
+                Db::query("update technician set sync = 0 where job_number = '$job_number'");
+            }
+        }
+        
 
 		echo json_encode([
 				'success'=>true,
@@ -667,9 +679,12 @@ class Technician extends Controller
 					{
 						Db::query("insert into chongka_record (`record_id`,`cardNo`,`charge`,`job_number`,`generated_time`) values ('$rnd','$cardNo','$cash','$emplCode','$modifyDate')");
 					}
-				}
-			}
-			
+                }
+                
+			}            
+            
+            Db::query("update technician set sync = 1 where job_number = '$emplCode'");
+
 			//echo json_encode([
 			//				'success'=>true,
 			//				'msg'=>'',
@@ -822,7 +837,9 @@ class Technician extends Controller
 					{
 						Db::query("insert into chongka_record (`record_id`,`cardNo`,`charge`,`job_number`,`generated_time`) values ('$rnd','$cardNo','$cash','$emplCode','$modifyDate')");
 					}
-				}
+                }
+                
+                
 			}
 			
 			//echo json_encode([

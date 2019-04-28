@@ -639,19 +639,28 @@ class Technician extends Controller
 						$cashStr = $itemNames[0];
 						$cashs = explode('值',$cashStr);
 						
-						if (count($cashs) >= 2)
+						if (count($cashs) >= 2)//带有值这个字
 						{
 							$cash = $cashs[1];
 						}
-						else
+						else//没有值这个字
 						{
 							$cashs_2 = explode('充',$cashStr);
-							if (count($cashs_2) >= 2)
+							if (count($cashs_2) >= 2)//有充这个字
 							{
 								$cash = $cashs_2[1];
-							}
+                            }
+                            else
+                            {
+                                $cashs_3 = explode('折',$cashStr);
+                                if (count($cashs_3) >= 2)//有折这个字
+                                {
+                                    $cash = trim($cashs_3[1]);
+                                }
+                            }
 						}
-					}
+                    }
+                    
 					//-------------------------------------------------
 					
 					$dict=['1','2','3','4','5','6','7','8','9','0'];

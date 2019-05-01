@@ -632,7 +632,7 @@ class Technician extends Controller
 						$cardNo = $memos[1];
 					}
 					//-------------------------------------------------
-					$itemName = $eachservice->itemName;//"充值1000送300" 充2000送600
+					$itemName = $eachservice->itemName;//"充值1000送300" 充2000送600  1000送200 九折卡
 					$itemNames = explode('送',$itemName);					
 					if (count($itemNames) >= 2)
 					{
@@ -656,6 +656,13 @@ class Technician extends Controller
                                 if (count($cashs_3) >= 2)//有折这个字
                                 {
                                     $cash = trim($cashs_3[1]);
+                                }
+                                else//没有折这个字
+                                {
+                                    if (is_numeric($cashStr) == true)
+                                    {
+                                        $cash = $cashStr;
+                                    }
                                 }
                             }
 						}

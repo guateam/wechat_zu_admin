@@ -206,8 +206,9 @@ class Technician extends Controller
             return json(["status" => $is_repeat]);
         }
 
+        $photo = "/photo/smile1.jpg";
         $data = new UserModel(['name' => $name, 'gender' => $gender, 'phone_number' => $mobile,
-            'job_number' => $job_number, 'birthday' => $birthday, "id_number" => $idcard,
+            'job_number' => $job_number, 'birthday' => $birthday, 'id_number' => $idcard,'photo'=>$photo,
             'entry_date' => time(), 'description' => $describe, 'in_job' => 1, 'type' => $type]);
         $data->save();
         if ($skill != '') {
